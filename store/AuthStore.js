@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 13:46:19
+ * @LastEditTime: 2021-03-21 22:06:26
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -12,11 +12,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 class AuthStore {
   @observable email = '';
   @observable password = '';
+  @observable password_confirmation = '';
   @observable name = '';
   @observable phone = '';
-  @observable current_image = null;
+  @observable tcno = '';
   @observable imagePath = '';
-  @observable password_confirmation = '';
+  @observable courier_city = '';
+  @observable courier_districts = '';
+
+  @observable current_image = null;
   @observable sozlesme = false;
   @observable token = null;
   @observable loginSnackbar = false;
@@ -33,6 +37,9 @@ class AuthStore {
   @action _closeMenu() { this.menu = false; }
 
   @action handleName(text) { this.name = text; }
+  @action handleTcNo(text) { this.tcno = text; }
+  @action handleCityId(text) { this.courier_city = text; }
+  @action handleDistrictId(text) { this.courier_districts = text; }
   @action handleEmail(text) { this.email = text; }
   @action handlePhone(text) { this.phone = text; }
   @action handlePassword(text) { this.password = text; }
@@ -94,7 +101,16 @@ class AuthStore {
       formData.append('name', this.name);
       formData.append('password', this.password);
       formData.append('password_confirmation', this.password_confirmation);
-
+      // if (this.imagePath != '') {
+      //   formData.append("photo", {
+      //     name: this.imagePath.fileName,
+      //     type: this.imagePath.type,
+      //     uri:
+      //       Platform.OS === "android" ? this.imagePath.uri : this.imagePath.uri.replace("file://", "")
+      //   });
+      // }
+      // formData.append('_method', "put");
+      
       let uri = `${global.apiUrl}/register`;
       await axios.post(uri, formData, { headers: { "Accept": "application/json" } })
         .then((response) => {
