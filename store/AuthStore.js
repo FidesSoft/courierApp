@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 23:06:01
+ * @LastEditTime: 2021-03-21 23:25:48
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -113,7 +113,7 @@ class AuthStore {
             Platform.OS === "android" ? this.imagePath.uri : this.imagePath.uri.replace("file://", "")
         });
       }
-s      let uri = `${global.apiUrl}/register`;
+     let uri = `${global.apiUrl}/register`;
       await axios.post(uri, formData, { headers: { "Accept": "application/json" } })
         .then((response) => {
           this.token = response.data.data.token;
