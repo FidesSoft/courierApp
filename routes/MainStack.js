@@ -3,11 +3,14 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:18:12
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 13:43:19
+ * @LastEditTime: 2021-03-21 13:47:04
  */
 import React, { Component } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import {observer} from 'mobx-react';
 
+//store files
+import AuthStore from '../store/AuthStore';
 // not auth
 import LoginScreen from '../screens/Auth/LoginScreen';
 import RegisterScreen from '../screens/Auth/RegisterScreen';
@@ -18,12 +21,11 @@ import UserTab from './auth/UserTab';
 
 const Stack = createStackNavigator();
 
+@observer
 export default class MainStack extends Component  {
      constructor(props) {
         super(props);
-        this.state = {
-            token: 'gfgd',
-        };
+        AuthStore.getToken();
       }
   render() {
      return (
@@ -32,7 +34,7 @@ export default class MainStack extends Component  {
     screenOptions={{
         headerShown: false,
     }}>
-    {this.state.token !== '' ? (
+    {AuthStore.token !== null ? (
     <>
          <Stack.Screen name="UserTab" component={UserTab} />
 
