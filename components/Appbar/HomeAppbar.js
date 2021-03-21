@@ -3,12 +3,15 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:45:43
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 13:45:17
+ * @LastEditTime: 2021-03-21 14:07:19
  */
 import React, {Component} from 'react';
 import { Appbar, Menu, Divider } from 'react-native-paper';
 import { Image} from 'react-native';
+import {observer} from 'mobx-react';
+import AuthStore from '../../store/AuthStore';
 
+@observer
 export default class HomeAppbar extends Component {
   render() {
     const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';

@@ -3,10 +3,12 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:24:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 13:25:09
+ * @LastEditTime: 2021-03-21 14:06:46
  */
 import React, { Component } from "react";
 import { Button, Text, View } from "react-native";
+import { observer } from 'mobx-react';
+import AuthStore from '../../store/AuthStore';
 
 class HomeScreen extends Component {
   
