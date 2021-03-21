@@ -283,7 +283,7 @@ class RegisterScreen extends Component {
           <View style={{ flex: 1, alignItems: 'center' }}>
             <View style={{ flexDirection: "row" }}>
               <View style={styles.button}>
-                <Button icon="account-plus" loading={AuthStore.loading} mode="contained" onPress={() => AuthStore.register()}>KAYDET</Button>
+                <Button icon="account-plus" loading={AuthStore.loading} mode="contained" onPress={() => AuthStore.register(this.props.navigation)}>KAYDET</Button>
               </View>
               <View style={styles.button}>
                 <Button icon="account-check" mode="contained" onPress={() => this.props.navigation.navigate('Login')}>Giriş</Button>

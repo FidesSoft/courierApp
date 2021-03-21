@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 03:31:45
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 13:48:05
+ * @LastEditTime: 2021-03-21 23:47:31
  */
 import React, { Component } from 'react';
 import { Image, View, StyleSheet, ScrollView } from 'react-native';
@@ -78,6 +78,9 @@ class LoginScreen extends Component {
         <Snackbar visible={AuthStore.logutSnackbar} onDismiss={() => AuthStore.onDismissLogutSnackbar()}
           duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissLogutSnackbar() } }}>
           Başarıyla çıkış yaptınız.</Snackbar>
+        <Snackbar visible={AuthStore.registerSuccessSnackbar} onDismiss={() => AuthStore.onDismissRegisterSuccessSnackbar()}
+          duration={4000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissRegisterSuccessSnackbar() } }}>
+          Başarıyla üye oldunuz. Üyeliğiniz onaylandıktan sonra giriş yapabilirsiniz.</Snackbar>
       </View>
     );
   }
