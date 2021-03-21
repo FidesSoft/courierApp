@@ -8,20 +8,21 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, Linking } from 'react-native';
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
+import * as ImagePicker from "react-native-image-picker"
 
-import { Button, Appbar, TextInput, Checkbox, HelperText, Snackbar } from 'react-native-paper';
+import { Button, Appbar, TextInput, Checkbox, HelperText, Snackbar, Avatar } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
 @observer
 class RegisterScreen extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        cities: [],
-        districts: [],
-      };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      cities: [],
+      districts: [],
+    };
+  }
   componentDidMount() {
     AuthStore.errors = {};
     AuthStore.email = '';
@@ -30,21 +31,25 @@ class RegisterScreen extends Component {
     AuthStore.tcno = '';
     AuthStore.courier_city = '';
     AuthStore.courier_districts = '';
+    AuthStore.imagePath = '';
     AuthStore.sozlesme = false;
     AuthStore.password_confirmation = '';
     AuthStore.loading = false;
     this.getCities();
   }
   componentWillUnmount() {
-    AuthStore.errors = '';
+    AuthStore.errors = {};
     AuthStore.email = '';
     AuthStore.password = '';
     AuthStore.name = '';
+    AuthStore.tcno = '';
+    AuthStore.courier_city = '';
+    AuthStore.courier_districts = '';
+    AuthStore.imagePath = '';
     AuthStore.sozlesme = false;
     AuthStore.password_confirmation = '';
     AuthStore.loading = false;
   }
-
 
   getCities = async () => {
     let uri = `${global.apiUrl}/get-cities/`;
@@ -87,18 +92,47 @@ class RegisterScreen extends Component {
         }
       });
   }
+ 
+
+
+  imageGalleryLaunch = () => {
+    let options = {
+      storageOptions: {
+        skipBackup: true,
+        includeBase64: true,
+        path: 'images',
+      },
+    };
+
+    ImagePicker.launchImageLibrary(options, (res) => {
+      // console.log('Response = ', res);
+      if (res.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (res.error) {
+        console.log('ImagePicker Error: ', res.error);
+      } else if (res.customButton) {
+        console.log('User tapped custom button: ', res.customButton);
+        alert(res.customButton);
+      } else {
+        const source = { uri: res.uri };
+        // console.log('response', JSON.stringify(res));
+        AuthStore.imagePath = res;
+      }
+    });
+  }
+
 
   render() {
     let allCities = this.state.cities.map((city) => {
       return (
-          <Picker.Item label={city.name} value={city.id} key={city.id} />
+        <Picker.Item label={city.name} value={city.id} key={city.id} />
       )
-  });
-  let allDistricts = this.state.districts.map((district) => {
+    });
+    let allDistricts = this.state.districts.map((district) => {
       return (
-          <Picker.Item label={district.name} value={district.id} key={district.id} />
+        <Picker.Item label={district.name} value={district.id} key={district.id} />
       )
-  });
+    });
     return (
       <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
         <Appbar.Header>
@@ -109,56 +143,72 @@ class RegisterScreen extends Component {
           />
         </Appbar.Header>
         <ScrollView>
-        <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'flex-start'
-                }}>
-                    <View style={{ width: '50%' }}>
-                        <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 5 }}>
-                            <Picker
-                                style={{ backgroundColor: "#fae6c3" }}
-                                selectedValue={AuthStore.courier_city}
-                                onValueChange={(itemValue) =>
-                                    this.getDistrictsAfterSelectedCity(itemValue)
-                                }>
-                                <Picker.Item label="İl Seç" value="" />
-                                {allCities}
-                            </Picker>
-                        </View>
-                        {AuthStore.errors.courier_city && <HelperText type="error" visible style={styles.helper}>
-                            {AuthStore.errors.courier_city}
-                        </HelperText>}
-                    </View>
-                    <View style={{ width: '50%' }}>
-                        <View style={{ flex: 1, marginTop: 15, marginLeft: 5, marginRight: 15 }}>
-                            <Picker
-                                style={{ backgroundColor: "#fae6c3" }}
-                                selectedValue={AuthStore.courier_districts}
-                                onValueChange={(itemValue) =>
-                                  AuthStore.handleDistrictId(itemValue )
-                                }>
-                                <Picker.Item label="İlçe Seç" value="" />
-                                {allDistricts}
-                            </Picker>
-                        </View>
-                        {AuthStore.errors.courier_districts && <HelperText type="error" visible style={styles.helper}>
-                            {AuthStore.errors.courier_districts}
-                        </HelperText>}
-                    </View>
-                </View>
+          <View style={{ flex: 1, alignItems: 'center', margin: 15 }}>
+
+            {AuthStore.imagePath.uri &&
+              <Avatar.Image style={{ margin: 10 }} size={100} source={{ uri: AuthStore.imagePath.uri }} />}
+
+            {!AuthStore.imagePath.uri &&
+              <Avatar.Icon style={{ margin: 10 }} size={100} icon="file-image" />}
+
+            {AuthStore.errors.image && <HelperText type="error" visible style={styles.helper}>
+              {AuthStore.errors.image}
+            </HelperText>}
+
+            <Button icon="camera" mode="contained" onPress={this.imageGalleryLaunch}>Fotograf Ekle</Button>
+          </View>
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'flex-start'
+          }}>
+            <View style={{ width: '50%' }}>
+              <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 5 }}>
+                <Picker
+                  style={{ backgroundColor: "#fae6c3" }}
+                  selectedValue={AuthStore.courier_city}
+                  onValueChange={(itemValue) =>
+                    this.getDistrictsAfterSelectedCity(itemValue)
+                  }>
+                  <Picker.Item label="İl Seç" value="" />
+                  {allCities}
+                </Picker>
+              </View>
+              {AuthStore.errors.courier_city && <HelperText type="error" visible style={styles.helper}>
+                {AuthStore.errors.courier_city}
+              </HelperText>}
+            </View>
+            <View style={{ width: '50%' }}>
+              <View style={{ flex: 1, marginTop: 15, marginLeft: 5, marginRight: 15 }}>
+                <Picker
+                  style={{ backgroundColor: "#fae6c3" }}
+                  selectedValue={AuthStore.courier_districts}
+                  onValueChange={(itemValue) =>
+                    AuthStore.handleDistrictId(itemValue)
+                  }>
+                  <Picker.Item label="İlçe Seç" value="" />
+                  {allDistricts}
+                </Picker>
+              </View>
+              {AuthStore.errors.courier_districts && <HelperText type="error" visible style={styles.helper}>
+                {AuthStore.errors.courier_districts}
+              </HelperText>}
+            </View>
+          </View>
 
           <TextInput style={styles.input}
             label="TC No"
             mode="outlined"
             onChangeText={text => AuthStore.handleTcNo(text)}
             autoCapitalize="none" />
+          {AuthStore.errors.tcno && <HelperText type="error" visible style={styles.helper}>
+            {AuthStore.errors.tcno}
+          </HelperText>}
 
           <TextInput style={styles.input}
             label="Adınız"
             mode="outlined"
             onChangeText={text => AuthStore.handleName(text)}
             autoCapitalize="none" />
-
           {AuthStore.errors.name && <HelperText type="error" visible style={styles.helper}>
             {AuthStore.errors.name}
           </HelperText>}
@@ -171,6 +221,15 @@ class RegisterScreen extends Component {
             autoCapitalize="none" />
           {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
             {AuthStore.errors.email}
+          </HelperText>}
+
+          <TextInput style={styles.input}
+            label="Telefon"
+            mode="outlined"
+            onChangeText={text => AuthStore.handlePhone(text)}
+            autoCapitalize="none" />
+          {AuthStore.errors.phone && <HelperText type="error" visible style={styles.helper}>
+            {AuthStore.errors.phone}
           </HelperText>}
 
           <TextInput style={styles.input}

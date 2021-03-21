@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 22:06:26
+ * @LastEditTime: 2021-03-21 23:06:01
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -19,7 +19,6 @@ class AuthStore {
   @observable imagePath = '';
   @observable courier_city = '';
   @observable courier_districts = '';
-
   @observable current_image = null;
   @observable sozlesme = false;
   @observable token = null;
@@ -96,22 +95,25 @@ class AuthStore {
   @action async register() {
     this.loading = true;
     if (this.sozlesme) {
+      console.log(this.courier_city)
       let formData = new FormData();
+      formData.append('tcno', this.tcno);
       formData.append('email', this.email);
       formData.append('name', this.name);
+      formData.append('phone', this.phone);
+      formData.append('courier_city', this.courier_city);
+      formData.append('courier_districts', this.courier_districts);
       formData.append('password', this.password);
       formData.append('password_confirmation', this.password_confirmation);
-      // if (this.imagePath != '') {
-      //   formData.append("photo", {
-      //     name: this.imagePath.fileName,
-      //     type: this.imagePath.type,
-      //     uri:
-      //       Platform.OS === "android" ? this.imagePath.uri : this.imagePath.uri.replace("file://", "")
-      //   });
-      // }
-      // formData.append('_method', "put");
-      
-      let uri = `${global.apiUrl}/register`;
+      if (this.imagePath != '') {
+        formData.append("image", {
+          name: this.imagePath.fileName,
+          type: this.imagePath.type,
+          uri:
+            Platform.OS === "android" ? this.imagePath.uri : this.imagePath.uri.replace("file://", "")
+        });
+      }
+s      let uri = `${global.apiUrl}/register`;
       await axios.post(uri, formData, { headers: { "Accept": "application/json" } })
         .then((response) => {
           this.token = response.data.data.token;
