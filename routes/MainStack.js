@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:18:12
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 13:20:03
+ * @LastEditTime: 2021-03-21 13:43:19
  */
 import React, { Component } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -22,7 +22,7 @@ export default class MainStack extends Component  {
      constructor(props) {
         super(props);
         this.state = {
-            token: '',
+            token: 'gfgd',
         };
       }
   render() {

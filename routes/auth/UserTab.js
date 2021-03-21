@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 13:21:40
+ * @LastEditTime: 2021-03-21 13:43:46
  */
 import * as React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -29,13 +29,13 @@ export default function UserTab() {
                     ),
                 }}
             />
-            <Tab.Screen name="Home" component={HomeStack}
+            {/* <Tab.Screen name="Home" component={HomeStack}
                 options={{
                     tabBarLabel: 'Home2',
                     tabBarIcon: ({ color }) => (
                         <Ionicons name="people-outline" color={color} size={26} />
                     ),
-                }} />
+                }} /> */}
         </Tab.Navigator>
     );
 }
