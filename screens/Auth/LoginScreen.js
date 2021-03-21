@@ -3,11 +3,11 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 03:31:45
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 23:47:31
+ * @LastEditTime: 2021-03-21 23:59:55
  */
 import React, { Component } from 'react';
 import { Image, View, StyleSheet, ScrollView } from 'react-native';
-import { Button, Appbar, TextInput, Snackbar, HelperText } from 'react-native-paper';
+import { Button, Appbar, TextInput, Snackbar, HelperText} from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
@@ -49,7 +49,6 @@ class LoginScreen extends Component {
             mode="outlined"
             onChangeText={text => AuthStore.handleEmail(text)}
             autoCapitalize="none" />
-
           {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
             {AuthStore.errors.email}
           </HelperText>}
@@ -60,7 +59,14 @@ class LoginScreen extends Component {
             autoCapitalize="none"
             onChangeText={text => AuthStore.handlePassword(text)}
             secureTextEntry={true} />
+          {AuthStore.errors.password && <HelperText type="error" visible style={styles.helper}>
+            {AuthStore.errors.password}
+          </HelperText>}
+
           <View style={{ flex: 1, alignItems: 'center' }}>
+          {AuthStore.errors.notapproved && <HelperText type="error" visible style={styles.helper}>
+            {AuthStore.errors.notapproved}
+          </HelperText>}
             <View style={{ flexDirection: "row" }}>
               <View style={styles.button}>
                 <Button icon="account-check" loading={AuthStore.loading} mode="contained" onPress={() => AuthStore.login()}>Gİrİş</Button>
