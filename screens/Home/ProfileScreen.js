@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 17:10:46
+ * @LastEditTime: 2021-03-22 18:37:09
  */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
@@ -12,6 +12,8 @@ import axios from 'axios';
 import { observer } from 'mobx-react';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from "react-native-image-picker"
+
+import moment from "moment";
 
 import AuthStore from '../../store/AuthStore';
 
@@ -34,7 +36,7 @@ class ProfileScreen extends Component {
         AuthStore.vehicle = '';
         AuthStore.plate = '';
         AuthStore.color = '';
-        AuthStore.birth_date = '';
+        AuthStore.birth_date = new Date();
         AuthStore.on_duty = false;
         AuthStore.loading = false;
         AuthStore.current_image = null;
@@ -58,7 +60,6 @@ class ProfileScreen extends Component {
         AuthStore.current_image = null;
         AuthStore.imagePath = '';
     }
-
 
     getCities = async () => {
         let uri = `${global.apiUrl}/get-cities/`;
@@ -282,6 +283,16 @@ class ProfileScreen extends Component {
                         {AuthStore.errors.plate}
                     </HelperText>}
 
+                    <TextInput style={styles.input}
+                        value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
+                        label="Doğum Tarihi"
+                        mode="outlined"
+                        onChangeText={text => AuthStore.handleBirthDate(text)}
+                        autoCapitalize="none" />
+                    {AuthStore.errors.birth_date && <HelperText type="error" visible style={styles.helper}>
+                        {AuthStore.errors.birth_date}
+                    </HelperText>}
+
                     <View style={{ flex: 1, margin: 10 }}>
                         <View style={{ flexDirection: "row" }}>
                             <Checkbox
@@ -298,7 +309,6 @@ class ProfileScreen extends Component {
                             </View>
                         </View>
                     </View>
-
 
                     <View style={{ flex: 1, alignItems: 'center', margin: 15 }}>
                         <Button icon="send" loading={AuthStore.loading} mode="contained" onPress={() => AuthStore.updateProfile()}>Profilimi Güncelle</Button>
