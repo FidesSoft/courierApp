@@ -26,7 +26,6 @@ class HomeScreen extends Component {
     this.state = {
       tasks: '',
       search: '',
-      statuses: [],
       selectedStatus: '',
       page: 1,
       fetchingFromServer: false,
@@ -116,7 +115,7 @@ class HomeScreen extends Component {
   getTasks = async () => {
     if (!this.state.fetchingFromServer && !this.state.isListEnd) {
       this.setState({ fetchingFromServer: true }, async () => {
-        let uri = `${global.apiUrl}/task?status=` + this.state.selectedStatus + `&search=` + this.state.search + `&page=` + this.state.page;
+        let uri = `${global.apiUrl}/task?search=` + this.state.search + `&page=` + this.state.page;
         await axios.get(uri, {
           headers: {
             'Accept': 'application/json',
@@ -124,8 +123,6 @@ class HomeScreen extends Component {
           }
         })
           .then((response) => {
-            this.setState({ statuses: response.data.statuses });
-
             if (response.data.tasks.data.length > 0) {
               this.setState({
                 tasks: [...this.state.tasks, ...response.data.tasks.data],
@@ -220,13 +217,6 @@ class HomeScreen extends Component {
   }
 
   render() {
-
-    let allStatuses = this.state.statuses.map((status) => {
-      return (
-        <Picker.Item label={status.name} value={status.id} key={status.id} />
-      )
-    });
-
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <View style={{
@@ -249,8 +239,7 @@ class HomeScreen extends Component {
               onValueChange={(itemValue) =>
                 this.updateAfterSelectedStatus(itemValue)
               }>
-              <Picker.Item label="Tümü" value="0" />
-              {allStatuses}
+              <Picker.Item label="Tüm Gönder" value="0" />
             </Picker>
           </View>
         </View>
