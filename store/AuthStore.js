@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 15:38:19
+ * @LastEditTime: 2021-03-22 17:13:10
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -49,7 +49,11 @@ class AuthStore {
   @action handlePhone(text) { this.phone = text; }
   @action handlePassword(text) { this.password = text; }
   @action handlePasswordC(text) { this.password_confirmation = text; }
+  @action handlePlate(text) { this.plate = text; }
+  @action handleColor(text) { this.color = text; }
+  @action handleVehicle(text) { this.vehicle = text; }
   @action handleSozlesme() { this.sozlesme = !this.sozlesme; }
+  @action handleOnDuty() { this.on_duty = !this.on_duty; console.log(this.on_duty) }
 
   @action onDismissLoginSnackbar() { this.loginSnackbar = false; }
   @action onDismissLogutSnackbar() { this.logutSnackbar = false; }
@@ -119,7 +123,7 @@ class AuthStore {
             Platform.OS === "android" ? this.imagePath.uri : this.imagePath.uri.replace("file://", "")
         });
       }
-     let uri = `${global.apiUrl}/register`;
+      let uri = `${global.apiUrl}/register`;
       await axios.post(uri, formData, { headers: { "Accept": "application/json" } })
         .then((response) => {
           // this.token = response.data.data.token;
@@ -175,9 +179,17 @@ class AuthStore {
   @action async updateProfile() {
     this.loading = true;
     let formData = new FormData();
+    formData.append('tcno', this.tcno);
     formData.append('email', this.email);
     formData.append('name', this.name);
     formData.append('phone', this.phone);
+    formData.append('vehicle', this.vehicle);
+    formData.append('plate', this.plate);
+    formData.append('color', this.color);
+    formData.append('on_duty', this.on_duty);
+    // formData.append('birth_date', this.birth_date);
+    formData.append('courier_city', this.courier_city);
+    formData.append('courier_districts', this.courier_districts);
     if (this.imagePath != '') {
       formData.append("photo", {
         name: this.imagePath.fileName,
@@ -186,20 +198,21 @@ class AuthStore {
           Platform.OS === "android" ? this.imagePath.uri : this.imagePath.uri.replace("file://", "")
       });
     }
-    formData.append('_method', "put");
     if (this.password) { formData.append('password', this.password); }
     let uri = `${global.apiUrl}/profile`;
     await axios.post(uri, formData, {
       headers: {
         'Accept': 'application/json',
         'Authorization': `Bearer ${this.token}`,
-        'Content-Type': 'multipart/form-data;'
       }
     })
       .then((response) => {
+        console.log(response.data)
         this.updateProfileSnackbar = true;
       })
       .catch(error => {
+        console.log('hata')
+        console.log(error.response)
         this.errors = error.response.data.errors;
       });
     this.loading = false;
