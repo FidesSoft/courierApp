@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 23:58:37
+ * @LastEditTime: 2021-03-22 15:38:19
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -19,7 +19,12 @@ class AuthStore {
   @observable imagePath = '';
   @observable courier_city = '';
   @observable courier_districts = '';
+  @observable vehicle = '';
+  @observable plate = '';
+  @observable color = '';
+  @observable birth_date = '';
   @observable current_image = null;
+  @observable on_duty = false;
   @observable sozlesme = false;
   @observable token = null;
   @observable loginSnackbar = false;
@@ -143,10 +148,19 @@ class AuthStore {
       }
     })
       .then((response) => {
+        // console.log(response.data.city[0].id)
         this.name = response.data.name;
         this.email = response.data.email;
         this.phone = response.data.phone;
+        this.tcno = response.data.tc;
+        this.vehicle = response.data.vehicle;
+        this.plate = response.data.plate;
+        this.color = response.data.color;
+        this.on_duty = response.data.on_duty;
+        this.birth_date = response.data.birth_date;
         this.current_image = response.data.image;
+        this.courier_city = response.data.city[0].id;
+        this.courier_districts = response.data.district[0].id;
       })
       .catch(error => {
         if (error.response.status == 401) {
