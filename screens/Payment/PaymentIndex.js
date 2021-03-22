@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-10 13:56:01
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-19 14:58:53
+ * @LastEditTime: 2021-03-22 23:00:59
  */
 import React, { Component } from "react";
 import axios from 'axios';
@@ -161,6 +161,7 @@ class PaymentIndex extends Component {
                         onValueChange={(itemValue, itemIndex) => { this.updateAfterSelectedStatus(itemValue) }
                         }>
                         <Picker.Item label="Tümü" value="" />
+                        <Picker.Item label="Alınan Ödemeler" value="1" />
                         <Picker.Item label="Bakiye Yüklemeleri" value="2" />
                         <Picker.Item label="Gönderi Ödemeleri" value="3" />
                     </Picker>
