@@ -12,7 +12,6 @@ import { FAB, Snackbar, Button, List, Searchbar, Divider } from 'react-native-pa
 import { observer } from 'mobx-react';
 
 import AuthStore from '../../store/AuthStore';
-import ContactStore from '../../store/ContactStore';
 
 import { Picker } from '@react-native-picker/picker';
 
@@ -26,7 +25,7 @@ class HomeScreen extends Component {
     this.state = {
       tasks: '',
       search: '',
-      selectedStatus: '',
+      selectedStatus: 1,
       page: 1,
       fetchingFromServer: false,
       isListEnd: false,
@@ -115,7 +114,15 @@ class HomeScreen extends Component {
   getTasks = async () => {
     if (!this.state.fetchingFromServer && !this.state.isListEnd) {
       this.setState({ fetchingFromServer: true }, async () => {
-        let uri = `${global.apiUrl}/task?search=` + this.state.search + `&page=` + this.state.page;
+        let task_type;
+        if(this.state.selectedStatus == 2){
+          task_type = 'task/inprogress'
+        } else if(this.state.selectedStatus == 3){
+          task_type = 'task/finished'
+        }else{
+          task_type = 'task'
+        }
+        let uri = `${global.apiUrl}/${task_type}?search=` + this.state.search + `&page=` + this.state.page;
         await axios.get(uri, {
           headers: {
             'Accept': 'application/json',
@@ -239,7 +246,9 @@ class HomeScreen extends Component {
               onValueChange={(itemValue) =>
                 this.updateAfterSelectedStatus(itemValue)
               }>
-              <Picker.Item label="Tüm Gönder" value="0" />
+              <Picker.Item label="Yeni Gönderiler" value={1} />
+              <Picker.Item label="Devam Eden Gönderilerim" value={2} />
+              <Picker.Item label="Tamamlanan Gönderilerim" value={3} />
             </Picker>
           </View>
         </View>
