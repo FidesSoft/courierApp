@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-03 15:15:29
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-15 23:16:05
+ * @LastEditTime: 2021-03-22 18:55:51
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -37,7 +37,9 @@ class ContactStore {
       .then((response) => {
         // console.log(response.data)
         this.contactSnackbar = true;
-        navi.navigate('Home');
+        this.subject = '';
+        this.message = '';
+        // navi.navigate('Home');
       })
       .catch(error => {
         if (error.response.status == 401) {

@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:24:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 14:06:46
+ * @LastEditTime: 2021-03-22 18:54:38
  */
 import React, { Component } from "react";
 import { Button, Text, View } from "react-native";

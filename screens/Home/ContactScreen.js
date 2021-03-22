@@ -3,11 +3,11 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 18:45:08
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 18:49:42
+ * @LastEditTime: 2021-03-22 19:00:02
  */
 import React, { Component } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { TextInput, Button, HelperText } from 'react-native-paper';
+import { TextInput, Button, HelperText, Snackbar } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import ContactStore from '../../store/ContactStore';
 
@@ -28,7 +28,7 @@ class ContactScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
-        <ScrollView>
+      <ScrollView>
           <TextInput style={styles.input}
             label="Konu"
             mode="outlined"
@@ -52,7 +52,11 @@ class ContactScreen extends Component {
             <Button icon="send" loading={ContactStore.loading} mode="contained" onPress={() => ContactStore.sendMessage(this.props.navigation)}>Gönder</Button>
           </View>
         </ScrollView>
-      </View>
+        <Snackbar visible={ContactStore.contactSnackbar} onDismiss={() => ContactStore.onDismissContactSnackbar()}
+        duration={2000} action={{ label: 'Gizle', onPress: () => { ContactStore.onDismissContactSnackbar() } }}>
+        Mesajınız başarıyla gönderildi.</Snackbar>
+            </View>
+
     );
   }
 }
