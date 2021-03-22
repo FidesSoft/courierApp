@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 18:37:09
+ * @LastEditTime: 2021-03-22 20:23:46
  */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
@@ -43,6 +43,7 @@ class ProfileScreen extends Component {
         AuthStore.imagePath = '';
         AuthStore.getUser();
         this.getCities();
+        this.getDistricts(AuthStore.courier_city);
     }
     componentWillUnmount() {
         AuthStore.errors = {};
@@ -72,7 +73,7 @@ class ProfileScreen extends Component {
                 this.setState({
                     cities: response.data,
                 }, () => {
-                    this.getDistricts(AuthStore.courier_city);
+                    // this.getDistricts(AuthStore.courier_city);
                 });
             })
             .catch(error => {
@@ -166,9 +167,8 @@ class ProfileScreen extends Component {
                         alignItems: 'flex-start'
                     }}>
                         <View style={{ width: '50%' }}>
-                            <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 5 }}>
+                            <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 5, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
                                 <Picker
-                                    style={{ backgroundColor: "#fae6c3" }}
                                     selectedValue={AuthStore.courier_city}
                                     onValueChange={(itemValue) =>
                                         this.getDistrictsAfterSelectedCity(itemValue)
@@ -182,9 +182,8 @@ class ProfileScreen extends Component {
                             </HelperText>}
                         </View>
                         <View style={{ width: '50%' }}>
-                            <View style={{ flex: 1, marginTop: 15, marginLeft: 5, marginRight: 15 }}>
+                            <View style={{ flex: 1, marginTop: 15, marginLeft: 5, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
                                 <Picker
-                                    style={{ backgroundColor: "#fae6c3" }}
                                     selectedValue={AuthStore.courier_districts}
                                     onValueChange={(itemValue) =>
                                         AuthStore.handleDistrictId(itemValue)

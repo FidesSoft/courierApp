@@ -3,11 +3,13 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 13:43:46
+ * @LastEditTime: 2021-03-22 20:02:11
  */
 import * as React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeStack from './HomeStack';
+import IbanStack from './IbanStack';
+
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 const Tab = createMaterialBottomTabNavigator();
@@ -29,13 +31,14 @@ export default function UserTab() {
                     ),
                 }}
             />
-            {/* <Tab.Screen name="Home" component={HomeStack}
+           
+           <Tab.Screen name="Iban" component={IbanStack}
                 options={{
-                    tabBarLabel: 'Home2',
+                    tabBarLabel: 'Ibanlar',
                     tabBarIcon: ({ color }) => (
-                        <Ionicons name="people-outline" color={color} size={26} />
+                        <Ionicons name="card-outline" color={color} size={26} />
                     ),
-                }} /> */}
+                }} />
         </Tab.Navigator>
     );
 }

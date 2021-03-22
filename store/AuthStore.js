@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 18:40:06
+ * @LastEditTime: 2021-03-22 20:20:54
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -153,7 +153,7 @@ class AuthStore {
       }
     })
       .then((response) => {
-        // console.log(response.data.city[0].id)
+        console.log(response.data.district[0].id)
         this.name = response.data.name;
         this.email = response.data.email;
         this.phone = response.data.phone;
