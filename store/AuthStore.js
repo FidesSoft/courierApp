@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 18:37:50
+ * @LastEditTime: 2021-03-22 18:40:06
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -188,7 +188,7 @@ class AuthStore {
     formData.append('plate', this.plate);
     formData.append('color', this.color);
     formData.append('on_duty', this.on_duty);
-    // formData.append('birth_date', this.birth_date);
+    formData.append('birth_date', this.birth_date);
     formData.append('courier_city', this.courier_city);
     formData.append('courier_districts', this.courier_districts);
     if (this.imagePath != '') {
@@ -208,12 +208,10 @@ class AuthStore {
       }
     })
       .then((response) => {
-        console.log(response.data)
         this.updateProfileSnackbar = true;
       })
       .catch(error => {
         console.log('hata')
-        console.log(error.response)
         this.errors = error.response.data.errors;
       });
     this.loading = false;
