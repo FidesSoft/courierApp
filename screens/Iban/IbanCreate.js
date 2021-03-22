@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-11 14:35:25
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-15 23:19:43
+ * @LastEditTime: 2021-03-22 20:17:30
  */
 import React, { Component } from "react";
 import axios from 'axios';
@@ -73,9 +73,8 @@ class IbanCreate extends Component {
                     {this.state.errors.iban_no}
                 </HelperText>}
 
-                <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 15 }}>
+                <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1  }}>
                     <Picker
-                        style={{ backgroundColor: "#fae6c3" }}
                         selectedValue={this.state.status}
                         onValueChange={(itemValue) =>
                             this.setState({ status: itemValue })
