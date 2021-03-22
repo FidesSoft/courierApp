@@ -8,9 +8,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import { View, StyleSheet, SafeAreaView, Text, FlatList, RefreshControl } from 'react-native';
-import { FAB, Snackbar, Button, List, Searchbar, Divider } from 'react-native-paper';
+import { Snackbar, Button, List, Searchbar, Divider } from 'react-native-paper';
 import { observer } from 'mobx-react';
-
 import AuthStore from '../../store/AuthStore';
 
 import { Picker } from '@react-native-picker/picker';
@@ -281,13 +280,6 @@ class HomeScreen extends Component {
         <Snackbar visible={AuthStore.loginSnackbar} onDismiss={() => AuthStore.onDismissLoginSnackbar()}
           duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissLoginSnackbar() } }}>
           Başarıyla giriş yaptınız.</Snackbar>
-
-
-        <FAB
-          style={styles.fab}
-          icon="plus"
-          onPress={() => this.props.navigation.navigate('TaskCreate')}
-        />
       </SafeAreaView>
     );
   }
@@ -300,11 +292,5 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center"
-  },
-  fab: {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
   },
 });
