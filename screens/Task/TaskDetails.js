@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-23 22:13:12
+ * @LastEditTime: 2021-03-23 22:29:47
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View } from "react-native";
@@ -18,7 +18,9 @@ class TaskDetails extends Component {
       id: '',
       task_type: '',
       shipment_type: '',
+      sender_name: '',
       receiver_name: '',
+      sender_phone: '',
       receiver_phone: '',
       delivery_date: '',
       delivered_at: '',
@@ -45,6 +47,8 @@ class TaskDetails extends Component {
       task_type: this.props.route.params.item.task_type,
       created_at: this.props.route.params.item.created_at,
       shipment_type: this.props.route.params.item.shipment_type,
+      sender_name: this.props.route.params.item.sender.name,
+      sender_phone: this.props.route.params.item.sender.phone,
       receiver_name: this.props.route.params.item.receiver.name,
       receiver_phone: this.props.route.params.item.receiver.phone,
       delivery_date: this.props.route.params.item.delivery_date,
@@ -112,7 +116,7 @@ class TaskDetails extends Component {
               <Text>Durum: {this.state.status}</Text>
             </View>
           }
-          description={'Açıklama: ' + this.state.description}
+          description={'Gönderi Türü: ' + this.state.task_type == 1 ? 'Paket' : 'Evrak' + ' ('+this.state.id+')'}
           left={props => <List.Icon {...props} icon="format-list-checks" />}
         />
         <List.Item
@@ -122,17 +126,18 @@ class TaskDetails extends Component {
               </Text>
             </View>
           }
-          description={'Kurye Adı: ' + this.state.courier_name}
+          description={'Açıklama: ' + this.state.description}
           left={props => <List.Icon {...props} icon="comment-account-outline" />}
         />
         <List.Item
           title={
             <View>
-              <Text>Gönderi Türü: {this.state.task_type == 1 ? 'Paket' : 'Evrak'} ({this.state.id})</Text>
+              <Text>Gönderici Adı: {this.state.sender_name}</Text>
+              <Text>Telefon: {this.state.sender_phone}</Text>
             </View>
           }
           description={'Gönderici Adresi: ' + this.state.sender_address}
-          left={props => <List.Icon {...props} icon="package-variant" />}
+          left={props => <List.Icon {...props} icon="account-arrow-right-outline" />}
         />
         <List.Item
           title={
@@ -163,40 +168,13 @@ class TaskDetails extends Component {
           }
           left={props => <List.Icon {...props} icon="credit-card-check-outline" />}
         />
-        {this.state.courier != '' && this.state.status_id != 23 && this.state.status_id != 24 && <List.Item
-          title={
-            <View>
-              <Button compact mode="text" onPress={() => this.props.navigation.navigate('CourierTrack', { created_at: this.state.created_at, id: this.state.id })}>
-                Canlı Kurye Takibi
-              </Button>
-            </View>
-          }
-          left={props => <List.Icon {...props} icon="map-marker-radius-outline" />}
-        />}
+        
 
-        {this.state.courier_name != 'Atanmadı' && this.state.status_id == 23 && <List.Item
-          title={
-            <View>
-              <Button uppercase={false} compact mode="text" onPress={() => this.props.navigation.navigate('Rating', { courier_id: this.state.courier.id, task_id: this.state.id })}>
-                Gönderi ve Kurye Değerlendir
-              </Button>
-            </View>
-          }
-          left={props => <List.Icon {...props} icon="star-outline" />}
-        />}
-
-
+{/* 
         {this.state.payment_status == 0 && this.state.payment_type == 1 && <Button style={{ margin: 15 }} icon="credit-card-plus-outline" mode="contained" compact onPress={() => this.props.navigation.navigate('TaskPayment', { id: this.state.id })}>
           ÖDE
-            </Button>}
-        {this.state.payment_status == 0 && this.state.payment_type == 4 && <Button style={{ margin: 15 }} icon="credit-card-plus-outline" mode="contained" compact onPress={() => this.props.navigation.navigate('TaskPaymentHavale', { id: this.state.id })}>
-          ÖDE
-            </Button>}
-
-            {this.state.payment_status == 1 && this.state.status_id !== 17 && this.state.status_id !== 23 && this.state.status_id !== 24 && this.state.status_id !== 25 && <Button style={{margin: 15}} icon="check-bold" mode="contained"
-          uppercase={false}
-          onPress={() => this.props.navigation.navigate('Approve', { id: this.state.id })}
-        >Gönderiyi Teslim Aldım</Button>}
+            </Button>} */}
+        
 
       </ScrollView>
     );
