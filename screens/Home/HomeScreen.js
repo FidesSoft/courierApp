@@ -170,6 +170,10 @@ class HomeScreen extends Component {
     }
   }
 
+  approveTask(item_id) {
+    console.log(item_id)
+  }
+
   renderItem = ({ item }) => {
     let shipment_type;
     if (item.shipment_type == 1) {
@@ -223,6 +227,9 @@ class HomeScreen extends Component {
           right={props => <View style={{ alignItems: 'flex-end' }}>
             {item.payment_status == 0 ? <Text style={{ color: 'red' }}>Ödenmedi</Text> : <Text style={{ color: 'green' }}> Ödendi</Text>}
             <Text style={{ color: 'green' }}> {payment_type}</Text>
+            {item.status_id == 17 || item.status_id == 25 && <Button icon="credit-card-plus-outline" mode="contained" compact onPress={() => this.approveTask(item.id)}>
+              Kabul Et
+            </Button>}
           </View>}
         />
         <Divider />
