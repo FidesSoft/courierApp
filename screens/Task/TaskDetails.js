@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-23 22:51:10
+ * @LastEditTime: 2021-03-23 22:56:28
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View } from "react-native";
@@ -35,6 +35,7 @@ class TaskDetails extends Component {
       duration: '',
       courier: '',
       courier_name: '',
+      courier_price: '',
       description: '',
       sender_address: '',
       receiver_address: '',
@@ -63,6 +64,7 @@ class TaskDetails extends Component {
       distance: this.props.route.params.item.distance,
       duration: this.props.route.params.item.duration,
       courier: this.props.route.params.item.courier,
+      courier_price: this.props.route.params.item.price_courier,
       courier_name: this.props.route.params.item.courier ? this.props.route.params.item.courier.name : 'Atanmadı',
       description: this.props.route.params.item.description,
       sender_address: this.props.route.params.item.senderaddress.description + ' ' + this.props.route.params.item.senderaddress.district.name + ' ' + this.props.route.params.item.senderaddress.city.name,
@@ -168,6 +170,7 @@ class TaskDetails extends Component {
             <View>
               <Text>Ödeme: {payment_type} ({payment_status})</Text>
               <Text>Fiyat: {this.state.price}  ₺</Text>
+              <Text>Kurye Kazancı: {this.state.courier_price}  ₺</Text>
             </View>
           }
           left={props => <List.Icon {...props} icon="credit-card-check-outline" />}
