@@ -114,11 +114,11 @@ class HomeScreen extends Component {
     if (!this.state.fetchingFromServer && !this.state.isListEnd) {
       this.setState({ fetchingFromServer: true }, async () => {
         let task_type;
-        if(this.state.selectedStatus == 2){
+        if (this.state.selectedStatus == 2) {
           task_type = 'task/inprogress'
-        } else if(this.state.selectedStatus == 3){
+        } else if (this.state.selectedStatus == 3) {
           task_type = 'task/finished'
-        }else{
+        } else {
           task_type = 'task'
         }
         let uri = `${global.apiUrl}/${task_type}?search=` + this.state.search + `&page=` + this.state.page;
@@ -161,6 +161,15 @@ class HomeScreen extends Component {
     );
   }
 
+  showDetails(item) {
+    let status_id = item.status_id;
+    if (status_id != 17 && status_id != 23 && status_id != 25) {
+      return this.props.navigation.navigate('TaskDetails', { item })
+    } else {
+      return null;
+    }
+  }
+
   renderItem = ({ item }) => {
     let shipment_type;
     if (item.shipment_type == 1) {
@@ -195,7 +204,7 @@ class HomeScreen extends Component {
       <>
         <List.Item style={{ backgroundColor: '#fff7e6', margin: 2 }}
           // onPress={() => console.log(item)}
-          onPress={() => this.props.navigation.navigate('TaskDetails', { item })}
+          onPress={() => this.showDetails(item)}
           titleEllipsizeMode="clip"
           titleNumberOfLines={3}
           title={
@@ -211,7 +220,7 @@ class HomeScreen extends Component {
             <Text style={{ marginTop: -10 }}> {item.task_type == 1 ? 'Paket' : 'Evrak'} </Text>
             <Text> {item.price} ₺ </Text>
           </View>}
-          right={props => <View  style={{ alignItems: 'flex-end' }}>
+          right={props => <View style={{ alignItems: 'flex-end' }}>
             {item.payment_status == 0 ? <Text style={{ color: 'red' }}>Ödenmedi</Text> : <Text style={{ color: 'green' }}> Ödendi</Text>}
             <Text style={{ color: 'green' }}> {payment_type}</Text>
           </View>}
