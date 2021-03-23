@@ -4,11 +4,12 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-23 22:29:47
+ * @LastEditTime: 2021-03-23 22:51:10
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { List, Button } from 'react-native-paper';
+import moment from "moment/min/moment-with-locales";
 
 class TaskDetails extends Component {
 
@@ -107,16 +108,19 @@ class TaskDetails extends Component {
     } else {
       payment_status = 'Bulunamadı';
     }
+    
 
     return (
       <ScrollView>
         <List.Item
           title={
             <View>
+              <Text>{'Gönderi Türü: ' + this.state.task_type == 1 ? 'Paket' : 'Evrak' + ' ('+this.state.id+')'}</Text>
               <Text>Durum: {this.state.status}</Text>
+
             </View>
           }
-          description={'Gönderi Türü: ' + this.state.task_type == 1 ? 'Paket' : 'Evrak' + ' ('+this.state.id+')'}
+          description={'Tarih: '+moment(this.state.created_at).locale('tr').format('lll')}
           left={props => <List.Icon {...props} icon="format-list-checks" />}
         />
         <List.Item
@@ -175,7 +179,6 @@ class TaskDetails extends Component {
           ÖDE
             </Button>} */}
         
-
       </ScrollView>
     );
   }
