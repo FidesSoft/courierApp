@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import { View, StyleSheet, SafeAreaView, Text, FlatList, RefreshControl } from 'react-native';
-import { Snackbar, Button, List, Searchbar, Divider } from 'react-native-paper';
+import { Snackbar, Button, List, Searchbar, Divider, Paragraph, Dialog, Portal } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
@@ -35,6 +35,9 @@ class HomeScreen extends Component {
       ratingSnackbar: false,
       approveSnackbar: false,
       refreshing: false,
+      acceptTaskDialog: false,
+      loading: false,
+      approveTaskId: 0,
     };
   }
 
@@ -97,6 +100,13 @@ class HomeScreen extends Component {
 
   handleSearch(search) {
     this.state.search = search.text;
+  }
+
+  cancelAccepTask(){
+    this.setState({ 
+      acceptTaskDialog: false,
+      approveTaskId: 0,
+     });
   }
 
   searching() {
@@ -170,8 +180,38 @@ class HomeScreen extends Component {
     }
   }
 
-  approveTask(item_id) {
-    console.log(item_id)
+  showApproveTaskDialog(item_id) {
+    this.setState({
+      acceptTaskDialog: true,
+      approveTaskId: item_id,
+    });
+  }
+  
+  async approveTask() {
+
+    this.loading = true;
+    let formData = new FormData();
+    formData.append('id', this.state.approveTaskId);
+
+    let uri = `${global.apiUrl}/task/accept/`;
+    await axios.post(uri, formData, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${AuthStore.token}`
+      }
+    })
+      .then((response) => {
+        console.log(response.data)
+        // navi.navigate('Home');
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          AuthStore.token = null;
+          AuthStore.storeToken('');
+        }
+        this.errors = error.response.data.errors;
+      });
+    this.loading = false;
   }
 
   renderItem = ({ item }) => {
@@ -229,7 +269,7 @@ class HomeScreen extends Component {
           right={props => <View style={{ alignItems: 'flex-end' }}>
             {item.payment_status == 0 ? <Text style={{ color: 'red' }}>Ödenmedi</Text> : <Text style={{ color: 'green' }}> Ödendi</Text>}
             <Text style={{ color: 'green' }}> {payment_type}</Text>
-            {item.status_id == 17 || item.status_id == 25 && <Button icon="credit-card-plus-outline" mode="contained" compact onPress={() => this.approveTask(item.id)}>
+            {item.status_id == 17 || item.status_id == 25 && <Button icon="check" mode="contained" compact onPress={() => this.showApproveTaskDialog(item.id)}>
               Kabul Et
             </Button>}
           </View>}
@@ -298,6 +338,20 @@ class HomeScreen extends Component {
         <Snackbar visible={AuthStore.loginSnackbar} onDismiss={() => AuthStore.onDismissLoginSnackbar()}
           duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissLoginSnackbar() } }}>
           Başarıyla giriş yaptınız.</Snackbar>
+          <Portal>
+
+        <Dialog visible={this.state.acceptTaskDialog} onDismiss={() => this.cancelAccepTask()}>
+          <Dialog.Title>Gönderi Kabul Et</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Gönderi kabul ettiğinizi onaylıyor musunuz</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => this.cancelAccepTask()}>İptal</Button>
+            <Button onPress={() => this.approveTask()}>Evet, Onaylıyorum.</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
       </SafeAreaView>
     );
   }
