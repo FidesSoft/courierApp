@@ -22,6 +22,7 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      errors: {},
       tasks: '',
       search: '',
       selectedStatus: 1,
@@ -36,8 +37,10 @@ class HomeScreen extends Component {
       approveSnackbar: false,
       refreshing: false,
       acceptTaskDialog: false,
+      showAcceptTaskDialogError: false,
       loading: false,
       approveTaskId: 0,
+      acceptTaskDialogError: '',
     };
   }
 
@@ -102,11 +105,18 @@ class HomeScreen extends Component {
     this.state.search = search.text;
   }
 
-  cancelAccepTask(){
-    this.setState({ 
+  cancelAccepTask() {
+    this.setState({
       acceptTaskDialog: false,
       approveTaskId: 0,
-     });
+    });
+  }
+
+  handleAcceptTaskDialogError() {
+    this.setState({
+      showAcceptTaskDialogError: false,
+      approveTaskId: 0,
+    });
   }
 
   searching() {
@@ -186,10 +196,10 @@ class HomeScreen extends Component {
       approveTaskId: item_id,
     });
   }
-  
+
   async approveTask() {
 
-    this.loading = true;
+    this.setState({ loading: true });
     let formData = new FormData();
     formData.append('id', this.state.approveTaskId);
 
@@ -203,15 +213,27 @@ class HomeScreen extends Component {
       .then((response) => {
         console.log(response.data)
         // navi.navigate('Home');
+
       })
       .catch(error => {
         if (error.response.status == 401) {
           AuthStore.token = null;
           AuthStore.storeToken('');
         }
-        this.errors = error.response.data.errors;
+        console.log(error.response.data.errors.error_desc)
+        this.setState({
+          errors: error.response.data.errors.error_desc,
+          }, () => {
+          this.setState({
+            acceptTaskDialogError: this.state.errors,
+          showAcceptTaskDialogError: true,
+        });
+        });
       });
-    this.loading = false;
+    this.setState({
+      acceptTaskDialog: false,
+      loading: false,
+    });
   }
 
   renderItem = ({ item }) => {
@@ -338,19 +360,29 @@ class HomeScreen extends Component {
         <Snackbar visible={AuthStore.loginSnackbar} onDismiss={() => AuthStore.onDismissLoginSnackbar()}
           duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissLoginSnackbar() } }}>
           Başarıyla giriş yaptınız.</Snackbar>
-          <Portal>
+        <Portal>
 
-        <Dialog visible={this.state.acceptTaskDialog} onDismiss={() => this.cancelAccepTask()}>
-          <Dialog.Title>Gönderi Kabul Et</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>Gönderi kabul ettiğinizi onaylıyor musunuz</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => this.cancelAccepTask()}>İptal</Button>
-            <Button onPress={() => this.approveTask()}>Evet, Onaylıyorum.</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+          <Dialog visible={this.state.acceptTaskDialog} onDismiss={() => this.cancelAccepTask()}>
+            <Dialog.Title>Gönderi Kabul Et</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>Gönderi kabul ettiğinizi onaylıyor musunuz</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => this.cancelAccepTask()}>İptal</Button>
+              <Button loading={this.state.loading} onPress={() => this.approveTask()}>Evet, Onaylıyorum.</Button>
+            </Dialog.Actions>
+          </Dialog>
+
+          <Dialog visible={this.state.showAcceptTaskDialogError} onDismiss={() => this.handleAcceptTaskDialogError()}>
+            <Dialog.Title>Bir Hata Oluştu!</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>{this.state.acceptTaskDialogError}</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => this.handleAcceptTaskDialogError()}>İptal</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
 
       </SafeAreaView>
     );
