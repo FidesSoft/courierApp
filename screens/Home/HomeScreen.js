@@ -177,13 +177,13 @@ class HomeScreen extends Component {
   renderItem = ({ item }) => {
     let shipment_type;
     if (item.shipment_type == 1) {
-      shipment_type = 'Yaya Kurye';
+      shipment_type = 'Yaya';
     } else if (item.shipment_type == 2) {
-      shipment_type = 'Motor Kurye';
+      shipment_type = 'Motor';
     } else if (item.shipment_type == 3) {
-      shipment_type = 'Express Kurye';
+      shipment_type = 'Express';
     } else if (item.shipment_type == 4) {
-      shipment_type = 'Araç Kurye';
+      shipment_type = 'Araç';
     } else {
       shipment_type = 'Bulunamadı';
     }
@@ -213,8 +213,10 @@ class HomeScreen extends Component {
           titleNumberOfLines={3}
           title={
             <View>
-              <Text>{item.receiver.name.substring(0, 15)} - {item.receiver.phone} </Text>
-              <Text>{shipment_type} - {item.status.name}</Text>
+              <Text>{item.receiver.name.substring(0, 3)}* - {item.senderaddress.district.name}/{item.senderaddress.city.name}</Text>
+              <Text>{item.sender.name.substring(0, 3)}* - {item.receiver.district.name}/{item.receiver.city.name}</Text>
+              <Text>Kurye Ücreti: {item.price_courier} ₺</Text>
+              <Text>Toplam Ücret: {item.price} ₺</Text>
             </View>
           }
           description={item.description}
@@ -222,7 +224,7 @@ class HomeScreen extends Component {
             <Text>
               <List.Icon color="#F59F0B" icon="calendar-check" /> </Text>
             <Text style={{ marginTop: -10 }}> {item.task_type == 1 ? 'Paket' : 'Evrak'} </Text>
-            <Text> {item.price} ₺ </Text>
+            <Text> {shipment_type} </Text>
           </View>}
           right={props => <View style={{ alignItems: 'flex-end' }}>
             {item.payment_status == 0 ? <Text style={{ color: 'red' }}>Ödenmedi</Text> : <Text style={{ color: 'green' }}> Ödendi</Text>}
