@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-24 15:46:40
+ * @LastEditTime: 2021-03-24 15:48:32
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -213,6 +213,7 @@ class TaskDetails extends Component {
 
         <View style={{ width: dimensions.window.width, height: 175 }}>
           <Button
+            icon="autorenew"
             mode="contained"
             uppercase={false}
             // color="red"
