@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:21:49
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 18:46:05
+ * @LastEditTime: 2021-03-23 22:14:15
  */
 import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,6 +12,7 @@ import HomeAppbar from '../../components/Appbar/HomeAppbar';
 import HomeScreen from '../../screens/Home/HomeScreen';
 import ProfileScreen from '../../screens/Home/ProfileScreen';
 import ContactScreen from '../../screens/Home/ContactScreen';
+import TaskDetails from '../../screens/Task/TaskDetails';
 import Empty from '../../screens/Home/Empty';
 
 const Stack = createStackNavigator();
@@ -32,6 +33,10 @@ export default function HomeStack() {
 
             <Stack.Screen name="Contact" component={ContactScreen}
                 initialParams={{ screenTitle: 'İletişim', screenDescription: 'Bizimle bir konu hakkında iletişime geçin.' }}
+            />
+
+            <Stack.Screen name="TaskDetails" component={TaskDetails}
+                initialParams={{ screenTitle: 'Gönderi Detayı', screenDescription: 'Gönderi hakkında tüm detaylar.' }}
             />
 
             <Stack.Screen name="Empty" component={Empty}

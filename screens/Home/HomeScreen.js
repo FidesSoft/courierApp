@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import { View, StyleSheet, SafeAreaView, Text, FlatList, RefreshControl } from 'react-native';
-import { Snackbar, Button, List, Searchbar, Divider } from 'react-native-paper';
+import { Snackbar, Button, List, Searchbar, Divider, Paragraph, Dialog, Portal } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
@@ -22,6 +22,7 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      errors: {},
       tasks: '',
       search: '',
       selectedStatus: 1,
@@ -35,6 +36,11 @@ class HomeScreen extends Component {
       ratingSnackbar: false,
       approveSnackbar: false,
       refreshing: false,
+      acceptTaskDialog: false,
+      showAcceptTaskDialogError: false,
+      loading: false,
+      approveTaskId: 0,
+      acceptTaskDialogError: '',
     };
   }
 
@@ -99,6 +105,20 @@ class HomeScreen extends Component {
     this.state.search = search.text;
   }
 
+  cancelAccepTask() {
+    this.setState({
+      acceptTaskDialog: false,
+      approveTaskId: 0,
+    });
+  }
+
+  handleAcceptTaskDialogError() {
+    this.setState({
+      showAcceptTaskDialogError: false,
+      approveTaskId: 0,
+    });
+  }
+
   searching() {
     this.setState({
       tasks: '',
@@ -114,11 +134,11 @@ class HomeScreen extends Component {
     if (!this.state.fetchingFromServer && !this.state.isListEnd) {
       this.setState({ fetchingFromServer: true }, async () => {
         let task_type;
-        if(this.state.selectedStatus == 2){
+        if (this.state.selectedStatus == 2) {
           task_type = 'task/inprogress'
-        } else if(this.state.selectedStatus == 3){
+        } else if (this.state.selectedStatus == 3) {
           task_type = 'task/finished'
-        }else{
+        } else {
           task_type = 'task'
         }
         let uri = `${global.apiUrl}/${task_type}?search=` + this.state.search + `&page=` + this.state.page;
@@ -161,16 +181,72 @@ class HomeScreen extends Component {
     );
   }
 
+  showDetails(item) {
+    let status_id = item.status_id;
+    if (status_id != 17 && status_id != 23 && status_id != 25) {
+      return this.props.navigation.navigate('TaskDetails', { item })
+    } else {
+      return null;
+    }
+  }
+
+  showApproveTaskDialog(item_id) {
+    this.setState({
+      acceptTaskDialog: true,
+      approveTaskId: item_id,
+    });
+  }
+
+  async approveTask() {
+
+    this.setState({ loading: true });
+    let formData = new FormData();
+    formData.append('id', this.state.approveTaskId);
+
+    let uri = `${global.apiUrl}/task/accept/`;
+    await axios.post(uri, formData, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${AuthStore.token}`
+      }
+    })
+      .then((response) => {
+        this.props.route.params.refreshData = true;
+        this.props.navigation.navigate('TaskDetails', { acceptTask: true, item: response.data.task })
+        // navi.navigate('Home');
+
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          AuthStore.token = null;
+          AuthStore.storeToken('');
+        }
+        console.log(error.response.data.errors.error_desc)
+        this.setState({
+          errors: error.response.data.errors.error_desc,
+          }, () => {
+          this.setState({
+            acceptTaskDialogError: this.state.errors,
+          showAcceptTaskDialogError: true,
+        });
+        });
+      });
+    this.setState({
+      acceptTaskDialog: false,
+      loading: false,
+    });
+  }
+
   renderItem = ({ item }) => {
     let shipment_type;
     if (item.shipment_type == 1) {
-      shipment_type = 'Yaya Kurye';
+      shipment_type = 'Yaya';
     } else if (item.shipment_type == 2) {
-      shipment_type = 'Motor Kurye';
+      shipment_type = 'Motor';
     } else if (item.shipment_type == 3) {
-      shipment_type = 'Express Kurye';
+      shipment_type = 'Express';
     } else if (item.shipment_type == 4) {
-      shipment_type = 'Araç Kurye';
+      shipment_type = 'Araç';
     } else {
       shipment_type = 'Bulunamadı';
     }
@@ -195,13 +271,15 @@ class HomeScreen extends Component {
       <>
         <List.Item style={{ backgroundColor: '#fff7e6', margin: 2 }}
           // onPress={() => console.log(item)}
-          onPress={() => this.props.navigation.navigate('TaskDetails', { item })}
+          onPress={() => this.showDetails(item)}
           titleEllipsizeMode="clip"
           titleNumberOfLines={3}
           title={
             <View>
-              <Text>{item.receiver.name.substring(0, 15)} - {item.receiver.phone} </Text>
-              <Text>{shipment_type} - {item.status.name}</Text>
+              <Text>{item.receiver.name.substring(0, 3)}* - {item.senderaddress.district.name}/{item.senderaddress.city.name}</Text>
+              <Text>{item.sender.name.substring(0, 3)}* - {item.receiver.district.name}/{item.receiver.city.name}</Text>
+              <Text>Kurye Ücreti: {item.price_courier} ₺</Text>
+              <Text>Toplam Ücret: {item.price} ₺</Text>
             </View>
           }
           description={item.description}
@@ -209,11 +287,14 @@ class HomeScreen extends Component {
             <Text>
               <List.Icon color="#F59F0B" icon="calendar-check" /> </Text>
             <Text style={{ marginTop: -10 }}> {item.task_type == 1 ? 'Paket' : 'Evrak'} </Text>
-            <Text> {item.price} ₺ </Text>
+            <Text> {shipment_type} </Text>
           </View>}
-          right={props => <View  style={{ alignItems: 'flex-end' }}>
+          right={props => <View style={{ alignItems: 'flex-end' }}>
             {item.payment_status == 0 ? <Text style={{ color: 'red' }}>Ödenmedi</Text> : <Text style={{ color: 'green' }}> Ödendi</Text>}
             <Text style={{ color: 'green' }}> {payment_type}</Text>
+            {item.status_id == 17 || item.status_id == 25 && <Button icon="check" mode="contained" compact onPress={() => this.showApproveTaskDialog(item.id)}>
+              Kabul Et
+            </Button>}
           </View>}
         />
         <Divider />
@@ -280,6 +361,30 @@ class HomeScreen extends Component {
         <Snackbar visible={AuthStore.loginSnackbar} onDismiss={() => AuthStore.onDismissLoginSnackbar()}
           duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissLoginSnackbar() } }}>
           Başarıyla giriş yaptınız.</Snackbar>
+        <Portal>
+
+          <Dialog visible={this.state.acceptTaskDialog} onDismiss={() => this.cancelAccepTask()}>
+            <Dialog.Title>Gönderi Kabul Et</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>Gönderi kabul ettiğinizi onaylıyor musunuz</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => this.cancelAccepTask()}>İptal</Button>
+              <Button loading={this.state.loading} onPress={() => this.approveTask()}>Evet, Onaylıyorum.</Button>
+            </Dialog.Actions>
+          </Dialog>
+
+          <Dialog visible={this.state.showAcceptTaskDialogError} onDismiss={() => this.handleAcceptTaskDialogError()}>
+            <Dialog.Title>Bir Hata Oluştu!</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>{this.state.acceptTaskDialogError}</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => this.handleAcceptTaskDialogError()}>İptal</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+
       </SafeAreaView>
     );
   }
