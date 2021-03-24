@@ -4,15 +4,18 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-23 22:56:28
+ * @LastEditTime: 2021-03-24 15:46:40
  */
 import React, { Component } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
 import { List, Button } from 'react-native-paper';
 import moment from "moment/min/moment-with-locales";
 
-class TaskDetails extends Component {
 
+const window = Dimensions.get("window");
+const screen = Dimensions.get("screen");
+
+class TaskDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,10 +43,15 @@ class TaskDetails extends Component {
       sender_address: '',
       receiver_address: '',
       created_at: '',
+      dimensions: {
+        window,
+        screen
+      }
     };
   }
 
   componentDidMount() {
+    Dimensions.addEventListener("change", this.onChange);
     this.setState({
       id: this.props.route.params.item.id,
       task_type: this.props.route.params.item.task_type,
@@ -69,6 +77,22 @@ class TaskDetails extends Component {
       description: this.props.route.params.item.description,
       sender_address: this.props.route.params.item.senderaddress.description + ' ' + this.props.route.params.item.senderaddress.district.name + ' ' + this.props.route.params.item.senderaddress.city.name,
       receiver_address: this.props.route.params.item.receiver.description,
+    });
+  }
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener("change", this.onChange);
+  }
+
+  onChange = ({ window, screen }) => {
+    this.setState({ dimensions: { window, screen } });
+  };
+
+  updateStatus = (id) => {
+    console.log(id);
+    // apiden istek at sonra status guncelle, daha sonra ana sayfaya atıp refresh
+    this.setState({
+      status: 'Kurye Teslim Aldı',
     });
   }
 
@@ -110,81 +134,130 @@ class TaskDetails extends Component {
     } else {
       payment_status = 'Bulunamadı';
     }
-    
+
+    const { dimensions } = this.state;
 
     return (
-      <ScrollView>
-        <List.Item
-          title={
-            <View>
-              <Text>{'Gönderi Türü: ' + this.state.task_type == 1 ? 'Paket' : 'Evrak' + ' ('+this.state.id+')'}</Text>
-              <Text>Durum: {this.state.status}</Text>
+      <View style={{ flex: 1 }}>
+        <View style={{ width: dimensions.window.width, height: dimensions.window.height - 170 }}>
+          <ScrollView>
+            <List.Item
+              title={
+                <View>
+                  <Text>{'Gönderi Türü: ' + this.state.task_type == 1 ? 'Paket' : 'Evrak' + ' (' + this.state.id + ')'}</Text>
+                  <Text>Durum: {this.state.status}</Text>
+                </View>
+              }
+              description={'Tarih: ' + moment(this.state.created_at).locale('tr').format('lll')}
+              left={props => <List.Icon {...props} icon="format-list-checks" />}
+            />
+            <List.Item
+              title={
+                <View>
+                  <Text>Kurye Türü: {shipment_type}
+                  </Text>
+                </View>
+              }
+              description={'Açıklama: ' + this.state.description}
+              left={props => <List.Icon {...props} icon="comment-account-outline" />}
+            />
+            <List.Item
+              title={
+                <View>
+                  <Text>Gönderici Adı: {this.state.sender_name}</Text>
+                  <Text>Telefon: {this.state.sender_phone}</Text>
+                </View>
+              }
+              description={'Gönderici Adresi: ' + this.state.sender_address}
+              left={props => <List.Icon {...props} icon="account-arrow-right-outline" />}
+            />
+            <List.Item
+              title={
+                <View>
+                  <Text>Alıcı Adı: {this.state.receiver_name}</Text>
+                  <Text>Telefon: {this.state.receiver_phone}</Text>
+                </View>
+              }
+              description={'Alıcı Adresi: ' + this.state.receiver_address}
+              left={props => <List.Icon {...props} icon="account-arrow-right-outline" />}
+            />
+            <List.Item
+              title={
+                <View>
+                  <Text>Ağırlık: {this.state.weight} kg</Text>
+                  <Text>Tahmini Uzaklık: {this.state.distance} km</Text>
+                  <Text>Tahmini Varış Süre: {this.state.duration} dk</Text>
+                </View>
+              }
+              left={props => <List.Icon {...props} icon="information-outline" />}
+            />
+            <List.Item
+              title={
+                <View>
+                  <Text>Ödeme: {payment_type} ({payment_status})</Text>
+                  <Text>Fiyat: {this.state.price}  ₺</Text>
+                  <Text>Kurye Kazancı: {this.state.courier_price}  ₺</Text>
+                </View>
+              }
+              left={props => <List.Icon {...props} icon="credit-card-check-outline" />}
+            />
 
-            </View>
-          }
-          description={'Tarih: '+moment(this.state.created_at).locale('tr').format('lll')}
-          left={props => <List.Icon {...props} icon="format-list-checks" />}
-        />
-        <List.Item
-          title={
-            <View>
-              <Text>Kurye Türü: {shipment_type}
-              </Text>
-            </View>
-          }
-          description={'Açıklama: ' + this.state.description}
-          left={props => <List.Icon {...props} icon="comment-account-outline" />}
-        />
-        <List.Item
-          title={
-            <View>
-              <Text>Gönderici Adı: {this.state.sender_name}</Text>
-              <Text>Telefon: {this.state.sender_phone}</Text>
-            </View>
-          }
-          description={'Gönderici Adresi: ' + this.state.sender_address}
-          left={props => <List.Icon {...props} icon="account-arrow-right-outline" />}
-        />
-        <List.Item
-          title={
-            <View>
-              <Text>Alıcı Adı: {this.state.receiver_name}</Text>
-              <Text>Telefon: {this.state.receiver_phone}</Text>
-            </View>
-          }
-          description={'Alıcı Adresi: ' + this.state.receiver_address}
-          left={props => <List.Icon {...props} icon="account-arrow-right-outline" />}
-        />
-        <List.Item
-          title={
-            <View>
-              <Text>Ağırlık: {this.state.weight} kg</Text>
-              <Text>Tahmini Uzaklık: {this.state.distance} km</Text>
-              <Text>Tahmini Varış Süre: {this.state.duration} dk</Text>
-            </View>
-          }
-          left={props => <List.Icon {...props} icon="information-outline" />}
-        />
-        <List.Item
-          title={
-            <View>
-              <Text>Ödeme: {payment_type} ({payment_status})</Text>
-              <Text>Fiyat: {this.state.price}  ₺</Text>
-              <Text>Kurye Kazancı: {this.state.courier_price}  ₺</Text>
-            </View>
-          }
-          left={props => <List.Icon {...props} icon="credit-card-check-outline" />}
-        />
-        
 
-{/* 
+            {/* 
         {this.state.payment_status == 0 && this.state.payment_type == 1 && <Button style={{ margin: 15 }} icon="credit-card-plus-outline" mode="contained" compact onPress={() => this.props.navigation.navigate('TaskPayment', { id: this.state.id })}>
           ÖDE
             </Button>} */}
-        
-      </ScrollView>
+
+          </ScrollView>
+        </View>
+
+        <View style={{ width: dimensions.window.width, height: 175 }}>
+          <Button
+            mode="contained"
+            uppercase={false}
+            // color="red"
+            onPress={() => this.updateStatus(this.state.id)}
+            style={styles.button}
+          >
+            Teslim Aldım Olarak Güncelle
+                </Button>
+        </View>
+      </View>
     );
   }
 }
 
 export default TaskDetails;
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  },
+  input: {
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 15,
+
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 12,
+  },
+  button_small: {
+    marginTop: 15,
+  },
+  rowright: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 12,
+    justifyContent: 'flex-end'
+  },
+  helper: {
+    marginLeft: 5,
+  },
+  hyperlinkStyle: {
+    color: 'blue',
+  },
+});
