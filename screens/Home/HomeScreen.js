@@ -211,7 +211,8 @@ class HomeScreen extends Component {
       }
     })
       .then((response) => {
-        console.log(response.data)
+        this.props.route.params.refreshData = true;
+        this.props.navigation.navigate('TaskDetails', { acceptTask: true, item: response.data.task })
         // navi.navigate('Home');
 
       })
