@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-25 22:16:06
+ * @LastEditTime: 2021-03-25 22:19:20
  */
 import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,11 +18,7 @@ import HomeStack from './HomeStack';
 import IbanStack from './IbanStack';
 import PaymentStack from './PaymentStack';
 
-
 const Tab = createMaterialBottomTabNavigator();
-
-
-
 
 export default function UserTab() {
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
@@ -37,23 +33,24 @@ export default function UserTab() {
 
   function updateCourierLocation() {
     BackgroundTimer.runBackgroundTimer(() => {
-      console.log('konum alınıyor');
       //code that will be called every 3 seconds 
       Geolocation.getCurrentPosition(
         (position) => {
           console.log(position);
+          //axios ile burdan gönder
         },
         (error) => {
           // See error code charts below.
           console.log(error.code, error.message);
+          // hata varsa belli bir süre istek yapmaya gerek yok
+          setHasLocationPermission(false);
+
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
     },
       300000);
   }
-
-
 
   async function requestPermissions() {
     if (Platform.OS === 'ios') {
@@ -84,9 +81,6 @@ export default function UserTab() {
       }
     }
   }
-
-
-
 
   return (
     <Tab.Navigator
