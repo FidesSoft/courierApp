@@ -4,12 +4,14 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-24 19:14:29
+ * @LastEditTime: 2021-03-25 17:26:30
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
-import { List, Button } from 'react-native-paper';
+import { List, Button, Snackbar } from 'react-native-paper';
 import moment from "moment/min/moment-with-locales";
+import axios from 'axios';
+import AuthStore from '../../store/AuthStore';
 
 
 const window = Dimensions.get("window");
@@ -43,6 +45,8 @@ class TaskDetails extends Component {
       sender_address: '',
       receiver_address: '',
       created_at: '',
+      loading: false,
+      updateStatusSnackbar: false,
       dimensions: {
         window,
         screen
@@ -88,12 +92,36 @@ class TaskDetails extends Component {
     this.setState({ dimensions: { window, screen } });
   };
 
-  updateStatus = (id) => {
-    console.log(id);
+  onDismissUpdateStatusSnackbar = () => this.setState({ updateStatusSnackbar: false });
+
+  updateStatus = async (id) => {
+    this.setState({ loading: true });
+    let formData = new FormData();
+    formData.append('id', id);
+
+    let uri = `${global.apiUrl}/task/update-task-status/`;
+    await axios.post(uri, formData, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${AuthStore.token}`
+      }
+    })
+      .then((response) => {
+        this.props.route.params.refreshData = true;
+        this.props.navigation.navigate('TaskDetails', { item: response.data.task })
+      })
+      .catch(error => {
+        console.log('hata')
+        if (error.response.status == 401) {
+          AuthStore.token = null;
+          AuthStore.storeToken('');
+        }
+      });
+    this.setState({ loading: false });
     // apiden istek at sonra status guncelle, daha sonra ana sayfaya atıp refresh
-    this.setState({
-      status: 'Kurye Teslim Aldı',
-    });
+    // this.setState({
+    //   status: 'Kurye Teslim Aldı',
+    // });
   }
 
   render(props) {
@@ -208,6 +236,13 @@ class TaskDetails extends Component {
           ÖDE
             </Button>} */}
 
+            <Snackbar
+              duration={3000}
+              visible={this.state.updateStatusSnackbar}
+              onDismiss={this.onDismissUpdateStatusSnackbar}
+            >
+              Durum Güncellemesi Başarılı.
+                </Snackbar>
           </ScrollView>
         </View>
 
@@ -216,6 +251,7 @@ class TaskDetails extends Component {
             icon="autorenew"
             mode="contained"
             uppercase={false}
+            loading={this.state.loading}
             // color="red"
             onPress={() => this.updateStatus(this.state.id)}
             style={styles.button}

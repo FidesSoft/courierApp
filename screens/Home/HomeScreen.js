@@ -25,7 +25,7 @@ class HomeScreen extends Component {
       errors: {},
       tasks: '',
       search: '',
-      selectedStatus: 1,
+      selectedStatus: 2,
       page: 1,
       fetchingFromServer: false,
       isListEnd: false,
