@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-25 17:26:30
+ * @LastEditTime: 2021-03-25 17:42:41
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -108,7 +108,7 @@ class TaskDetails extends Component {
     })
       .then((response) => {
         this.props.route.params.refreshData = true;
-        this.props.navigation.navigate('TaskDetails', { item: response.data.task })
+        this.props.navigation.navigate('Home', { refreshData : true })
       })
       .catch(error => {
         console.log('hata')
@@ -128,6 +128,20 @@ class TaskDetails extends Component {
     let shipment_type;
     let payment_status;
     let payment_type;
+    let change_status_text;
+
+    if (this.state.status_id == 18) {
+      change_status_text = 'Teslim Aldım olarak güncelle';
+    } else if (this.state.status_id == 19) {
+      change_status_text = 'Yoldayım olarak güncelle';
+    } else if (this.state.status_id == 20) {
+      change_status_text = 'Hedefe Ulaştım olarak güncelle';
+    } else if (this.state.status_id == 21) {
+      change_status_text = 'Teslim Ettim olarak güncelle';
+    } else {
+      change_status_text = 'Durum bulunamadı...';
+    }
+
 
     if (this.state.shipment_type == 1) {
       shipment_type = 'Yaya Kurye';
@@ -247,7 +261,7 @@ class TaskDetails extends Component {
         </View>
 
         <View style={{ width: dimensions.window.width, height: 175 }}>
-          <Button
+          {this.state.status_id !=22 && <Button
             icon="autorenew"
             mode="contained"
             uppercase={false}
@@ -256,8 +270,17 @@ class TaskDetails extends Component {
             onPress={() => this.updateStatus(this.state.id)}
             style={styles.button}
           >
-            Teslim Aldım Olarak Güncelle
-                </Button>
+            {change_status_text}
+                </Button>}
+
+            {this.state.status_id == 22 && <Button
+            icon="autorenew"
+            mode="contained"
+            uppercase={false}
+            style={styles.button}
+          >
+            Müşteri onayı bekleniyor...
+                </Button>}
         </View>
       </View>
     );
