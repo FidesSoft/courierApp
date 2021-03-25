@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-25 17:42:41
+ * @LastEditTime: 2021-03-25 17:44:24
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -46,7 +46,7 @@ class TaskDetails extends Component {
       receiver_address: '',
       created_at: '',
       loading: false,
-      updateStatusSnackbar: false,
+      updateStatusDialog: false,
       dimensions: {
         window,
         screen
@@ -108,7 +108,7 @@ class TaskDetails extends Component {
     })
       .then((response) => {
         this.props.route.params.refreshData = true;
-        this.props.navigation.navigate('Home', { refreshData : true })
+        this.props.navigation.navigate('Home', { refreshData : true, update: true })
       })
       .catch(error => {
         console.log('hata')

@@ -37,6 +37,7 @@ class HomeScreen extends Component {
       approveSnackbar: false,
       refreshing: false,
       acceptTaskDialog: false,
+      updateStatusSnackbar: false,
       showAcceptTaskDialogError: false,
       loading: false,
       approveTaskId: 0,
@@ -354,6 +355,7 @@ class HomeScreen extends Component {
           duration={3000}
           visible={this.state.updateSnackbar}
           onDismiss={this.onDismissUpdateSnackbar}
+          action={{ label: 'Gizle', onPress: () => { this.onDismissUpdateSnackbar() } }}
         >
           Güncelleme Başarılı.
                 </Snackbar>
