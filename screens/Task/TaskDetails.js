@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-25 18:08:14
+ * @LastEditTime: 2021-03-25 18:23:44
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -47,6 +47,7 @@ class TaskDetails extends Component {
       created_at: '',
       loading: false,
       updateStatusDialog: false,
+      cancelTaskDialog: false,
       dimensions: {
         window,
         screen
@@ -57,6 +58,12 @@ class TaskDetails extends Component {
   changeUpdateStatusDialog(status) {
     this.setState({
       updateStatusDialog: status,
+    });
+  }
+
+  changeCancelTaskDialog(status) {
+    this.setState({
+      cancelTaskDialog: status,
     });
   }
 
@@ -113,7 +120,6 @@ class TaskDetails extends Component {
       }
     })
       .then((response) => {
-        this.props.route.params.refreshData = true;
         this.props.navigation.navigate('Home', { refreshData: true, update: true })
       })
       .catch(error => {
@@ -123,12 +129,43 @@ class TaskDetails extends Component {
           AuthStore.storeToken('');
         }
       });
-    this.setState({ loading : false, updateStatusDialog : false });
+    this.setState({ loading: false, updateStatusDialog: false });
     // apiden istek at sonra status guncelle, daha sonra ana sayfaya atıp refresh
     // this.setState({
     //   status: 'Kurye Teslim Aldı',
     // });
   }
+
+
+  cancelTask = async (id) => {
+    this.setState({ loading: true });
+    let formData = new FormData();
+    formData.append('id', id);
+
+    let uri = `${global.apiUrl}/task/cancel-task/`;
+    await axios.post(uri, formData, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${AuthStore.token}`
+      }
+    })
+      .then((response) => {
+        this.props.navigation.navigate('Home', { refreshData: true, update: true })
+      })
+      .catch(error => {
+        console.log('hata')
+        if (error.response.status == 401) {
+          AuthStore.token = null;
+          AuthStore.storeToken('');
+        }
+      });
+    this.setState({ loading: false, cancelTaskDialog: false });
+    // apiden istek at sonra status guncelle, daha sonra ana sayfaya atıp refresh
+    // this.setState({
+    //   status: 'Kurye Teslim Aldı',
+    // });
+  }
+
 
   render(props) {
     let shipment_type;
@@ -250,32 +287,46 @@ class TaskDetails extends Component {
               left={props => <List.Icon {...props} icon="credit-card-check-outline" />}
             />
 
+{this.state.status_id == 18 && <List.Item
+              title={
+                <Button style={{ margin: 15 }} color="red" icon="close" mode="contained" compact onPress={() => this.changeCancelTaskDialog(true)}>
+              Gönderi Görevini İptal Et
+            </Button>
+              }
+              left={props => <List.Icon {...props}  />}
+            />}
 
-            {/* 
-        {this.state.payment_status == 0 && this.state.payment_type == 1 && <Button style={{ margin: 15 }} icon="credit-card-plus-outline" mode="contained" compact onPress={() => this.props.navigation.navigate('TaskPayment', { id: this.state.id })}>
-          ÖDE
-            </Button>} */}
+
           </ScrollView>
         </View>
 
         <Dialog visible={this.state.updateStatusDialog} onDismiss={() => this.changeUpdateStatusDialog(false)}>
-              <Dialog.Title>Gönderi Durumu Güncelle</Dialog.Title>
-              <Dialog.Content>
-              <Paragraph>Gönderi durumunu {change_status_text}meyi onaylıyor musunuz?</Paragraph>
+          <Dialog.Title>Gönderi Durumu Güncelle</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Gönderi durumunu {change_status_text}meyi onaylıyor musunuz?</Paragraph>
+            {this.state.payment_status == 0 && this.state.status_id == 18 && this.state.payment_type == 2 && <>
+              <Paragraph>* Nakit ödemeyi almadan bu işlemi yapmayınız. Onaylarsanız gönderi komisyon ücreti hesabınızdan düşecektir.</Paragraph></>}
 
+            {this.state.payment_status == 0 && this.state.status_id == 21 && this.state.payment_type == 3 && <>
+              <Paragraph>* Nakit ödemeyi almadan bu işlemi yapmayınız. Onaylarsanız gönderi komisyon ücreti hesabınızdan düşecektir.</Paragraph></>}
 
-              {this.state.payment_status == 0 && this.state.status_id == 18 && this.state.payment_type == 2 && <> 
-                <Paragraph>* Nakit ödemeyi almadan bu işlemi yapmayınız. Onaylarsanız gönderi komisyon ücreti hesabınızdan düşecektir.</Paragraph></> }
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => this.changeUpdateStatusDialog(false)}>İptal</Button>
+            <Button loading={this.state.loading} onPress={() => this.updateStatus(this.state.id)}>Evet, Onaylıyorum.</Button>
+          </Dialog.Actions>
+        </Dialog>
 
-                {this.state.payment_status == 0 && this.state.status_id == 21 && this.state.payment_type == 3 && <> 
-                <Paragraph>* Nakit ödemeyi almadan bu işlemi yapmayınız. Onaylarsanız gönderi komisyon ücreti hesabınızdan düşecektir.</Paragraph></> }
-
-              </Dialog.Content>
-              <Dialog.Actions>
-                <Button onPress={() => this.changeUpdateStatusDialog(false)}>İptal</Button>
-                <Button loading={this.state.loading} onPress={() => this.updateStatus(this.state.id)}>Evet, Onaylıyorum.</Button>
-              </Dialog.Actions>
-            </Dialog>
+        <Dialog visible={this.state.cancelTaskDialog} onDismiss={() => this.changeCancelTaskDialog(false)}>
+          <Dialog.Title>Görevi İptal Et</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Bu gönderi görevini iptal etmek istediğinizi onaylıyor musunuz?</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => this.changeCancelTaskDialog(false)}>İptal</Button>
+            <Button loading={this.state.loading} onPress={() => this.cancelTask(this.state.id)}>Evet, Onaylıyorum.</Button>
+          </Dialog.Actions>
+        </Dialog>
         <View style={{ width: dimensions.window.width, height: 175 }}>
           {this.state.status_id != 22 && <Button
             icon="autorenew"
