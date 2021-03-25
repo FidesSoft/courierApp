@@ -4,11 +4,11 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-25 17:44:24
+ * @LastEditTime: 2021-03-25 18:08:14
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
-import { List, Button, Snackbar } from 'react-native-paper';
+import { List, Button, Paragraph, Dialog } from 'react-native-paper';
 import moment from "moment/min/moment-with-locales";
 import axios from 'axios';
 import AuthStore from '../../store/AuthStore';
@@ -52,6 +52,12 @@ class TaskDetails extends Component {
         screen
       }
     };
+  }
+
+  changeUpdateStatusDialog(status) {
+    this.setState({
+      updateStatusDialog: status,
+    });
   }
 
   componentDidMount() {
@@ -108,7 +114,7 @@ class TaskDetails extends Component {
     })
       .then((response) => {
         this.props.route.params.refreshData = true;
-        this.props.navigation.navigate('Home', { refreshData : true, update: true })
+        this.props.navigation.navigate('Home', { refreshData: true, update: true })
       })
       .catch(error => {
         console.log('hata')
@@ -117,7 +123,7 @@ class TaskDetails extends Component {
           AuthStore.storeToken('');
         }
       });
-    this.setState({ loading: false });
+    this.setState({ loading : false, updateStatusDialog : false });
     // apiden istek at sonra status guncelle, daha sonra ana sayfaya atıp refresh
     // this.setState({
     //   status: 'Kurye Teslim Aldı',
@@ -131,13 +137,13 @@ class TaskDetails extends Component {
     let change_status_text;
 
     if (this.state.status_id == 18) {
-      change_status_text = 'Teslim Aldım olarak güncelle';
+      change_status_text = '"Teslim Aldım" olarak güncelle';
     } else if (this.state.status_id == 19) {
-      change_status_text = 'Yoldayım olarak güncelle';
+      change_status_text = '"Yoldayım" olarak güncelle';
     } else if (this.state.status_id == 20) {
-      change_status_text = 'Hedefe Ulaştım olarak güncelle';
+      change_status_text = '"Hedefe Ulaştım" olarak güncelle';
     } else if (this.state.status_id == 21) {
-      change_status_text = 'Teslim Ettim olarak güncelle';
+      change_status_text = '"Teslim Ettim" olarak güncelle';
     } else {
       change_status_text = 'Durum bulunamadı...';
     }
@@ -249,31 +255,41 @@ class TaskDetails extends Component {
         {this.state.payment_status == 0 && this.state.payment_type == 1 && <Button style={{ margin: 15 }} icon="credit-card-plus-outline" mode="contained" compact onPress={() => this.props.navigation.navigate('TaskPayment', { id: this.state.id })}>
           ÖDE
             </Button>} */}
-
-            <Snackbar
-              duration={3000}
-              visible={this.state.updateStatusSnackbar}
-              onDismiss={this.onDismissUpdateStatusSnackbar}
-            >
-              Durum Güncellemesi Başarılı.
-                </Snackbar>
           </ScrollView>
         </View>
 
+        <Dialog visible={this.state.updateStatusDialog} onDismiss={() => this.changeUpdateStatusDialog(false)}>
+              <Dialog.Title>Gönderi Durumu Güncelle</Dialog.Title>
+              <Dialog.Content>
+              <Paragraph>Gönderi durumunu {change_status_text}meyi onaylıyor musunuz?</Paragraph>
+
+
+              {this.state.payment_status == 0 && this.state.status_id == 18 && this.state.payment_type == 2 && <> 
+                <Paragraph>* Nakit ödemeyi almadan bu işlemi yapmayınız. Onaylarsanız gönderi komisyon ücreti hesabınızdan düşecektir.</Paragraph></> }
+
+                {this.state.payment_status == 0 && this.state.status_id == 21 && this.state.payment_type == 3 && <> 
+                <Paragraph>* Nakit ödemeyi almadan bu işlemi yapmayınız. Onaylarsanız gönderi komisyon ücreti hesabınızdan düşecektir.</Paragraph></> }
+
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => this.changeUpdateStatusDialog(false)}>İptal</Button>
+                <Button loading={this.state.loading} onPress={() => this.updateStatus(this.state.id)}>Evet, Onaylıyorum.</Button>
+              </Dialog.Actions>
+            </Dialog>
         <View style={{ width: dimensions.window.width, height: 175 }}>
-          {this.state.status_id !=22 && <Button
+          {this.state.status_id != 22 && <Button
             icon="autorenew"
             mode="contained"
             uppercase={false}
             loading={this.state.loading}
             // color="red"
-            onPress={() => this.updateStatus(this.state.id)}
+            onPress={() => this.changeUpdateStatusDialog(true)}
             style={styles.button}
           >
             {change_status_text}
-                </Button>}
+          </Button>}
 
-            {this.state.status_id == 22 && <Button
+          {this.state.status_id == 22 && <Button
             icon="autorenew"
             mode="contained"
             uppercase={false}
