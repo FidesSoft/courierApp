@@ -3,19 +3,30 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 22:51:04
+ * @LastEditTime: 2021-03-25 21:22:26
  */
 import * as React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import BackgroundTimer from 'react-native-background-timer';
+
 import HomeStack from './HomeStack';
 import IbanStack from './IbanStack';
 import PaymentStack from './PaymentStack';
+
+import AuthStore from '../../store/AuthStore';
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 const Tab = createMaterialBottomTabNavigator();
 
 export default function UserTab() {
+    // BackgroundTimer.runBackgroundTimer(() => {
+    //     //code that will be called every 3 seconds 
+    //     console.log(AuthStore.token);
+    // },
+    //     5000);
+
+    
     return (
         <Tab.Navigator
             initialRouteName="Home"
