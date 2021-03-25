@@ -25,7 +25,7 @@ class HomeScreen extends Component {
       errors: {},
       tasks: '',
       search: '',
-      selectedStatus: 2,
+      selectedStatus: 1,
       page: 1,
       fetchingFromServer: false,
       isListEnd: false,
@@ -287,13 +287,14 @@ class HomeScreen extends Component {
           left={props => <View>
             <Text>
               <List.Icon color="#F59F0B" icon="calendar-check" /> </Text>
-            <Text style={{ marginTop: -10 }}> {item.task_type == 1 ? 'Paket' : 'Evrak'} </Text>
+            <Text style={{ marginTop: -10 }}> {item.id} </Text>
+            <Text> {item.task_type == 1 ? 'Paket' : 'Evrak'} </Text>
             <Text> {shipment_type} </Text>
           </View>}
           right={props => <View style={{ alignItems: 'flex-end' }}>
             {item.payment_status == 0 ? <Text style={{ color: 'red' }}>Ödenmedi</Text> : <Text style={{ color: 'green' }}> Ödendi</Text>}
             <Text style={{ color: 'green' }}> {payment_type}</Text>
-            {item.status_id == 17 || item.status_id == 25 && <Button icon="check" mode="contained" compact onPress={() => this.showApproveTaskDialog(item.id)}>
+            {(item.status_id === 17 || item.status_id === 25) && <Button icon="check" mode="contained" compact onPress={() => this.showApproveTaskDialog(item.id)}>
               Kabul Et
             </Button>}
           </View>}

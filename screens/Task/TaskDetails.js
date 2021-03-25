@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-25 18:23:44
+ * @LastEditTime: 2021-03-25 18:25:05
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -287,13 +287,13 @@ class TaskDetails extends Component {
               left={props => <List.Icon {...props} icon="credit-card-check-outline" />}
             />
 
-{this.state.status_id == 18 && <List.Item
+            {this.state.status_id == 18 && <List.Item
               title={
                 <Button style={{ margin: 15 }} color="red" icon="close" mode="contained" compact onPress={() => this.changeCancelTaskDialog(true)}>
-              Gönderi Görevini İptal Et
+                  Gönderi Görevini İptal Et
             </Button>
               }
-              left={props => <List.Icon {...props}  />}
+              left={props => <List.Icon {...props} />}
             />}
 
 
