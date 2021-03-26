@@ -199,7 +199,6 @@ class HomeScreen extends Component {
   }
 
   async approveTask() {
-
     this.setState({ loading: true });
     let formData = new FormData();
     formData.append('id', this.state.approveTaskId);
