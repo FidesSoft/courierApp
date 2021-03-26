@@ -3,13 +3,12 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 14:34:59
+ * @LastEditTime: 2021-03-27 02:00:02
  */
 import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Platform, PermissionsAndroid } from 'react-native';
 
-import axios from 'axios';
 import BackgroundTimer from 'react-native-background-timer';
 import Geolocation from 'react-native-geolocation-service';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -83,13 +82,12 @@ export default function UserTab() {
         }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('istek kabul edildi');
+        console.log('konum isteği kabul edildi');
         // do something if granted...
         setHasLocationPermission(true);
       }
     }
   }
-
 
   return (
     <Tab.Navigator
