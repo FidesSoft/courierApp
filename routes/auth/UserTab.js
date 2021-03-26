@@ -3,12 +3,13 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-25 22:19:20
+ * @LastEditTime: 2021-03-26 12:04:09
  */
 import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Platform, PermissionsAndroid } from 'react-native';
 
+import axios from 'axios';
 import BackgroundTimer from 'react-native-background-timer';
 import Geolocation from 'react-native-geolocation-service';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -37,6 +38,7 @@ export default function UserTab() {
       Geolocation.getCurrentPosition(
         (position) => {
           console.log(position);
+          updateCourierLatLng(position);
           //axios ile burdan gönder
         },
         (error) => {
@@ -49,7 +51,8 @@ export default function UserTab() {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
     },
-      300000);
+      // 5000);
+    300000);
   }
 
   async function requestPermissions() {
@@ -80,6 +83,29 @@ export default function UserTab() {
         setHasLocationPermission(true);
       }
     }
+  }
+
+  function updateCourierLatLng(position) {
+    let formData = new FormData();
+    formData.append('latitude', position.coords.latitude);
+    formData.append('longitude', position.coords.longitude);
+
+    let uri = `${global.apiUrl}/update-lat-lng`;
+     axios.post(uri, formData, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${AuthStore.token}`
+      }
+    })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          AuthStore.token = null;
+          AuthStore.storeToken('');
+        }
+      });
   }
 
   return (
