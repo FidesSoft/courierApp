@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 12:48:49
+ * @LastEditTime: 2021-03-26 12:55:03
  */
 import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -112,7 +112,7 @@ export default function UserTab() {
   }
 
   function addLatLngToCourierTracking(position){
-    // console.log(AuthStore.isCourierAcceptTaskId);
+    console.log(AuthStore.isCourierAcceptTaskId);
     // console.log(position);
   }
 

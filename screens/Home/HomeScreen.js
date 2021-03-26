@@ -199,7 +199,6 @@ class HomeScreen extends Component {
   }
 
   async approveTask() {
-
     this.setState({ loading: true });
     let formData = new FormData();
     formData.append('id', this.state.approveTaskId);
@@ -212,6 +211,9 @@ class HomeScreen extends Component {
       }
     })
       .then((response) => {
+        AuthStore.handleIsCourierAcceptTask(true);
+        AuthStore.handleIsCourierAcceptTaskId(response.data.task.id);
+
         this.props.route.params.refreshData = true;
         this.props.navigation.navigate('TaskDetails', { acceptTask: true, item: response.data.task })
         // navi.navigate('Home');

@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 12:43:08
+ * @LastEditTime: 2021-03-26 12:58:03
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -44,6 +44,7 @@ class AuthStore {
   @action _closeMenu() { this.menu = false; }
 
   @action handleIsCourierAcceptTask(text) { this.isCourierAcceptTask = text; }
+  @action handleIsCourierAcceptTaskId(text) { this.isCourierAcceptTaskId = text; }
   @action handleName(text) { this.name = text; }
   @action handleTcNo(text) { this.tcno = text; }
   @action handleCityId(text) { this.courier_city = text; }
@@ -269,11 +270,10 @@ class AuthStore {
     }
   }
 
-  @action isThereCourierTask() {
+  @action async isThereCourierTask() {
     console.log('check-courier-task istegi gönderildi')
-    // this.isCourierAcceptTask = true;
     let uri = `${global.apiUrl}/check-courier-task`;
-     axios.get(uri, {
+     await axios.get(uri, {
       headers: {
         'Accept': 'application/json',
         'Authorization': `Bearer ${this.token}`
@@ -281,9 +281,12 @@ class AuthStore {
     })
       .then((response) => {
         if(response.data.task){          
+          console.log('devam eden gönderi var')
           this.isCourierAcceptTaskId = response.data.task.id;
           this.isCourierAcceptTask = true;
         }else{
+          console.log('devam eden gönderi yok')
+          this.isCourierAcceptTaskId = '';
           this.isCourierAcceptTask = false;
         }
       })
