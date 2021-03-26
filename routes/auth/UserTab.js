@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 12:04:09
+ * @LastEditTime: 2021-03-26 12:48:49
  */
 import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,6 +24,7 @@ const Tab = createMaterialBottomTabNavigator();
 export default function UserTab() {
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
   useEffect(() => {
+    AuthStore.isThereCourierTask();
     requestPermissions();
     if (hasLocationPermission) {
       updateCourierLocation();
@@ -37,9 +38,11 @@ export default function UserTab() {
       //code that will be called every 3 seconds 
       Geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
-          updateCourierLatLng(position);
-          //axios ile burdan gönder
+          // console.log(position);
+          // updateCourierLatLng(position);
+          if(AuthStore.isCourierAcceptTask){
+            addLatLngToCourierTracking(position)
+          }
         },
         (error) => {
           // See error code charts below.
@@ -51,8 +54,8 @@ export default function UserTab() {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
     },
-      // 5000);
-    300000);
+      5000);
+    // 300000); // 5 minutes
   }
 
   async function requestPermissions() {
@@ -106,6 +109,11 @@ export default function UserTab() {
           AuthStore.storeToken('');
         }
       });
+  }
+
+  function addLatLngToCourierTracking(position){
+    // console.log(AuthStore.isCourierAcceptTaskId);
+    // console.log(position);
   }
 
   return (
