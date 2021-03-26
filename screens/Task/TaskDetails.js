@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-25 18:25:05
+ * @LastEditTime: 2021-03-26 13:07:33
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -120,6 +120,11 @@ class TaskDetails extends Component {
       }
     })
       .then((response) => {
+        console.log(response.data.task.status_id)
+        if (response.data.task.status_id == 22) {
+          AuthStore.handleIsCourierAcceptTask(false);
+          AuthStore.handleIsCourierAcceptTaskId('');
+        }
         this.props.navigation.navigate('Home', { refreshData: true, update: true })
       })
       .catch(error => {
@@ -150,6 +155,8 @@ class TaskDetails extends Component {
       }
     })
       .then((response) => {
+        AuthStore.handleIsCourierAcceptTask(false);
+        AuthStore.handleIsCourierAcceptTaskId('');
         this.props.navigation.navigate('Home', { refreshData: true, update: true })
       })
       .catch(error => {
