@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 13:45:33
+ * @LastEditTime: 2021-03-27 02:06:17
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -122,9 +122,10 @@ class TaskDetails extends Component {
     })
       .then((response) => {
         console.log(response.data.task.status_id)
-
-        if (response.data.task.status_id == 22) {
-        console.log('gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool')
+        if (response.data.task.status_id == 19) {
+          AuthStore.handleIsCourierAcceptTask(true);
+          AuthStore.handleIsCourierAcceptTaskId(response.data.task.id);
+        }else if(response.data.task.status_id == 22) {
           AuthStore.handleIsCourierAcceptTask(false);
           AuthStore.handleIsCourierAcceptTaskId('');
         }
