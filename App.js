@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:29:51
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 11:51:11
+ * @LastEditTime: 2021-03-27 01:58:07
  */
 import * as React from 'react';
 import { NavigationContainer} from '@react-navigation/native';
@@ -26,7 +26,7 @@ const theme = {
 };
 
 function App() {
-  global.url = 'https://ab9a937ad635.ngrok.io';
+  global.url = 'https://70d27f304780.ngrok.io';
   global.apiUrl = `${global.url}/api/v1/courier`;
   return (
       <PaperProvider theme={theme}>

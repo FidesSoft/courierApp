@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 12:55:03
+ * @LastEditTime: 2021-03-26 14:34:59
  */
 import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -23,25 +23,27 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default function UserTab() {
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
-  useEffect(() => {
-    AuthStore.isThereCourierTask();
-    requestPermissions();
+  useEffect(() => { // her değişiklikte çalışır
     if (hasLocationPermission) {
       updateCourierLocation();
     } else {
+      requestPermissions();
       BackgroundTimer.stopBackgroundTimer();
     }
   });
+
+  useEffect(() => { //tek sefer çalışır
+    AuthStore.isThereCourierTask();
+  }, []);
 
   function updateCourierLocation() {
     BackgroundTimer.runBackgroundTimer(() => {
       //code that will be called every 3 seconds 
       Geolocation.getCurrentPosition(
         (position) => {
-          // console.log(position);
-          // updateCourierLatLng(position);
-          if(AuthStore.isCourierAcceptTask){
-            addLatLngToCourierTracking(position)
+          AuthStore.updateCourierLatLng(position);
+          if (AuthStore.isCourierAcceptTask) {
+            AuthStore.addLatLngToCourierTracking(position)
           }
         },
         (error) => {
@@ -54,8 +56,8 @@ export default function UserTab() {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
     },
-      5000);
-    // 300000); // 5 minutes
+      // 10000);
+    300000); // 5 minutes
   }
 
   async function requestPermissions() {
@@ -88,33 +90,6 @@ export default function UserTab() {
     }
   }
 
-  function updateCourierLatLng(position) {
-    let formData = new FormData();
-    formData.append('latitude', position.coords.latitude);
-    formData.append('longitude', position.coords.longitude);
-
-    let uri = `${global.apiUrl}/update-lat-lng`;
-     axios.post(uri, formData, {
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${AuthStore.token}`
-      }
-    })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        if (error.response.status == 401) {
-          AuthStore.token = null;
-          AuthStore.storeToken('');
-        }
-      });
-  }
-
-  function addLatLngToCourierTracking(position){
-    console.log(AuthStore.isCourierAcceptTaskId);
-    // console.log(position);
-  }
 
   return (
     <Tab.Navigator

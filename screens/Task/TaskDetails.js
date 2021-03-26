@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 13:07:33
+ * @LastEditTime: 2021-03-26 13:45:33
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -108,6 +108,7 @@ class TaskDetails extends Component {
   onDismissUpdateStatusSnackbar = () => this.setState({ updateStatusSnackbar: false });
 
   updateStatus = async (id) => {
+    console.log('durum guncelleniyor')
     this.setState({ loading: true });
     let formData = new FormData();
     formData.append('id', id);
@@ -121,7 +122,9 @@ class TaskDetails extends Component {
     })
       .then((response) => {
         console.log(response.data.task.status_id)
+
         if (response.data.task.status_id == 22) {
+        console.log('gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool')
           AuthStore.handleIsCourierAcceptTask(false);
           AuthStore.handleIsCourierAcceptTaskId('');
         }
@@ -135,12 +138,7 @@ class TaskDetails extends Component {
         }
       });
     this.setState({ loading: false, updateStatusDialog: false });
-    // apiden istek at sonra status guncelle, daha sonra ana sayfaya atıp refresh
-    // this.setState({
-    //   status: 'Kurye Teslim Aldı',
-    // });
   }
-
 
   cancelTask = async (id) => {
     this.setState({ loading: true });

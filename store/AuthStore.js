@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 12:58:03
+ * @LastEditTime: 2021-03-26 14:23:38
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -273,27 +273,74 @@ class AuthStore {
   @action async isThereCourierTask() {
     console.log('check-courier-task istegi gönderildi')
     let uri = `${global.apiUrl}/check-courier-task`;
-     await axios.get(uri, {
+    await axios.get(uri, {
       headers: {
         'Accept': 'application/json',
         'Authorization': `Bearer ${this.token}`
       }
     })
       .then((response) => {
-        if(response.data.task){          
-          console.log('devam eden gönderi var')
+        if (response.data.task) {
+          // console.log('devam eden gönderi var')
           this.isCourierAcceptTaskId = response.data.task.id;
           this.isCourierAcceptTask = true;
-        }else{
-          console.log('devam eden gönderi yok')
+        } else {
+          // console.log('devam eden gönderi yok')
           this.isCourierAcceptTaskId = '';
           this.isCourierAcceptTask = false;
         }
       })
       .catch(error => {
         if (error.response.status == 401) {
-          AuthStore.token = null;
-          AuthStore.storeToken('');
+          this.token = null;
+          this.storeToken('');
+        }
+      });
+  }
+
+  @action updateCourierLatLng(position) {
+    let formData = new FormData();
+    formData.append('latitude', position.coords.latitude);
+    formData.append('longitude', position.coords.longitude);
+
+    let uri = `${global.apiUrl}/update-lat-lng`;
+    axios.post(uri, formData, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${this.token}`
+      }
+    })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          this.token = null;
+          this.storeToken('');
+        }
+      });
+  }
+
+  @action addLatLngToCourierTracking(position) {
+    let formData = new FormData();
+    formData.append('task_id', this.isCourierAcceptTaskId);
+    formData.append('latitude', position.coords.latitude);
+    formData.append('longitude', position.coords.longitude);
+
+    let uri = `${global.apiUrl}/save-courier-tracking`;
+    axios.post(uri, formData, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${this.token}`
+      }
+    })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          this.token = null;
+          this.storeToken('');
         }
       });
   }
