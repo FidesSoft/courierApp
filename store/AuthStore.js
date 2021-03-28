@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-28 22:52:30
+ * @LastEditTime: 2021-03-28 22:57:31
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -25,6 +25,7 @@ class AuthStore {
   @observable vehicle = '';
   @observable plate = '';
   @observable color = '';
+  @observable balance = '';
   @observable birth_date = new Date();
   @observable current_image = null;
   @observable on_duty = false;
@@ -166,6 +167,7 @@ class AuthStore {
         this.vehicle = response.data.vehicle;
         this.plate = response.data.plate;
         this.color = response.data.color;
+        this.balance = response.data.balance;
         this.on_duty = response.data.on_duty;
         this.birth_date = response.data.birth_date;
         this.current_image = response.data.image;
