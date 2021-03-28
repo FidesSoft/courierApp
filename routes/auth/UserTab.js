@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-27 02:00:02
+ * @LastEditTime: 2021-03-27 02:17:42
  */
 import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -63,6 +63,7 @@ export default function UserTab() {
     if (Platform.OS === 'ios') {
       const auth = await Geolocation.requestAuthorization("whenInUse");
       if (auth === "granted") {
+        // console.log('konum isteği kabul edildi');
         // do something if granted...
         setHasLocationPermission(true);
       }
@@ -82,7 +83,7 @@ export default function UserTab() {
         }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('konum isteği kabul edildi');
+        // console.log('konum isteği kabul edildi');
         // do something if granted...
         setHasLocationPermission(true);
       }

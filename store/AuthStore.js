@@ -3,13 +3,14 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 14:23:38
+ * @LastEditTime: 2021-03-28 23:07:18
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class AuthStore {
+  @observable loading_screen = true;
   @observable isCourierAcceptTask = false;
   @observable isCourierAcceptTaskId = '';
   @observable email = '';
@@ -24,6 +25,7 @@ class AuthStore {
   @observable vehicle = '';
   @observable plate = '';
   @observable color = '';
+  @observable balance = '';
   @observable birth_date = new Date();
   @observable current_image = null;
   @observable on_duty = false;
@@ -157,7 +159,6 @@ class AuthStore {
       }
     })
       .then((response) => {
-        console.log(response.data.district[0].id)
         this.name = response.data.name;
         this.email = response.data.email;
         this.phone = response.data.phone;
@@ -165,6 +166,7 @@ class AuthStore {
         this.vehicle = response.data.vehicle;
         this.plate = response.data.plate;
         this.color = response.data.color;
+        this.balance = response.data.balance;
         this.on_duty = response.data.on_duty;
         this.birth_date = response.data.birth_date;
         this.current_image = response.data.image;
@@ -184,6 +186,7 @@ class AuthStore {
   @action async updateProfile() {
     this.loading = true;
     let formData = new FormData();
+    formData.append('current_image', this.current_image);
     formData.append('tcno', this.tcno);
     formData.append('email', this.email);
     formData.append('name', this.name);
@@ -260,6 +263,7 @@ class AuthStore {
     } catch (error) {
       console.log("Something went wrong", error);
     }
+    this.loading_screen=false;
   }
 
   @action async removeToken() {

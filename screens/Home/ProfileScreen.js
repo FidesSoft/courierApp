@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 20:23:46
+ * @LastEditTime: 2021-03-28 23:08:54
  */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
@@ -36,6 +36,7 @@ class ProfileScreen extends Component {
         AuthStore.vehicle = '';
         AuthStore.plate = '';
         AuthStore.color = '';
+        AuthStore.balance = 0;
         AuthStore.birth_date = new Date();
         AuthStore.on_duty = false;
         AuthStore.loading = false;
@@ -55,6 +56,7 @@ class ProfileScreen extends Component {
         AuthStore.vehicle = '';
         AuthStore.plate = '';
         AuthStore.color = '';
+        AuthStore.balance = 0;
         AuthStore.birth_date = '';
         AuthStore.on_duty = false;
         AuthStore.loading = false;
@@ -155,12 +157,13 @@ class ProfileScreen extends Component {
                             <Avatar.Image style={{ margin: 10 }} size={120} source={{ uri: AuthStore.imagePath.uri }} />}
 
                         {AuthStore.current_image && !AuthStore.imagePath.uri &&
-                            <Avatar.Image style={{ margin: 10 }} size={120} source={{ uri: `${global.url}/storage/user/${AuthStore.current_image}` }} />}
+                            <Avatar.Image style={{ margin: 10 }} size={120} source={{ uri: `${global.url}/storage/courier/${AuthStore.current_image}` }} />}
 
                         {!AuthStore.current_image && !AuthStore.imagePath.uri &&
                             <Avatar.Text style={{ margin: 10 }} size={120} label={(AuthStore.name).substring(0, 2)} />}
 
                         <Button icon="camera" mode="contained" onPress={this.imageGalleryLaunch}>Fotograf Ekle</Button>
+                        <Text style={{marginTop: 15,}}>Bakiyeniz: {AuthStore.balance} ₺</Text>
                     </View>
                     <View style={{
                         flexDirection: 'row',

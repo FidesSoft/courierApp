@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-27 02:06:17
+ * @LastEditTime: 2021-03-27 02:17:31
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -108,7 +108,6 @@ class TaskDetails extends Component {
   onDismissUpdateStatusSnackbar = () => this.setState({ updateStatusSnackbar: false });
 
   updateStatus = async (id) => {
-    console.log('durum guncelleniyor')
     this.setState({ loading: true });
     let formData = new FormData();
     formData.append('id', id);
