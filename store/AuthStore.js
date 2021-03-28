@@ -3,13 +3,14 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-26 14:23:38
+ * @LastEditTime: 2021-03-28 22:44:40
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class AuthStore {
+  @observable loading_screen = true;
   @observable isCourierAcceptTask = false;
   @observable isCourierAcceptTaskId = '';
   @observable email = '';
@@ -260,6 +261,7 @@ class AuthStore {
     } catch (error) {
       console.log("Something went wrong", error);
     }
+    this.loading_screen=false;
   }
 
   @action async removeToken() {

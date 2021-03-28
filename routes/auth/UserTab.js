@@ -63,6 +63,7 @@ export default function UserTab() {
     if (Platform.OS === 'ios') {
       const auth = await Geolocation.requestAuthorization("whenInUse");
       if (auth === "granted") {
+        // console.log('konum isteği kabul edildi');
         // do something if granted...
         setHasLocationPermission(true);
       }
@@ -82,7 +83,7 @@ export default function UserTab() {
         }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('konum isteği kabul edildi');
+        // console.log('konum isteği kabul edildi');
         // do something if granted...
         setHasLocationPermission(true);
       }
