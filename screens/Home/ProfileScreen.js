@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-31 01:29:21
+ * @LastEditTime: 2021-03-31 01:40:44
  */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
@@ -25,7 +25,7 @@ class ProfileScreen extends Component {
         this.state = {
             cities: [],
             districts: [],
-            date: new Date('2020-06-12T14:42:42'),
+            date: new Date('2021-01-01'),
             show: false,
         };
     }
@@ -60,7 +60,7 @@ class ProfileScreen extends Component {
         AuthStore.plate = '';
         AuthStore.color = '';
         AuthStore.balance = 0;
-        AuthStore.birth_date = new Date('2020-06-12T14:42:42');;
+        AuthStore.birth_date = new Date('2021-01-01');;
         AuthStore.on_duty = false;
         AuthStore.loading = false;
         AuthStore.current_image = null;
@@ -80,7 +80,7 @@ class ProfileScreen extends Component {
         AuthStore.plate = '';
         AuthStore.color = '';
         AuthStore.balance = 0;
-        AuthStore.birth_date = new Date('2020-06-12T14:42:42');
+        AuthStore.birth_date = new Date('2021-01-01');
         AuthStore.on_duty = false;
         AuthStore.loading = false;
         AuthStore.current_image = null;
