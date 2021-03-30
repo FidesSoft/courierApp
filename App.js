@@ -3,10 +3,10 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:29:51
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-28 22:41:42
+ * @LastEditTime: 2021-03-29 21:33:22
  */
-import * as React from 'react';
-import { NavigationContainer} from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 import MainStack from './routes/MainStack';
@@ -20,19 +20,19 @@ const theme = {
     primary: '#F59F0B',
     accent: '#139740',
     // text:'#139740',
-    placeholder:'#eda324',
+    placeholder: '#eda324',
     // background:'#fffaf0',
   },
 };
 
 function App() {
-  global.url = 'https://62dedebda7d3.ngrok.io';
+  global.url = 'https://b9c016dee49e.ngrok.io';
   global.apiUrl = `${global.url}/api/v1/courier`;
   return (
-      <PaperProvider theme={theme}>
-        <NavigationContainer>
-          <MainStack/>
-        </NavigationContainer>
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <MainStack />
+      </NavigationContainer>
     </PaperProvider>
   );
 }
