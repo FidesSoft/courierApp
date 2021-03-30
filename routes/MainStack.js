@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:18:12
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-28 22:45:47
+ * @LastEditTime: 2021-03-29 21:24:58
  */
 import React, { Component } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';

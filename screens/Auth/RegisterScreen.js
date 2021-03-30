@@ -162,9 +162,8 @@ class RegisterScreen extends Component {
             alignItems: 'flex-start'
           }}>
             <View style={{ width: '50%' }}>
-              <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 5 }}>
+            <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
                 <Picker
-                  style={{ backgroundColor: "#fae6c3" }}
                   selectedValue={AuthStore.courier_city}
                   onValueChange={(itemValue) =>
                     this.getDistrictsAfterSelectedCity(itemValue)
@@ -178,9 +177,8 @@ class RegisterScreen extends Component {
               </HelperText>}
             </View>
             <View style={{ width: '50%' }}>
-              <View style={{ flex: 1, marginTop: 15, marginLeft: 5, marginRight: 15 }}>
-                <Picker
-                  style={{ backgroundColor: "#fae6c3" }}
+            <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
+                <Picker                  
                   selectedValue={AuthStore.courier_districts}
                   onValueChange={(itemValue) =>
                     AuthStore.handleDistrictId(itemValue)
