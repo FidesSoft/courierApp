@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-28 23:07:18
+ * @LastEditTime: 2021-03-31 01:02:28
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -26,7 +26,7 @@ class AuthStore {
   @observable plate = '';
   @observable color = '';
   @observable balance = '';
-  @observable birth_date = new Date();
+  @observable birth_date = new Date('2020-06-12T14:42:42');
   @observable current_image = null;
   @observable on_duty = false;
   @observable sozlesme = false;

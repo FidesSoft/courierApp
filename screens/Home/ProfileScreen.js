@@ -3,15 +3,16 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-28 23:08:54
+ * @LastEditTime: 2021-03-31 01:15:54
  */
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Button, Checkbox, TextInput, Snackbar, HelperText, Avatar } from 'react-native-paper';
 import axios from 'axios';
 import { observer } from 'mobx-react';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from "react-native-image-picker"
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import moment from "moment";
 
@@ -24,8 +25,36 @@ class ProfileScreen extends Component {
         this.state = {
             cities: [],
             districts: [],
+            date: new Date('2020-06-12T14:42:42'),
+            mode: 'date',
+            show: false,
         };
     }
+
+    setDate = (event, date) => {
+        date = date || this.state.date;
+        AuthStore.handleBirthDate(moment(date).format('YYYY-MM-DD'));
+        this.setState({
+            show: Platform.OS === 'ios' ? true : false,
+            date,
+        });
+    }
+
+    show = mode => {
+        this.setState({
+            show: true,
+            mode,
+        });
+    }
+
+    datepicker = () => {
+        this.show('date');
+    }
+
+    timepicker = () => {
+        this.show('time');
+    }
+
     componentDidMount() {
         AuthStore.errors = {};
         AuthStore.email = '';
@@ -37,7 +66,7 @@ class ProfileScreen extends Component {
         AuthStore.plate = '';
         AuthStore.color = '';
         AuthStore.balance = 0;
-        AuthStore.birth_date = new Date();
+        AuthStore.birth_date = new Date('2020-06-12T14:42:42');;
         AuthStore.on_duty = false;
         AuthStore.loading = false;
         AuthStore.current_image = null;
@@ -57,7 +86,7 @@ class ProfileScreen extends Component {
         AuthStore.plate = '';
         AuthStore.color = '';
         AuthStore.balance = 0;
-        AuthStore.birth_date = '';
+        AuthStore.birth_date = new Date('2020-06-12T14:42:42');
         AuthStore.on_duty = false;
         AuthStore.loading = false;
         AuthStore.current_image = null;
@@ -75,6 +104,7 @@ class ProfileScreen extends Component {
                 this.setState({
                     cities: response.data,
                 }, () => {
+                    // this.setState({ date: new Date('1999-06-12T14:42:42') });
                     // this.getDistricts(AuthStore.courier_city);
                 });
             })
@@ -137,6 +167,8 @@ class ProfileScreen extends Component {
     }
 
     render() {
+        const { show, date, mode } = this.state;
+
         let allCities = this.state.cities.map((city) => {
             return (
                 <Picker.Item label={city.name} value={city.id} key={city.id} />
@@ -163,7 +195,7 @@ class ProfileScreen extends Component {
                             <Avatar.Text style={{ margin: 10 }} size={120} label={(AuthStore.name).substring(0, 2)} />}
 
                         <Button icon="camera" mode="contained" onPress={this.imageGalleryLaunch}>Fotograf Ekle</Button>
-                        <Text style={{marginTop: 15,}}>Bakiyeniz: {AuthStore.balance} ₺</Text>
+                        <Text style={{ marginTop: 15, }}>Bakiyeniz: {AuthStore.balance} ₺</Text>
                     </View>
                     <View style={{
                         flexDirection: 'row',
@@ -285,15 +317,29 @@ class ProfileScreen extends Component {
                         {AuthStore.errors.plate}
                     </HelperText>}
 
-                    <TextInput style={styles.input}
+                    {/* <TextInput style={styles.input}
                         value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
                         label="Doğum Tarihi"
+                        mode="outlined"
+                        onChangeText={text => AuthStore.handleBirthDate(text)}
+                        autoCapitalize="none" /> */}
+                    <TextInput style={styles.input}
+                        onFocus={() => this.datepicker()}
+                        value={moment(date).format('YYYY-MM-DD')}
+                        label="Yeni Doğum Tarihi"
                         mode="outlined"
                         onChangeText={text => AuthStore.handleBirthDate(text)}
                         autoCapitalize="none" />
                     {AuthStore.errors.birth_date && <HelperText type="error" visible style={styles.helper}>
                         {AuthStore.errors.birth_date}
                     </HelperText>}
+
+                    {show && <DateTimePicker value={date}
+                        mode={mode}
+                        is24Hour={true}
+                        display="default"
+                        onChange={this.setDate} />
+                    }
 
                     <View style={{ flex: 1, margin: 10 }}>
                         <View style={{ flexDirection: "row" }}>
