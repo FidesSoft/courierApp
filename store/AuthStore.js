@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-31 01:02:28
+ * @LastEditTime: 2021-03-31 01:29:33
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -58,7 +58,7 @@ class AuthStore {
   @action handlePlate(text) { this.plate = text; }
   @action handleColor(text) { this.color = text; }
   @action handleVehicle(text) { this.vehicle = text; }
-  @action handleBirthDate(text) { this.birth_date = text; }
+  @action handleBirthDate(date) { this.birth_date = date }
   @action handleSozlesme() { this.sozlesme = !this.sozlesme; }
   @action handleOnDuty() { this.on_duty = !this.on_duty; console.log(this.on_duty) }
 

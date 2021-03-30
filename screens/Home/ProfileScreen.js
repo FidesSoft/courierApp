@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-31 01:15:54
+ * @LastEditTime: 2021-03-31 01:29:21
  */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
@@ -26,33 +26,27 @@ class ProfileScreen extends Component {
             cities: [],
             districts: [],
             date: new Date('2020-06-12T14:42:42'),
-            mode: 'date',
             show: false,
         };
     }
 
     setDate = (event, date) => {
-        date = date || this.state.date;
-        AuthStore.handleBirthDate(moment(date).format('YYYY-MM-DD'));
         this.setState({
             show: Platform.OS === 'ios' ? true : false,
             date,
         });
+        date = date || this.state.date;
+        AuthStore.handleBirthDate(moment(date).format('YYYY-MM-DD'));
     }
 
-    show = mode => {
+    show = () => {
         this.setState({
             show: true,
-            mode,
         });
     }
 
     datepicker = () => {
-        this.show('date');
-    }
-
-    timepicker = () => {
-        this.show('time');
+        this.show();
     }
 
     componentDidMount() {
@@ -323,9 +317,13 @@ class ProfileScreen extends Component {
                         mode="outlined"
                         onChangeText={text => AuthStore.handleBirthDate(text)}
                         autoCapitalize="none" /> */}
+
+
+
+
                     <TextInput style={styles.input}
                         onFocus={() => this.datepicker()}
-                        value={moment(date).format('YYYY-MM-DD')}
+                        value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
                         label="Yeni Doğum Tarihi"
                         mode="outlined"
                         onChangeText={text => AuthStore.handleBirthDate(text)}
@@ -334,8 +332,8 @@ class ProfileScreen extends Component {
                         {AuthStore.errors.birth_date}
                     </HelperText>}
 
-                    {show && <DateTimePicker value={date}
-                        mode={mode}
+                    {show && <DateTimePicker value={new Date(AuthStore.birth_date)}
+                        mode="date"
                         is24Hour={true}
                         display="default"
                         onChange={this.setDate} />
