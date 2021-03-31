@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-31 13:40:25
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-31 13:56:56
+ * @LastEditTime: 2021-03-31 17:00:31
  */
 import React, { Component } from 'react';
 
@@ -14,31 +14,6 @@ import axios from 'axios';
 
 // import MultiSelect library
 import MultiSelect from 'react-native-multiple-select';
-
-// Dummy Data for the MutiSelect
-const items = [
-    // name key is must. It is to show the text in front
-    { id: 1, name: 'angellist' },
-    { id: 2, name: 'codepen' },
-    { id: 3, name: 'envelope' },
-    { id: 4, name: 'etsy' },
-    { id: 5, name: 'facebook' },
-    { id: 6, name: 'foursquare' },
-    { id: 7, name: 'github-alt' },
-    { id: 8, name: 'github' },
-    { id: 9, name: 'gitlab' },
-    { id: 10, name: 'instagram' },
-    { id: 11, name: 'angellist' },
-    { id: 12, name: 'codepen' },
-    { id: 13, name: 'envelope' },
-    { id: 14, name: 'etsy' },
-    { id: 15, name: 'facebook' },
-    { id: 16, name: 'foursquare' },
-    { id: 17, name: 'github-alt' },
-    { id: 18, name: 'github' },
-    { id: 19, name: 'gitlab' },
-    { id: 20, name: 'instagram' },
-];
 
 export default class MultiSelectExample extends Component {
     constructor(props) {

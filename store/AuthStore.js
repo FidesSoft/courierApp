@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-31 01:40:52
+ * @LastEditTime: 2021-03-31 23:56:00
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -20,8 +20,8 @@ class AuthStore {
   @observable phone = '';
   @observable tcno = '';
   @observable imagePath = '';
-  @observable courier_city = '';
-  @observable courier_districts = '';
+  @observable courier_city = [];
+  @observable courier_districts = [];
   @observable vehicle = '';
   @observable plate = '';
   @observable color = '';
@@ -111,6 +111,7 @@ class AuthStore {
   }
 
   @action async register(navi) {
+
     this.loading = true;
     if (this.sozlesme) {
       let formData = new FormData();
@@ -118,8 +119,8 @@ class AuthStore {
       formData.append('email', this.email);
       formData.append('name', this.name);
       formData.append('phone', this.phone);
-      formData.append('courier_city', this.courier_city);
-      formData.append('courier_districts', this.courier_districts);
+      formData.append('courier_city', JSON.stringify(this.courier_city));
+      formData.append('courier_districts', JSON.stringify(this.courier_districts));
       formData.append('password', this.password);
       formData.append('password_confirmation', this.password_confirmation);
       if (this.imagePath != '') {
@@ -133,8 +134,7 @@ class AuthStore {
       let uri = `${global.apiUrl}/register`;
       await axios.post(uri, formData, { headers: { "Accept": "application/json" } })
         .then((response) => {
-          // this.token = response.data.data.token;
-          // this.storeToken(this.token);
+          // console.log(response.data);
           global.googleApiKey = response.data.data.googleApiKey;
           this.registerSuccessSnackbar = true;
           navi.navigate('Login');
