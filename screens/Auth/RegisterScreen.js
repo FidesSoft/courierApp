@@ -7,11 +7,10 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, Linking } from 'react-native';
 import axios from 'axios';
-import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from "react-native-image-picker"
 import MultiSelect from 'react-native-multiple-select';
 
-import { Button, Appbar, TextInput, Checkbox, HelperText, Snackbar, Avatar, Paragraph, Dialog, Portal } from 'react-native-paper';
+import { Button, Appbar, TextInput, Checkbox, HelperText, Snackbar, Avatar, Dialog, Portal } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
@@ -133,16 +132,6 @@ class RegisterScreen extends Component {
 
 
   render() {
-    let allCities = this.state.cities.map((city) => {
-      return (
-        <Picker.Item label={city.name} value={city.id} key={city.id} />
-      )
-    });
-    let allDistricts = this.state.districts.map((district) => {
-      return (
-        <Picker.Item label={district.name} value={district.id} key={district.id} />
-      )
-    });
     return (
       <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
         <Appbar.Header>
