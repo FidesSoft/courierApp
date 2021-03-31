@@ -102,8 +102,6 @@ class RegisterScreen extends Component {
       });
   }
 
-
-
   imageGalleryLaunch = () => {
     let options = {
       storageOptions: {
