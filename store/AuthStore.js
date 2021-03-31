@@ -3,13 +3,15 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-31 01:40:52
+ * @LastEditTime: 2021-04-01 01:06:18
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class AuthStore {
+  @observable cities = [];
+  @observable districts = [];
   @observable loading_screen = true;
   @observable isCourierAcceptTask = false;
   @observable isCourierAcceptTaskId = '';
@@ -20,8 +22,8 @@ class AuthStore {
   @observable phone = '';
   @observable tcno = '';
   @observable imagePath = '';
-  @observable courier_city = '';
-  @observable courier_districts = '';
+  @observable courier_city = [];
+  @observable courier_districts = [];
   @observable vehicle = '';
   @observable plate = '';
   @observable color = '';
@@ -111,6 +113,7 @@ class AuthStore {
   }
 
   @action async register(navi) {
+
     this.loading = true;
     if (this.sozlesme) {
       let formData = new FormData();
@@ -118,8 +121,8 @@ class AuthStore {
       formData.append('email', this.email);
       formData.append('name', this.name);
       formData.append('phone', this.phone);
-      formData.append('courier_city', this.courier_city);
-      formData.append('courier_districts', this.courier_districts);
+      formData.append('courier_city', JSON.stringify(this.courier_city));
+      formData.append('courier_districts', JSON.stringify(this.courier_districts));
       formData.append('password', this.password);
       formData.append('password_confirmation', this.password_confirmation);
       if (this.imagePath != '') {
@@ -133,8 +136,7 @@ class AuthStore {
       let uri = `${global.apiUrl}/register`;
       await axios.post(uri, formData, { headers: { "Accept": "application/json" } })
         .then((response) => {
-          // this.token = response.data.data.token;
-          // this.storeToken(this.token);
+          // console.log(response.data);
           global.googleApiKey = response.data.data.googleApiKey;
           this.registerSuccessSnackbar = true;
           navi.navigate('Login');
@@ -159,6 +161,7 @@ class AuthStore {
       }
     })
       .then((response) => {
+        // console.log(response.data.city[0].id)
         this.name = response.data.name;
         this.email = response.data.email;
         this.phone = response.data.phone;
@@ -170,8 +173,14 @@ class AuthStore {
         this.on_duty = response.data.on_duty;
         this.birth_date = response.data.birth_date;
         this.current_image = response.data.image;
-        this.courier_city = response.data.city[0].id;
-        this.courier_districts = response.data.district[0].id;
+        this.courier_city = [...this.courier_city, response.data.city[0].id];
+        response.data.district.map((district) => {
+          this.courier_districts = [...this.courier_districts, district.id];
+          console.log(id);
+      });
+        
+        this.getCities();
+        this.getDistricts(this.courier_city);
       })
       .catch(error => {
         if (error.response.status == 401) {
@@ -196,8 +205,8 @@ class AuthStore {
     formData.append('color', this.color);
     formData.append('on_duty', this.on_duty);
     formData.append('birth_date', this.birth_date);
-    formData.append('courier_city', this.courier_city);
-    formData.append('courier_districts', this.courier_districts);
+    formData.append('courier_city', JSON.stringify(this.courier_city));
+    formData.append('courier_districts', JSON.stringify(this.courier_districts));
     if (this.imagePath != '') {
       formData.append("photo", {
         name: this.imagePath.fileName,
@@ -263,7 +272,7 @@ class AuthStore {
     } catch (error) {
       console.log("Something went wrong", error);
     }
-    this.loading_screen=false;
+    this.loading_screen = false;
   }
 
   @action async removeToken() {
@@ -340,6 +349,48 @@ class AuthStore {
     })
       .then((response) => {
         console.log(response.data);
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          this.token = null;
+          this.storeToken('');
+        }
+      });
+  }
+
+  @action getCities = async () => {
+    let uri = `${global.apiUrl}/get-cities/`;
+    await axios.get(uri, {
+      headers: {
+        'Accept': 'application/json',
+      }
+    })
+      .then((response) => {
+        this.cities= response.data;
+      })
+      .catch(error => {
+        if (error.response.status == 401) {
+          this.token = null;
+          this.storeToken('');
+        }
+      });
+  }
+
+  @action getDistrictsAfterSelectedCity = async (itemValue) => {
+    this.handleCityId(itemValue);
+    this.handleDistrictId([]);
+    this.getDistricts(itemValue);
+  }
+
+  @action getDistricts = async (itemValue) => {
+    let uri = `${global.apiUrl}/get-city-districts/${itemValue}`;
+    await axios.get(uri, {
+      headers: {
+        'Accept': 'application/json',
+      }
+    })
+      .then((response) => {
+        this.districts = response.data;
       })
       .catch(error => {
         if (error.response.status == 401) {

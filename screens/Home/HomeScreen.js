@@ -386,7 +386,6 @@ class HomeScreen extends Component {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-
       </SafeAreaView>
     );
   }

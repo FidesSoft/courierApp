@@ -7,10 +7,10 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, Linking } from 'react-native';
 import axios from 'axios';
-import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from "react-native-image-picker"
+import MultiSelect from 'react-native-multiple-select';
 
-import { Button, Appbar, TextInput, Checkbox, HelperText, Snackbar, Avatar } from 'react-native-paper';
+import { Button, Appbar, TextInput, Checkbox, HelperText, Snackbar, Avatar, Dialog, Portal } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
@@ -21,16 +21,25 @@ class RegisterScreen extends Component {
     this.state = {
       cities: [],
       districts: [],
+      dialogCities: false,
+      dialogDistricts: false,
     };
   }
+
+  showDialogCities() { this.setState({ dialogCities: true }); }
+  hideDialogCities() { this.setState({ dialogCities: false }); }
+
+  showDialogDistricts() { this.setState({ dialogDistricts: true }); }
+  hideDialogDistricts() { this.setState({ dialogDistricts: false }); }
+
   componentDidMount() {
     AuthStore.errors = {};
     AuthStore.email = '';
     AuthStore.password = '';
     AuthStore.name = '';
     AuthStore.tcno = '';
-    AuthStore.courier_city = '';
-    AuthStore.courier_districts = '';
+    AuthStore.courier_city = [];
+    AuthStore.courier_districts = [];
     AuthStore.imagePath = '';
     AuthStore.sozlesme = false;
     AuthStore.password_confirmation = '';
@@ -43,8 +52,8 @@ class RegisterScreen extends Component {
     AuthStore.password = '';
     AuthStore.name = '';
     AuthStore.tcno = '';
-    AuthStore.courier_city = '';
-    AuthStore.courier_districts = '';
+    AuthStore.courier_city = [];
+    AuthStore.courier_districts = [];
     AuthStore.imagePath = '';
     AuthStore.sozlesme = false;
     AuthStore.password_confirmation = '';
@@ -71,7 +80,7 @@ class RegisterScreen extends Component {
 
   getDistrictsAfterSelectedCity = async (itemValue) => {
     AuthStore.handleCityId(itemValue);
-    AuthStore.handleDistrictId('');
+    AuthStore.handleDistrictId([]);
     this.getDistricts(itemValue);
   }
 
@@ -92,8 +101,6 @@ class RegisterScreen extends Component {
         }
       });
   }
- 
-
 
   imageGalleryLaunch = () => {
     let options = {
@@ -123,16 +130,6 @@ class RegisterScreen extends Component {
 
 
   render() {
-    let allCities = this.state.cities.map((city) => {
-      return (
-        <Picker.Item label={city.name} value={city.id} key={city.id} />
-      )
-    });
-    let allDistricts = this.state.districts.map((district) => {
-      return (
-        <Picker.Item label={district.name} value={district.id} key={district.id} />
-      )
-    });
     return (
       <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
         <Appbar.Header>
@@ -162,31 +159,34 @@ class RegisterScreen extends Component {
             alignItems: 'flex-start'
           }}>
             <View style={{ width: '50%' }}>
-            <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
-                <Picker
+              <TextInput style={styles.input}
+                        onFocus={() => this.showDialogCities()}
+                        // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
+                        label="İl Listesi"
+                        mode="outlined"
+                        // onChangeText={text => AuthStore.handleBirthDate(text)}
+                        autoCapitalize="none" />
+                {/* <Picker
+                style={{height: 20}}
                   selectedValue={AuthStore.courier_city}
                   onValueChange={(itemValue) =>
                     this.getDistrictsAfterSelectedCity(itemValue)
                   }>
                   <Picker.Item label="İl Seç" value="" />
                   {allCities}
-                </Picker>
-              </View>
+                </Picker> */}
               {AuthStore.errors.courier_city && <HelperText type="error" visible style={styles.helper}>
                 {AuthStore.errors.courier_city}
               </HelperText>}
             </View>
-            <View style={{ width: '50%' }}>
-            <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
-                <Picker                  
-                  selectedValue={AuthStore.courier_districts}
-                  onValueChange={(itemValue) =>
-                    AuthStore.handleDistrictId(itemValue)
-                  }>
-                  <Picker.Item label="İlçe Seç" value="" />
-                  {allDistricts}
-                </Picker>
-              </View>
+            <View style={{ width: '50%' }}>                
+                <TextInput style={styles.input}
+                        onFocus={() => this.showDialogDistricts()}
+                        // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
+                        label="İlçe Seç"
+                        mode="outlined"
+                        // onChangeText={text => AuthStore.handleBirthDate(text)}
+                        autoCapitalize="none" />
               {AuthStore.errors.courier_districts && <HelperText type="error" visible style={styles.helper}>
                 {AuthStore.errors.courier_districts}
               </HelperText>}
@@ -278,6 +278,8 @@ class RegisterScreen extends Component {
             </View>
           </View>
 
+
+
           <View style={{ flex: 1, alignItems: 'center' }}>
             <View style={{ flexDirection: "row" }}>
               <View style={styles.button}>
@@ -292,6 +294,72 @@ class RegisterScreen extends Component {
         <Snackbar visible={AuthStore.registerSnackbar} onDismiss={() => AuthStore.onDismissRegisterSnackbar()}
           duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissRegisterSnackbar() } }}>
           Sözleşmeleri kabul etmelisiniz.</Snackbar>
+        <Portal>
+          <Dialog visible={this.state.dialogCities} onDismiss={() => this.hideDialogCities()}>
+            <Dialog.Title>İl Seçin</Dialog.Title>
+            <Dialog.Content>
+            <MultiSelect
+                  flatListProps={{ nestedScrollEnabled: true }}
+                  styleListContainer={{ height: 256 }}
+                  hideTags
+                  items={this.state.cities}
+                  uniqueKey="id"
+                  onSelectedItemsChange={(itemValue) => this.getDistrictsAfterSelectedCity(itemValue)}
+                  selectedItems={AuthStore.courier_city}
+                  selectText="İl Seç"
+                  searchInputPlaceholderText="İl Ara..."
+                  onChangeInput={(text) => console.log(text)}
+                  tagRemoveIconColor="#CCC"
+                  tagBorderColor="#CCC"
+                  tagTextColor="#CCC"
+                  selectedItemTextColor="#CCC"
+                  selectedItemIconColor="#CCC"
+                  itemTextColor="#000"
+                  displayKey="name"
+                  searchInputStyle={{ color: '#CCC' }}
+                  submitButtonColor="#48d22b"
+                  submitButtonText="Kaydet"
+                  single={true}
+                />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => this.hideDialogCities()}>Onayla</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+        <Portal>
+          <Dialog visible={this.state.dialogDistricts} onDismiss={() => this.hideDialogDistricts()}>
+            <Dialog.Title>İlçeler Seçin</Dialog.Title>
+            <Dialog.Content>
+            <MultiSelect
+                  flatListProps={{ nestedScrollEnabled: true }}
+                  styleListContainer={{ height: 256 }}
+                  hideTags
+                  items={this.state.districts}
+                  uniqueKey="id"
+                  onSelectedItemsChange={(itemValue) =>
+                    AuthStore.handleDistrictId(itemValue)}
+                  selectedItems={AuthStore.courier_districts}
+                  selectText="İlçeler Seç"
+                  searchInputPlaceholderText="İlçe Ara..."
+                  onChangeInput={(text) => console.log(text)}
+                  tagRemoveIconColor="#CCC"
+                  tagBorderColor="#CCC"
+                  tagTextColor="#CCC"
+                  selectedItemTextColor="#CCC"
+                  selectedItemIconColor="#CCC"
+                  itemTextColor="#000"
+                  displayKey="name"
+                  searchInputStyle={{ color: '#CCC' }}
+                  submitButtonColor="#48d22b"
+                  submitButtonText="Kaydet"
+                />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => this.hideDialogDistricts()}>Onayla</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       </View>
     );
   }

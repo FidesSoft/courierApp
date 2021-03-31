@@ -3,16 +3,17 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-31 01:40:44
+ * @LastEditTime: 2021-04-01 01:02:42
  */
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Button, Checkbox, TextInput, Snackbar, HelperText, Avatar } from 'react-native-paper';
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Button, Checkbox, TextInput, Snackbar, HelperText, Avatar, Dialog, Portal } from 'react-native-paper';
 import axios from 'axios';
 import { observer } from 'mobx-react';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from "react-native-image-picker"
 import DateTimePicker from '@react-native-community/datetimepicker';
+import MultiSelect from 'react-native-multiple-select';
 
 import moment from "moment";
 
@@ -22,11 +23,11 @@ import AuthStore from '../../store/AuthStore';
 class ProfileScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            cities: [],
-            districts: [],
+        this.state = {            
             date: new Date('2021-01-01'),
             show: false,
+            dialogCities: false,
+            dialogDistricts: false,
         };
     }
 
@@ -49,6 +50,12 @@ class ProfileScreen extends Component {
         this.show();
     }
 
+    showDialogCities() { this.setState({ dialogCities: true }); }
+    hideDialogCities() { this.setState({ dialogCities: false }); }
+
+    showDialogDistricts() { this.setState({ dialogDistricts: true }); }
+    hideDialogDistricts() { this.setState({ dialogDistricts: false }); }
+
     componentDidMount() {
         AuthStore.errors = {};
         AuthStore.email = '';
@@ -65,9 +72,9 @@ class ProfileScreen extends Component {
         AuthStore.loading = false;
         AuthStore.current_image = null;
         AuthStore.imagePath = '';
+        AuthStore.courier_city = [];
+        AuthStore.courier_districts = [];
         AuthStore.getUser();
-        this.getCities();
-        this.getDistricts(AuthStore.courier_city);
     }
     componentWillUnmount() {
         AuthStore.errors = {};
@@ -85,53 +92,8 @@ class ProfileScreen extends Component {
         AuthStore.loading = false;
         AuthStore.current_image = null;
         AuthStore.imagePath = '';
-    }
-
-    getCities = async () => {
-        let uri = `${global.apiUrl}/get-cities/`;
-        await axios.get(uri, {
-            headers: {
-                'Accept': 'application/json',
-            }
-        })
-            .then((response) => {
-                this.setState({
-                    cities: response.data,
-                }, () => {
-                    // this.setState({ date: new Date('1999-06-12T14:42:42') });
-                    // this.getDistricts(AuthStore.courier_city);
-                });
-            })
-            .catch(error => {
-                if (error.response.status == 401) {
-                    AuthStore.token = null;
-                    AuthStore.storeToken('');
-                }
-            });
-    }
-
-    getDistrictsAfterSelectedCity = async (itemValue) => {
-        AuthStore.handleCityId(itemValue);
-        AuthStore.handleDistrictId('');
-        this.getDistricts(itemValue);
-    }
-
-    getDistricts = async (itemValue) => {
-        let uri = `${global.apiUrl}/get-city-districts/${itemValue}`;
-        await axios.get(uri, {
-            headers: {
-                'Accept': 'application/json',
-            }
-        })
-            .then((response) => {
-                this.setState({ districts: response.data });
-            })
-            .catch(error => {
-                if (error.response.status == 401) {
-                    AuthStore.token = null;
-                    AuthStore.storeToken('');
-                }
-            });
+        AuthStore.courier_city = [];
+        AuthStore.courier_districts = [];
     }
 
     imageGalleryLaunch = () => {
@@ -163,17 +125,6 @@ class ProfileScreen extends Component {
     render() {
         const { show, date, mode } = this.state;
 
-        let allCities = this.state.cities.map((city) => {
-            return (
-                <Picker.Item label={city.name} value={city.id} key={city.id} />
-            )
-        });
-        let allDistricts = this.state.districts.map((district) => {
-            return (
-                <Picker.Item label={district.name} value={district.id} key={district.id} />
-            )
-        });
-
         return (
             <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
                 <ScrollView>
@@ -196,31 +147,26 @@ class ProfileScreen extends Component {
                         alignItems: 'flex-start'
                     }}>
                         <View style={{ width: '50%' }}>
-                            <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 5, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
-                                <Picker
-                                    selectedValue={AuthStore.courier_city}
-                                    onValueChange={(itemValue) =>
-                                        this.getDistrictsAfterSelectedCity(itemValue)
-                                    }>
-                                    <Picker.Item label="İl Seç" value="" />
-                                    {allCities}
-                                </Picker>
-                            </View>
+                            <TextInput style={styles.input}
+                                onFocus={() => this.showDialogCities()}
+                                // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
+                                label="İl Listesi"
+                                mode="outlined"
+                                // onChangeText={text => AuthStore.handleBirthDate(text)}
+                                autoCapitalize="none" />
+                            
                             {AuthStore.errors.courier_city && <HelperText type="error" visible style={styles.helper}>
                                 {AuthStore.errors.courier_city}
                             </HelperText>}
                         </View>
                         <View style={{ width: '50%' }}>
-                            <View style={{ flex: 1, marginTop: 15, marginLeft: 5, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
-                                <Picker
-                                    selectedValue={AuthStore.courier_districts}
-                                    onValueChange={(itemValue) =>
-                                        AuthStore.handleDistrictId(itemValue)
-                                    }>
-                                    <Picker.Item label="İlçe Seç" value="" />
-                                    {allDistricts}
-                                </Picker>
-                            </View>
+                            <TextInput style={styles.input}
+                                onFocus={() => this.showDialogDistricts()}
+                                // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
+                                label="İlçe Seç"
+                                mode="outlined"
+                                // onChangeText={text => AuthStore.handleBirthDate(text)}
+                                autoCapitalize="none" />
                             {AuthStore.errors.courier_districts && <HelperText type="error" visible style={styles.helper}>
                                 {AuthStore.errors.courier_districts}
                             </HelperText>}
@@ -364,6 +310,72 @@ class ProfileScreen extends Component {
                 <Snackbar visible={AuthStore.updateProfileSnackbar} onDismiss={() => AuthStore.onDismissUpdateProfileSnackbar()}
                     duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissUpdateProfileSnackbar() } }}>
                     Profiliniz başarıyla güncellendi.</Snackbar>
+                <Portal>
+                    <Dialog visible={this.state.dialogCities} onDismiss={() => this.hideDialogCities()}>
+                        <Dialog.Title>İl Seçin</Dialog.Title>
+                        <Dialog.Content>
+                            <MultiSelect
+                                flatListProps={{ nestedScrollEnabled: true }}
+                                styleListContainer={{ height: 256 }}
+                                hideTags
+                                items={AuthStore.cities}
+                                uniqueKey="id"
+                                onSelectedItemsChange={(itemValue) => this.getDistrictsAfterSelectedCity(itemValue)}
+                                selectedItems={AuthStore.courier_city}
+                                selectText="İl Seç"
+                                searchInputPlaceholderText="İl Ara..."
+                                onChangeInput={(text) => console.log(text)}
+                                tagRemoveIconColor="#CCC"
+                                tagBorderColor="#CCC"
+                                tagTextColor="#CCC"
+                                selectedItemTextColor="#CCC"
+                                selectedItemIconColor="#CCC"
+                                itemTextColor="#000"
+                                displayKey="name"
+                                searchInputStyle={{ color: '#CCC' }}
+                                submitButtonColor="#48d22b"
+                                submitButtonText="Kaydet"
+                                single={true}
+                            />
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                            <Button onPress={() => this.hideDialogCities()}>Onayla</Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
+                <Portal>
+                    <Dialog visible={this.state.dialogDistricts} onDismiss={() => this.hideDialogDistricts()}>
+                        <Dialog.Title>İlçeler Seçin</Dialog.Title>
+                        <Dialog.Content>
+                            <MultiSelect
+                                flatListProps={{ nestedScrollEnabled: true }}
+                                styleListContainer={{ height: 256 }}
+                                hideTags
+                                items={AuthStore.districts}
+                                uniqueKey="id"
+                                onSelectedItemsChange={(itemValue) =>
+                                    AuthStore.handleDistrictId(itemValue)}
+                                selectedItems={AuthStore.courier_districts}
+                                selectText="İlçeler Seç"
+                                searchInputPlaceholderText="İlçe Ara..."
+                                onChangeInput={(text) => console.log(text)}
+                                tagRemoveIconColor="#CCC"
+                                tagBorderColor="#CCC"
+                                tagTextColor="#CCC"
+                                selectedItemTextColor="#CCC"
+                                selectedItemIconColor="#CCC"
+                                itemTextColor="#000"
+                                displayKey="name"
+                                searchInputStyle={{ color: '#CCC' }}
+                                submitButtonColor="#48d22b"
+                                submitButtonText="Kaydet"
+                            />
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                            <Button onPress={() => this.hideDialogDistricts()}>Onayla</Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
             </View>
         );
     }
