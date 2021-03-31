@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import { View, StyleSheet, SafeAreaView, Text, FlatList, RefreshControl } from 'react-native';
-import { Snackbar, Button, List, Searchbar, Divider, Paragraph, Dialog, Portal } from 'react-native-paper';
+import { Snackbar, Button, List, Searchbar, Divider, Paragraph, Dialog, Portal, FAB } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
@@ -386,7 +386,17 @@ class HomeScreen extends Component {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-
+        <FAB
+                    style={{
+                        position: 'absolute',
+                        margin: 16,
+                        right: 0,
+                        bottom: 0,
+                    }}
+                    small
+                    icon="plus"
+                    onPress={() => this.props.navigation.navigate('MultiSelectExample')}
+                />
       </SafeAreaView>
     );
   }
