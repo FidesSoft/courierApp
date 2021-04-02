@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-01 01:06:18
+ * @LastEditTime: 2021-04-03 01:08:55
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -176,7 +176,6 @@ class AuthStore {
         this.courier_city = [...this.courier_city, response.data.city[0].id];
         response.data.district.map((district) => {
           this.courier_districts = [...this.courier_districts, district.id];
-          console.log(id);
       });
         
         this.getCities();
