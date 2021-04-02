@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 03:31:45
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 02:36:50
+ * @LastEditTime: 2021-04-03 02:39:00
  */
 import React, { Component } from 'react';
 import { Image, View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
@@ -33,7 +33,9 @@ class LoginScreen extends Component {
   }
 
   submitForm(values) {
-    console.log(values.email);
+    AuthStore.handleEmail(values.email);
+    AuthStore.handlePassword(values.password);
+    AuthStore.login();
   }
 
   render() {
