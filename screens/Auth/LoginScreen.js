@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 03:31:45
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 02:39:00
+ * @LastEditTime: 2021-04-03 02:44:28
  */
 import React, { Component } from 'react';
 import { Image, View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
@@ -15,12 +15,6 @@ import { Formik } from 'formik'
 
 @observer
 class LoginScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      setValues: [],
-    };
-  }
   componentWillUnmount() {
     AuthStore.errors = {};
     AuthStore.email = '';
