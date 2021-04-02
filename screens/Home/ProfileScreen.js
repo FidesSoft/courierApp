@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-01 01:02:42
+ * @LastEditTime: 2021-04-03 01:31:24
  */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
@@ -339,7 +339,7 @@ class ProfileScreen extends Component {
                             />
                         </Dialog.Content>
                         <Dialog.Actions>
-                            <Button onPress={() => this.hideDialogCities()}>Onayla</Button>
+                            <Button onPress={() => this.hideDialogCities()}>Kapat</Button>
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
@@ -358,7 +358,7 @@ class ProfileScreen extends Component {
                                 selectedItems={AuthStore.courier_districts}
                                 selectText="İlçeler Seç"
                                 searchInputPlaceholderText="İlçe Ara..."
-                                onChangeInput={(text) => console.log(text)}
+                                // onChangeInput={(text) => console.log(text)}
                                 tagRemoveIconColor="#CCC"
                                 tagBorderColor="#CCC"
                                 tagTextColor="#CCC"
@@ -367,12 +367,13 @@ class ProfileScreen extends Component {
                                 itemTextColor="#000"
                                 displayKey="name"
                                 searchInputStyle={{ color: '#CCC' }}
-                                submitButtonColor="#48d22b"
+                                submitButtonColor="#F59F0B"
                                 submitButtonText="Kaydet"
+                                hideSubmitButton={true}
                             />
                         </Dialog.Content>
                         <Dialog.Actions>
-                            <Button onPress={() => this.hideDialogDistricts()}>Onayla</Button>
+                            <Button onPress={() => this.hideDialogDistricts()}>Kapat</Button>
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
