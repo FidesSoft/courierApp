@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 03:31:45
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 04:06:20
+ * @LastEditTime: 2021-04-03 13:45:22
  */
 import React, { Component } from 'react';
 import { Image, View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
@@ -73,11 +73,9 @@ class LoginScreen extends Component {
                   onChangeText={handleChange('email')}
                   onBlur={() => setFieldTouched('email')}
                   autoCapitalize="none" />
-                {touched.email && errors.email && <HelperText type="error" visible style={styles.helper}>
-                  {errors.email}
-                </HelperText>}
-                {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.email}
+                {((touched.email && errors.email) || (AuthStore.errors.email)) && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.email ?? AuthStore.errors.email} 
+                  {errors.email ?? errors.email}
                 </HelperText>}
 
                 <TextInput style={styles.input}
@@ -88,12 +86,9 @@ class LoginScreen extends Component {
                   onChangeText={handleChange('password')}
                   onBlur={() => setFieldTouched('password')}
                   secureTextEntry={true} />
-
-                {touched.password && errors.password && <HelperText type="error" visible style={styles.helper}>
-                  {errors.password}
-                </HelperText>}
-                {AuthStore.errors.password && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.password}
+               {((touched.password && errors.password) || (AuthStore.errors.password)) && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.password ?? AuthStore.errors.password} 
+                  {errors.password ?? errors.password}
                 </HelperText>}
 
                 <View style={{ flex: 1, alignItems: 'center' }}>
