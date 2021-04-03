@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 18:45:08
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 13:37:20
+ * @LastEditTime: 2021-04-03 13:52:22
  */
 import React, { Component } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
@@ -55,12 +55,9 @@ class ContactScreen extends Component {
                   onChangeText={handleChange('subject')}
                   onBlur={() => setFieldTouched('subject')}
                   autoCapitalize="none" />
-                {touched.subject && errors.subject && <HelperText type="error" visible style={styles.helper}>
-                  {errors.subject}
-                </HelperText>}
-
-                {ContactStore.errors.subject && <HelperText type="error" visible style={styles.helper}>
-                  {ContactStore.errors.subject}
+                {((touched.subject && errors.subject) || (ContactStore.errors.subject)) && <HelperText type="error" visible style={styles.helper}>
+                  {ContactStore.errors.subject ?? ContactStore.errors.subject}
+                  {errors.subject ?? errors.subject}
                 </HelperText>}
 
                 <TextInput style={styles.input}
@@ -70,11 +67,9 @@ class ContactScreen extends Component {
                   onChangeText={handleChange('message')}
                   onBlur={() => setFieldTouched('message')}
                   autoCapitalize="none" />
-                {touched.message && errors.message && <HelperText type="error" visible style={styles.helper}>
-                  {errors.message}
-                </HelperText>}
-                {ContactStore.errors.message && <HelperText type="error" visible style={styles.helper}>
-                  {ContactStore.errors.message}
+                {((touched.message && errors.message) || (ContactStore.errors.message)) && <HelperText type="error" visible style={styles.helper}>
+                  {ContactStore.errors.message ?? ContactStore.errors.message}
+                  {errors.message ?? errors.message}
                 </HelperText>}
 
                 <View style={styles.button}>
