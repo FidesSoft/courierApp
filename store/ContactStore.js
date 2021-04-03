@@ -3,29 +3,28 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-03 15:15:29
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 18:55:51
+ * @LastEditTime: 2021-04-03 13:33:59
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
 import AuthStore from '../store/AuthStore';
 
 class ContactStore {
-  @observable subject = '';
-  @observable message = '';
+  // @observable subject = '';
+  // @observable message = '';
   @observable errors = {};
-  @observable loading = false;
+  // @observable loading = false;
   @observable contactSnackbar = false;
 
-  @action handleSubject(text) { this.subject = text; }
-  @action handleMessage(text) { this.message = text; }
+  // @action handleSubject(text) { this.subject = text; }
+  // @action handleMessage(text) { this.message = text; }
 
   @action onDismissContactSnackbar() { this.contactSnackbar = false; }
 
-  @action async sendMessage(navi) {
-    this.loading = true;
+  @action async sendMessage(values) {
     let formData = new FormData();
-    formData.append('subject', this.subject);
-    formData.append('message', this.message);
+    formData.append('subject', values.subject);
+    formData.append('message', values.message);
 
     let uri = `${global.apiUrl}/send-message`;
     await axios.post(uri, formData, {
@@ -48,7 +47,6 @@ class ContactStore {
         }
         this.errors = error.response.data.errors;
       });
-    this.loading = false;
   }
 
 

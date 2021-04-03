@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 18:31:21
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 04:04:34
+ * @LastEditTime: 2021-04-03 13:46:13
  */
 import React, { Component } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
@@ -59,12 +59,9 @@ class ResetPasswordScreen extends Component {
                   onChangeText={handleChange('email')}
                   onBlur={() => setFieldTouched('email')}
                   autoCapitalize="none" />
-                {touched.email && errors.email && <HelperText type="error" visible style={styles.helper}>
-                  {errors.email}
-                </HelperText>}
-                
-                {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.email}
+                {((touched.email && errors.email) || (AuthStore.errors.email)) && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.email ?? AuthStore.errors.email} 
+                  {errors.email ?? errors.email}
                 </HelperText>}
 
                 <View style={{ flex: 1, alignItems: 'center' }}>

@@ -3,13 +3,15 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 18:45:08
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 19:00:02
+ * @LastEditTime: 2021-04-03 13:52:22
  */
 import React, { Component } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { TextInput, Button, HelperText, Snackbar } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import ContactStore from '../../store/ContactStore';
+import * as yup from 'yup'
+import { Formik } from 'formik'
 
 @observer
 class ContactScreen extends Component {
@@ -28,34 +30,59 @@ class ContactScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
-      <ScrollView>
-          <TextInput style={styles.input}
-            label="Konu"
-            mode="outlined"
-            onChangeText={text => ContactStore.handleSubject(text)}
-            autoCapitalize="none" />
-          {ContactStore.errors.subject && <HelperText type="error" visible style={styles.helper}>
-            {ContactStore.errors.subject}
-          </HelperText>}
+        <ScrollView>
+          <Formik
+            initialValues={{
+              subject: '',
+              message: '',
+            }}
 
-          <TextInput style={styles.input}
-            label="Mesaj"
-            mode="outlined"
-            multiline={true}
-            onChangeText={text => ContactStore.handleMessage(text)}
-            autoCapitalize="none" />
-          {ContactStore.errors.message && <HelperText type="error" visible style={styles.helper}>
-            {ContactStore.errors.message}
-          </HelperText>}
+            onSubmit={values => ContactStore.sendMessage(values)}
+            validationSchema={yup.object().shape({
+              subject: yup
+                .string()
+                .required('Bu alan mutlaka gerekiyor.'),
+              message: yup
+                .string()
+                .required('Bu alan mutlaka gerekiyor.'),
+            })}
+          >
+            {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit, isSubmitting }) => (
+              <View>
+                <TextInput style={styles.input}
+                  label="Konu"
+                  mode="outlined"
+                  onChangeText={handleChange('subject')}
+                  onBlur={() => setFieldTouched('subject')}
+                  autoCapitalize="none" />
+                {((touched.subject && errors.subject) || (ContactStore.errors.subject)) && <HelperText type="error" visible style={styles.helper}>
+                  {ContactStore.errors.subject ?? ContactStore.errors.subject}
+                  {errors.subject ?? errors.subject}
+                </HelperText>}
 
-          <View style={styles.button}>
-            <Button icon="send" loading={ContactStore.loading} mode="contained" onPress={() => ContactStore.sendMessage(this.props.navigation)}>Gönder</Button>
-          </View>
+                <TextInput style={styles.input}
+                  label="Mesaj"
+                  mode="outlined"
+                  multiline={true}
+                  onChangeText={handleChange('message')}
+                  onBlur={() => setFieldTouched('message')}
+                  autoCapitalize="none" />
+                {((touched.message && errors.message) || (ContactStore.errors.message)) && <HelperText type="error" visible style={styles.helper}>
+                  {ContactStore.errors.message ?? ContactStore.errors.message}
+                  {errors.message ?? errors.message}
+                </HelperText>}
+
+                <View style={styles.button}>
+                  <Button icon="send" loading={isSubmitting} onPress={handleSubmit} mode="contained">Gönder</Button>
+                </View>
+              </View>
+            )}
+          </Formik>
         </ScrollView>
         <Snackbar visible={ContactStore.contactSnackbar} onDismiss={() => ContactStore.onDismissContactSnackbar()}
-        duration={2000} action={{ label: 'Gizle', onPress: () => { ContactStore.onDismissContactSnackbar() } }}>
-        Mesajınız başarıyla gönderildi.</Snackbar>
-            </View>
+          duration={2000} action={{ label: 'Gizle', onPress: () => { ContactStore.onDismissContactSnackbar() } }}>
+          Mesajınız başarıyla gönderildi.</Snackbar>
+      </View>
 
     );
   }
