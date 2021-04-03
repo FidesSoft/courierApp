@@ -3,14 +3,16 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-12 21:08:08
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-15 23:18:09
+ * @LastEditTime: 2021-04-03 14:33:16
  */
 
 import React, { Component } from "react";
 import axios from 'axios';
 import { View, ScrollView, StyleSheet } from "react-native";
-import { Button, TextInput,  HelperText} from 'react-native-paper';
+import { Button, TextInput, HelperText } from 'react-native-paper';
 import AuthStore from '../../store/AuthStore';
+import * as yup from 'yup'
+import { Formik } from 'formik'
 
 class AddBalance extends Component {
 
@@ -27,14 +29,14 @@ class AddBalance extends Component {
     componentDidMount() {
         // 
     }
-    
+
     handleBalance = (text) => this.setState({ balance: text });
 
-    addNewBalance = async () => {
+    addNewBalance = async (values) => {
         this.setState({ loading: true });
         let formData = new FormData();
-        formData.append('balance', this.state.balance);
-        
+        formData.append('balance', values.balance);
+
         let uri = `${global.apiUrl}/payment/add-balance`;
         await axios.post(uri, formData, {
             headers: {
@@ -43,10 +45,10 @@ class AddBalance extends Component {
             }
         })
             .then((response) => {
-                this.props.navigation.navigate('Pay', { item: response.data  })
+                this.props.navigation.navigate('Pay', { item: response.data })
             })
             .catch(error => {
-                if(error.response.status == 401){
+                if (error.response.status == 401) {
                     AuthStore.token = null;
                     AuthStore.storeToken('');
                 }
@@ -59,20 +61,38 @@ class AddBalance extends Component {
     render() {
         return (
             <ScrollView>
-                <TextInput style={styles.input}
-                    label="Ödeme Miktarı"
-                    mode="outlined"
-                    onChangeText={text => this.handleBalance(text)}
-                    autoCapitalize="none" />
-                {this.state.errors.balance && <HelperText type="error" visible style={styles.helper}>
-                    {this.state.errors.balance}
-                </HelperText>}
+                <Formik
+                    initialValues={{
+                        balance: '',
+                    }}
+                    onSubmit={values => this.addNewBalance(values)}
+                    validationSchema={yup.object().shape({
+                        balance: yup
+                            .string('Geçersiz karakterler içeriyor.')
+                            .required('Bu alan mutlaka gerekiyor.'),
+                    })}
+                >
+                    {({ handleChange, errors, setFieldTouched, touched, handleSubmit, isSubmitting }) => (
+                        <View>
+                            <TextInput style={styles.input}
+                                label="Ödeme Miktarı"
+                                mode="outlined"
+                                keyboardType = 'numeric'
+                                onChangeText={handleChange('balance')}
+                                onBlur={() => setFieldTouched('balance')}
+                                autoCapitalize="none" />
+                            {((touched.balance && errors.balance) || (AuthStore.errors.balance)) && <HelperText type="error" visible style={styles.helper}>
+                                {AuthStore.errors.balance ?? AuthStore.errors.balance}
+                                {errors.balance ?? errors.balance}
+                            </HelperText>}
 
-                <View style={styles.button}>
-                    <Button icon="check-bold" mode="contained"
-                        loading={this.state.loading}
-                        onPress={() => this.addNewBalance()}>Ödeme Yap</Button>
-                </View>
+                            <View style={styles.button}>
+                                <Button icon="check-bold" mode="contained"
+                                    loading={isSubmitting} onPress={handleSubmit}>Ödeme Yap</Button>
+                            </View>
+                        </View>
+                    )}
+                </Formik>
             </ScrollView>
         );
     }
