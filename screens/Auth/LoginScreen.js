@@ -3,13 +3,15 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 03:31:45
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 23:59:55
+ * @LastEditTime: 2021-04-03 04:06:20
  */
 import React, { Component } from 'react';
-import { Image, View, StyleSheet, ScrollView } from 'react-native';
-import { Button, Appbar, TextInput, Snackbar, HelperText} from 'react-native-paper';
+import { Image, View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
+import { Button, Appbar, TextInput, Snackbar, HelperText } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
+import * as yup from 'yup'
+import { Formik } from 'formik'
 
 @observer
 class LoginScreen extends Component {
@@ -44,39 +46,73 @@ class LoginScreen extends Component {
           />
         </Appbar.Header>
         <ScrollView>
-          <TextInput style={styles.input}
-            label="Email"
-            mode="outlined"
-            onChangeText={text => AuthStore.handleEmail(text)}
-            autoCapitalize="none" />
-          {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
-            {AuthStore.errors.email}
-          </HelperText>}
+          <Formik
+            initialValues={{
+              email: '',
+              password: ''
+            }}
+            onSubmit={values => AuthStore.login(values)}
+            validationSchema={yup.object().shape({
+              email: yup
+                .string('Geçersiz karakterler içeriyor.')
+                .email('Geçersiz email formatı.')
+                .required('Bu alan mutlaka gerekiyor.'),
+              password: yup
+                .string()
+                // .min(4)
+                // .max(10, 'Password should not excced 10 chars.')
+                .required('Bu alan mutlaka gerekiyor.'),
+            })}
+          >
+            {({ values, handleChange, errors, setFieldTouched, touched, isSubmitting, handleSubmit }) => (
+              <View>
+                <TextInput style={styles.input}
+                  value={values.email}
+                  label="Email"
+                  mode="outlined"
+                  onChangeText={handleChange('email')}
+                  onBlur={() => setFieldTouched('email')}
+                  autoCapitalize="none" />
+                {touched.email && errors.email && <HelperText type="error" visible style={styles.helper}>
+                  {errors.email}
+                </HelperText>}
+                {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.email}
+                </HelperText>}
 
-          <TextInput style={styles.input}
-            label="Şifre"
-            mode="outlined"
-            autoCapitalize="none"
-            onChangeText={text => AuthStore.handlePassword(text)}
-            secureTextEntry={true} />
-          {AuthStore.errors.password && <HelperText type="error" visible style={styles.helper}>
-            {AuthStore.errors.password}
-          </HelperText>}
+                <TextInput style={styles.input}
+                  value={values.password}
+                  label="Şifre"
+                  mode="outlined"
+                  autoCapitalize="none"
+                  onChangeText={handleChange('password')}
+                  onBlur={() => setFieldTouched('password')}
+                  secureTextEntry={true} />
 
-          <View style={{ flex: 1, alignItems: 'center' }}>
-          {AuthStore.errors.notapproved && <HelperText type="error" visible style={styles.helper}>
-            {AuthStore.errors.notapproved}
-          </HelperText>}
-            <View style={{ flexDirection: "row" }}>
-              <View style={styles.button}>
-                <Button icon="account-check" loading={AuthStore.loading} mode="contained" onPress={() => AuthStore.login()}>Gİrİş</Button>
+                {touched.password && errors.password && <HelperText type="error" visible style={styles.helper}>
+                  {errors.password}
+                </HelperText>}
+                {AuthStore.errors.password && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.password}
+                </HelperText>}
+
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                  {AuthStore.errors.notapproved && <HelperText type="error" visible style={styles.helper}>
+                    {AuthStore.errors.notapproved}
+                  </HelperText>}
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={styles.button}>
+                      <Button icon="account-check" loading={isSubmitting} mode="contained" onPress={handleSubmit}>Gİrİş</Button>
+                    </View>
+                    <View style={styles.button}>
+                      <Button icon="account-plus" mode="contained" onPress={() => this.props.navigation.navigate('Register')}>Yenİ ÜYelİK</Button>
+                    </View>
+                  </View>
+                  <Button icon="login" onPress={() => this.props.navigation.navigate('ResetPassword')}>Şİfremİ unuttum</Button>
+                </View>
               </View>
-              <View style={styles.button}>
-                <Button icon="account-plus" mode="contained" onPress={() => this.props.navigation.navigate('Register')}>Yenİ ÜYelİK</Button>
-              </View>
-            </View>
-            <Button icon="login" onPress={() => this.props.navigation.navigate('ResetPassword')}>Şİfremİ unuttum</Button>
-          </View>
+            )}
+          </Formik>
         </ScrollView>
         <Snackbar visible={AuthStore.loginSnackbar} onDismiss={() => AuthStore.onDismissLoginSnackbar()}
           duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissLoginSnackbar() } }}>

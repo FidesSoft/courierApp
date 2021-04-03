@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-01 01:06:18
+ * @LastEditTime: 2021-04-03 05:23:00
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -92,11 +92,10 @@ class AuthStore {
       });
   }
 
-  @action async login() {
-    this.loading = true;
+  @action async login(values) {
     let formData = new FormData();
-    formData.append('email', this.email);
-    formData.append('password', this.password);
+    formData.append('email', values.email);
+    formData.append('password', values.password);
     let uri = `${global.apiUrl}/login`;
     await axios.post(uri, formData)
       .then(async (response) => {
@@ -109,22 +108,18 @@ class AuthStore {
         this.errors = error.response.data.errors;
         this.loginSnackbar = true;
       });
-    this.loading = false;
   }
 
-  @action async register(navi) {
-
-    this.loading = true;
-    if (this.sozlesme) {
+  @action async register(values,navi) {
       let formData = new FormData();
-      formData.append('tcno', this.tcno);
-      formData.append('email', this.email);
-      formData.append('name', this.name);
-      formData.append('phone', this.phone);
+      formData.append('tcno', values.tcno);
+      formData.append('email', values.email);
+      formData.append('name', values.name);
+      formData.append('phone', values.phone);
       formData.append('courier_city', JSON.stringify(this.courier_city));
       formData.append('courier_districts', JSON.stringify(this.courier_districts));
-      formData.append('password', this.password);
-      formData.append('password_confirmation', this.password_confirmation);
+      formData.append('password', values.password);
+      formData.append('password_confirmation', values.password_confirmation);
       if (this.imagePath != '') {
         formData.append("image", {
           name: this.imagePath.fileName,
@@ -143,11 +138,7 @@ class AuthStore {
         })
         .catch(error => {
           this.errors = error.response.data.errors;
-        });
-    } else {
-      this.registerSnackbar = true;
-    }
-    this.loading = false;
+        });    
   }
 
   @action async getUser() {
@@ -176,7 +167,6 @@ class AuthStore {
         this.courier_city = [...this.courier_city, response.data.city[0].id];
         response.data.district.map((district) => {
           this.courier_districts = [...this.courier_districts, district.id];
-          console.log(id);
       });
         
         this.getCities();
@@ -233,10 +223,9 @@ class AuthStore {
     this.loading = false;
   }
 
-  @action async resetPassword() {
-    this.loading = true;
+  @action async resetPassword(values) {
     let formData = new FormData();
-    formData.append('email', this.email);
+    formData.append('email', values.email);
 
     let uri = `${global.apiUrl}/reset-password`;
     await axios.post(uri, formData, {
@@ -253,7 +242,6 @@ class AuthStore {
       .catch(error => {
         this.errors = error.response.data.errors;
       });
-    this.loading = false;
   }
 
 

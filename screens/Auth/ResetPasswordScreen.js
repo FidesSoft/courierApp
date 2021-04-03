@@ -3,13 +3,15 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 18:31:21
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-21 14:04:21
+ * @LastEditTime: 2021-04-03 04:04:34
  */
 import React, { Component } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Button, Appbar, TextInput, Snackbar, HelperText } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
+import * as yup from 'yup'
+import { Formik } from 'formik'
 
 @observer
 class ResetPasswordScreen extends Component {
@@ -23,6 +25,7 @@ class ResetPasswordScreen extends Component {
     AuthStore.email = '';
     AuthStore.password = '';
   }
+  
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
@@ -34,23 +37,47 @@ class ResetPasswordScreen extends Component {
           />
         </Appbar.Header>
         <ScrollView>
-          <TextInput style={styles.input}
-            label="Email"
-            mode="outlined"
-            onChangeText={text => AuthStore.handleEmail(text)}
-            autoCapitalize="none" />
+          <Formik
+            initialValues={{
+              email: '',
+            }}
 
-          {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
-            {AuthStore.errors.email}
-          </HelperText>}
+            onSubmit={values => AuthStore.resetPassword(values)}
+            validationSchema={yup.object().shape({
+              email: yup
+                .string('Geçersiz karakterler içeriyor.')
+                .email('Geçersiz email formatı.')
+                .required('Bu alan mutlaka gerekiyor.'),
+            })}
+          >
+            {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit, isSubmitting }) => (
+              <View>
+                <TextInput style={styles.input}
+                  value={values.email}
+                  label="Email"
+                  mode="outlined"
+                  onChangeText={handleChange('email')}
+                  onBlur={() => setFieldTouched('email')}
+                  autoCapitalize="none" />
+                {touched.email && errors.email && <HelperText type="error" visible style={styles.helper}>
+                  {errors.email}
+                </HelperText>}
+                
+                {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.email}
+                </HelperText>}
 
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <View style={{ flexDirection: "row" }}>
-              <View style={styles.button}>
-                <Button icon="account-check" loading={AuthStore.loading} mode="contained" onPress={() => AuthStore.resetPassword()}>Şifremi Yenİle</Button>
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={styles.button}>
+                      <Button icon="account-check" loading={isSubmitting} mode="contained" onPress={handleSubmit}>Şİfremİ Yenİle</Button>
+                    </View>
+                  </View>
+                </View>
+
               </View>
-            </View>
-          </View>
+            )}
+          </Formik>
         </ScrollView>
         <Snackbar visible={AuthStore.resetPaswordSnackbar} onDismiss={() => AuthStore.onDismissResetPaswordSnackbar()}
           duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissResetPaswordSnackbar() } }}>
