@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 03:31:45
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 02:44:28
+ * @LastEditTime: 2021-04-03 04:06:20
  */
 import React, { Component } from 'react';
 import { Image, View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
@@ -24,12 +24,6 @@ class LoginScreen extends Component {
     AuthStore.errors = {};
     AuthStore.email = '';
     AuthStore.password = '';
-  }
-
-  submitForm(values) {
-    AuthStore.handleEmail(values.email);
-    AuthStore.handlePassword(values.password);
-    AuthStore.login();
   }
 
   render() {
@@ -57,7 +51,7 @@ class LoginScreen extends Component {
               email: '',
               password: ''
             }}
-            onSubmit={values => this.submitForm(values)}
+            onSubmit={values => AuthStore.login(values)}
             validationSchema={yup.object().shape({
               email: yup
                 .string('Geçersiz karakterler içeriyor.')
@@ -70,7 +64,7 @@ class LoginScreen extends Component {
                 .required('Bu alan mutlaka gerekiyor.'),
             })}
           >
-            {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
+            {({ values, handleChange, errors, setFieldTouched, touched, isSubmitting, handleSubmit }) => (
               <View>
                 <TextInput style={styles.input}
                   value={values.email}
@@ -108,7 +102,7 @@ class LoginScreen extends Component {
                   </HelperText>}
                   <View style={{ flexDirection: "row" }}>
                     <View style={styles.button}>
-                      <Button icon="account-check" loading={AuthStore.loading} mode="contained" onPress={handleSubmit}>Gİrİş</Button>
+                      <Button icon="account-check" loading={isSubmitting} mode="contained" onPress={handleSubmit}>Gİrİş</Button>
                     </View>
                     <View style={styles.button}>
                       <Button icon="account-plus" mode="contained" onPress={() => this.props.navigation.navigate('Register')}>Yenİ ÜYelİK</Button>

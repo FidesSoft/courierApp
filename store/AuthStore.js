@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 04:04:12
+ * @LastEditTime: 2021-04-03 04:05:57
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -92,11 +92,10 @@ class AuthStore {
       });
   }
 
-  @action async login() {
-    this.loading = true;
+  @action async login(values) {
     let formData = new FormData();
-    formData.append('email', this.email);
-    formData.append('password', this.password);
+    formData.append('email', values.email);
+    formData.append('password', values.password);
     let uri = `${global.apiUrl}/login`;
     await axios.post(uri, formData)
       .then(async (response) => {
@@ -109,7 +108,6 @@ class AuthStore {
         this.errors = error.response.data.errors;
         this.loginSnackbar = true;
       });
-    this.loading = false;
   }
 
   @action async register(navi) {
