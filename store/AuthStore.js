@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 01:08:55
+ * @LastEditTime: 2021-04-03 04:00:23
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -232,10 +232,10 @@ class AuthStore {
     this.loading = false;
   }
 
-  @action async resetPassword() {
+  @action async resetPassword(values) {
     this.loading = true;
     let formData = new FormData();
-    formData.append('email', this.email);
+    formData.append('email', values.email);
 
     let uri = `${global.apiUrl}/reset-password`;
     await axios.post(uri, formData, {
