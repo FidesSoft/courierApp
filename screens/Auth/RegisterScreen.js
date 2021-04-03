@@ -235,11 +235,9 @@ class RegisterScreen extends Component {
                   // onChangeText={text => AuthStore.handleTcNo(text)}
                   onChangeText={handleChange('tcno')}
                   autoCapitalize="none" />
-                {touched.tcno && errors.tcno && <HelperText type="error" visible style={styles.helper}>
-                  {errors.tcno}
-                </HelperText>}
-                {AuthStore.errors.tcno && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.tcno}
+                {((touched.tcno && errors.tcno) || (AuthStore.errors.tcno)) && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.tcno ?? AuthStore.errors.tcno} 
+                  {errors.tcno ?? errors.tcno}
                 </HelperText>}
 
                 <TextInput style={styles.input}
@@ -248,12 +246,9 @@ class RegisterScreen extends Component {
                   onChangeText={handleChange('name')}
                   // onChangeText={text => AuthStore.handleName(text)}
                   autoCapitalize="none" />
-                {touched.name && errors.name && <HelperText type="error" visible style={styles.helper}>
-                  {errors.name}
-                </HelperText>}
-
-                {AuthStore.errors.name && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.name}
+                {((touched.name && errors.name) || (AuthStore.errors.name)) && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.name ?? AuthStore.errors.name} 
+                  {errors.name ?? errors.name}
                 </HelperText>}
 
                 <TextInput style={styles.input}
@@ -263,11 +258,9 @@ class RegisterScreen extends Component {
                   onChangeText={handleChange('email')}
                   // onChangeText={text => AuthStore.handleEmail(text)}
                   autoCapitalize="none" />
-                {touched.email && errors.email && <HelperText type="error" visible style={styles.helper}>
-                  {errors.email}
-                </HelperText>}
-                {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.email}
+                {((touched.email && errors.email) || (AuthStore.errors.email)) && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.email ?? AuthStore.errors.email} 
+                  {errors.email ?? errors.email}
                 </HelperText>}
 
                 <TextInput style={styles.input}
@@ -276,11 +269,9 @@ class RegisterScreen extends Component {
                   onChangeText={handleChange('phone')}
                   // onChangeText={text => AuthStore.handlePhone(text)}
                   autoCapitalize="none" />
-                {touched.phone && errors.phone && <HelperText type="error" visible style={styles.helper}>
-                  {errors.phone}
-                </HelperText>}
-                {AuthStore.errors.phone && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.phone}
+                {((touched.phone && errors.phone) || (AuthStore.errors.phone)) && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.phone ?? AuthStore.errors.phone} 
+                  {errors.phone ?? errors.phone}
                 </HelperText>}
 
                 <TextInput style={styles.input}
@@ -290,11 +281,9 @@ class RegisterScreen extends Component {
                   onChangeText={handleChange('password')}
                   // onChangeText={text => AuthStore.handlePassword(text)}
                   secureTextEntry={true} />
-                {touched.password && errors.password && <HelperText type="error" visible style={styles.helper}>
-                  {errors.password}
-                </HelperText>}
-                {AuthStore.errors.password && <HelperText type="error" style={styles.helper}>
-                  {AuthStore.errors.password}
+                {((touched.password && errors.password) || (AuthStore.errors.password)) && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.password ?? AuthStore.errors.password} 
+                  {errors.password ?? errors.password}
                 </HelperText>}
 
                 <TextInput style={styles.input}
