@@ -14,6 +14,9 @@ import { Button, Appbar, TextInput, Checkbox, HelperText, Snackbar, Avatar, Dial
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
+import * as yup from 'yup'
+import { Formik } from 'formik'
+
 @observer
 class RegisterScreen extends Component {
   constructor(props) {
@@ -140,156 +143,216 @@ class RegisterScreen extends Component {
           />
         </Appbar.Header>
         <ScrollView>
-          <View style={{ flex: 1, alignItems: 'center', margin: 15 }}>
+          <Formik
+            initialValues={{
+              email: '',
+              password: '',
+              password_confirmation: '',
+              tcno: '',
+              name: '',
+              phone: '',
+            }}
 
-            {AuthStore.imagePath.uri &&
-              <Avatar.Image style={{ margin: 10 }} size={100} source={{ uri: AuthStore.imagePath.uri }} />}
+            onSubmit={values => AuthStore.register(values, this.props.navigation)}
+            validationSchema={yup.object().shape({
+              email: yup
+                .string('Geçersiz karakterler içeriyor.')
+                .email('Geçersiz email formatı.')
+                .required('Bu alan mutlaka gerekiyor.'),
+              password: yup
+                .string()
+                .required('Bu alan mutlaka gerekiyor.'),
+              password_confirmation: yup
+                .string()
+                .oneOf([yup.ref('password'), null], 'Şifreler eşleşmiyor.')
+                .required('Bu alan mutlaka gerekiyor.'),
+              tcno: yup
+                .string()
+                .required('Bu alan mutlaka gerekiyor.')
+                .matches(/^[0-9]+$/, "Sadece sayı olabilir.")
+                .min(11, '11 karakter olmalı.')
+                .max(11, '11 karakter olmalı.'),
+              name: yup
+                .string()
+                .required('Bu alan mutlaka gerekiyor.'),
+              phone: yup
+                .string()
+                .matches(/^[0-9]+$/, "Sadece sayı olabilir.")
+                .required('Bu alan mutlaka gerekiyor.'),
+            })}
+          >
+            {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit, isSubmitting }) => (
+              <View>
+                <View style={{ flex: 1, alignItems: 'center', margin: 15 }}>
 
-            {!AuthStore.imagePath.uri &&
-              <Avatar.Icon style={{ margin: 10 }} size={100} icon="file-image" />}
+                  {AuthStore.imagePath.uri &&
+                    <Avatar.Image style={{ margin: 10 }} size={100} source={{ uri: AuthStore.imagePath.uri }} />}
 
-            {AuthStore.errors.image && <HelperText type="error" visible style={styles.helper}>
-              {AuthStore.errors.image}
-            </HelperText>}
+                  {!AuthStore.imagePath.uri &&
+                    <Avatar.Icon style={{ margin: 10 }} size={100} icon="file-image" />}
 
-            <Button icon="camera" mode="contained" onPress={this.imageGalleryLaunch}>Fotograf Ekle</Button>
-          </View>
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'flex-start'
-          }}>
-            <View style={{ width: '50%' }}>
-              <TextInput style={styles.input}
-                        onFocus={() => this.showDialogCities()}
-                        // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
-                        label="İl Listesi"
-                        mode="outlined"
-                        // onChangeText={text => AuthStore.handleBirthDate(text)}
-                        autoCapitalize="none" />
-                {/* <Picker
-                style={{height: 20}}
-                  selectedValue={AuthStore.courier_city}
-                  onValueChange={(itemValue) =>
-                    this.getDistrictsAfterSelectedCity(itemValue)
-                  }>
-                  <Picker.Item label="İl Seç" value="" />
-                  {allCities}
-                </Picker> */}
-              {AuthStore.errors.courier_city && <HelperText type="error" visible style={styles.helper}>
-                {AuthStore.errors.courier_city}
-              </HelperText>}
-            </View>
-            <View style={{ width: '50%' }}>                
+                  {AuthStore.errors.image && <HelperText type="error" visible style={styles.helper}>
+                    {AuthStore.errors.image}
+                  </HelperText>}
+
+                  <Button icon="camera" mode="contained" onPress={this.imageGalleryLaunch}>Fotograf Ekle</Button>
+                </View>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'flex-start'
+                }}>
+                  <View style={{ width: '50%' }}>
+                    <TextInput style={styles.input}
+                      onFocus={() => this.showDialogCities()}
+                      // value={AuthStore.courier_city}
+                      label="İl Seçimi"
+                      mode="outlined"
+                      // onChangeText={text => AuthStore.handleBirthDate(text)}
+                      autoCapitalize="none" />
+                    {AuthStore.errors.courier_city && <HelperText type="error" visible style={styles.helper}>
+                      {AuthStore.errors.courier_city}
+                    </HelperText>}
+                  </View>
+                  <View style={{ width: '50%' }}>
+                    <TextInput style={styles.input}
+                      onFocus={() => this.showDialogDistricts()}
+                      // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
+                      label="İlçe Seçimi"
+                      mode="outlined"
+                      // onChangeText={text => AuthStore.handleBirthDate(text)}
+                      autoCapitalize="none" />
+                    {AuthStore.errors.courier_districts && <HelperText type="error" visible style={styles.helper}>
+                      {AuthStore.errors.courier_districts}
+                    </HelperText>}
+                  </View>
+                </View>
+
                 <TextInput style={styles.input}
-                        onFocus={() => this.showDialogDistricts()}
-                        // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
-                        label="İlçe Seç"
-                        mode="outlined"
-                        // onChangeText={text => AuthStore.handleBirthDate(text)}
-                        autoCapitalize="none" />
-              {AuthStore.errors.courier_districts && <HelperText type="error" visible style={styles.helper}>
-                {AuthStore.errors.courier_districts}
-              </HelperText>}
-            </View>
-          </View>
+                  label="TC No"
+                  mode="outlined"
+                  // onChangeText={text => AuthStore.handleTcNo(text)}
+                  onChangeText={handleChange('tcno')}
+                  autoCapitalize="none" />
+                {touched.tcno && errors.tcno && <HelperText type="error" visible style={styles.helper}>
+                  {errors.tcno}
+                </HelperText>}
+                {AuthStore.errors.tcno && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.tcno}
+                </HelperText>}
 
-          <TextInput style={styles.input}
-            label="TC No"
-            mode="outlined"
-            onChangeText={text => AuthStore.handleTcNo(text)}
-            autoCapitalize="none" />
-          {AuthStore.errors.tcno && <HelperText type="error" visible style={styles.helper}>
-            {AuthStore.errors.tcno}
-          </HelperText>}
+                <TextInput style={styles.input}
+                  label="Adınız"
+                  mode="outlined"
+                  onChangeText={handleChange('name')}
+                  // onChangeText={text => AuthStore.handleName(text)}
+                  autoCapitalize="none" />
+                {touched.name && errors.name && <HelperText type="error" visible style={styles.helper}>
+                  {errors.name}
+                </HelperText>}
 
-          <TextInput style={styles.input}
-            label="Adınız"
-            mode="outlined"
-            onChangeText={text => AuthStore.handleName(text)}
-            autoCapitalize="none" />
-          {AuthStore.errors.name && <HelperText type="error" visible style={styles.helper}>
-            {AuthStore.errors.name}
-          </HelperText>}
+                {AuthStore.errors.name && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.name}
+                </HelperText>}
 
-          <TextInput style={styles.input}
-            label="Email"
-            mode="outlined"
-            keyboardType="email-address"
-            onChangeText={text => AuthStore.handleEmail(text)}
-            autoCapitalize="none" />
-          {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
-            {AuthStore.errors.email}
-          </HelperText>}
+                <TextInput style={styles.input}
+                  label="Email"
+                  mode="outlined"
+                  keyboardType="email-address"
+                  onChangeText={handleChange('email')}
+                  // onChangeText={text => AuthStore.handleEmail(text)}
+                  autoCapitalize="none" />
+                {touched.email && errors.email && <HelperText type="error" visible style={styles.helper}>
+                  {errors.email}
+                </HelperText>}
+                {AuthStore.errors.email && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.email}
+                </HelperText>}
 
-          <TextInput style={styles.input}
-            label="Telefon"
-            mode="outlined"
-            onChangeText={text => AuthStore.handlePhone(text)}
-            autoCapitalize="none" />
-          {AuthStore.errors.phone && <HelperText type="error" visible style={styles.helper}>
-            {AuthStore.errors.phone}
-          </HelperText>}
+                <TextInput style={styles.input}
+                  label="Telefon"
+                  mode="outlined"
+                  onChangeText={handleChange('phone')}
+                  // onChangeText={text => AuthStore.handlePhone(text)}
+                  autoCapitalize="none" />
+                {touched.phone && errors.phone && <HelperText type="error" visible style={styles.helper}>
+                  {errors.phone}
+                </HelperText>}
+                {AuthStore.errors.phone && <HelperText type="error" visible style={styles.helper}>
+                  {AuthStore.errors.phone}
+                </HelperText>}
 
-          <TextInput style={styles.input}
-            label="Şifre"
-            mode="outlined"
-            autoCapitalize="none"
-            onChangeText={text => AuthStore.handlePassword(text)}
-            secureTextEntry={true} />
-          {AuthStore.errors.password && <HelperText type="error" style={styles.helper}>
-            {AuthStore.errors.password}
-          </HelperText>}
+                <TextInput style={styles.input}
+                  label="Şifre"
+                  mode="outlined"
+                  autoCapitalize="none"
+                  onChangeText={handleChange('password')}
+                  // onChangeText={text => AuthStore.handlePassword(text)}
+                  secureTextEntry={true} />
+                {touched.password && errors.password && <HelperText type="error" visible style={styles.helper}>
+                  {errors.password}
+                </HelperText>}
+                {AuthStore.errors.password && <HelperText type="error" style={styles.helper}>
+                  {AuthStore.errors.password}
+                </HelperText>}
 
-          <TextInput style={styles.input}
-            label="Şifre Onaylama"
-            mode="outlined"
-            autoCapitalize="none"
-            onChangeText={text => AuthStore.handlePasswordC(text)}
-            secureTextEntry={true} />
-          <View style={{ flex: 1, margin: 10 }}>
-            <View style={{ flexDirection: "row" }}>
-              <Checkbox
-                color="#139740"
-                status={AuthStore.sozlesme ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  AuthStore.handleSozlesme(!AuthStore.sozlesme);
-                }}
-              />
-              <View style={{ flexDirection: "column", justifyContent: 'center' }}>
-                <Text> '
+                <TextInput style={styles.input}
+                  label="Şifre Onaylama"
+                  mode="outlined"
+                  autoCapitalize="none"
+                  onChangeText={handleChange('password_confirmation')}
+                  // onChangeText={text => AuthStore.handlePasswordC(text)}
+                  secureTextEntry={true} />
+                {touched.password_confirmation && errors.password_confirmation && <HelperText type="error" visible style={styles.helper}>
+                  {errors.password_confirmation}
+                </HelperText>}
+
+                <View style={{ flex: 1, margin: 10 }}>
+                  <View style={{ flexDirection: "row" }}>
+                    <Checkbox
+                      color="#139740"
+                      status={AuthStore.sozlesme ? 'checked' : 'unchecked'}
+                      onPress={() => {
+                        AuthStore.handleSozlesme(!AuthStore.sozlesme);
+                      }}
+                    />
+                    <View style={{ flexDirection: "column", justifyContent: 'center' }}>
+                      <Text> '
                 <Text
-                    style={styles.hyperlinkStyle}
-                    onPress={() => {
-                      Linking.openURL(`${global.url}/privacy-policy`);
-                    }}>
-                    Gizlilik Sözleşmesi
+                          style={styles.hyperlinkStyle}
+                          onPress={() => {
+                            Linking.openURL(`${global.url}/privacy-policy`);
+                          }}>
+                          Gizlilik Sözleşmesi
               </Text>
               ' ve '
               <Text
-                    style={styles.hyperlinkStyle}
-                    onPress={() => {
-                      Linking.openURL(`${global.url}/contract`);
-                    }}>
-                    Kullanıcı Sözleşmesi
+                          style={styles.hyperlinkStyle}
+                          onPress={() => {
+                            Linking.openURL(`${global.url}/contract`);
+                          }}>
+                          Kullanıcı Sözleşmesi
               </Text>
               'ni okudum ve kabul ediyorum.
                 </Text>
-              </View>
-            </View>
-          </View>
+                    </View>
+                  </View>
+                </View>
 
 
 
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <View style={{ flexDirection: "row" }}>
-              <View style={styles.button}>
-                <Button icon="account-plus" loading={AuthStore.loading} mode="contained" onPress={() => AuthStore.register(this.props.navigation)}>KAYDET</Button>
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={styles.button}>
+                      <Button icon="account-plus" loading={isSubmitting} onPress={handleSubmit} mode="contained">KAYDET</Button>
+                    </View>
+                    <View style={styles.button}>
+                      <Button icon="account-check" mode="contained" onPress={() => this.props.navigation.navigate('Login')}>Giriş</Button>
+                    </View>
+                  </View>
+                </View>
               </View>
-              <View style={styles.button}>
-                <Button icon="account-check" mode="contained" onPress={() => this.props.navigation.navigate('Login')}>Giriş</Button>
-              </View>
-            </View>
-          </View>
+            )}
+          </Formik>
         </ScrollView>
         <Snackbar visible={AuthStore.registerSnackbar} onDismiss={() => AuthStore.onDismissRegisterSnackbar()}
           duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissRegisterSnackbar() } }}>
@@ -298,29 +361,29 @@ class RegisterScreen extends Component {
           <Dialog visible={this.state.dialogCities} onDismiss={() => this.hideDialogCities()}>
             <Dialog.Title>İl Seçin</Dialog.Title>
             <Dialog.Content>
-            <MultiSelect
-                  flatListProps={{ nestedScrollEnabled: true }}
-                  styleListContainer={{ height: 256 }}
-                  hideTags
-                  items={this.state.cities}
-                  uniqueKey="id"
-                  onSelectedItemsChange={(itemValue) => this.getDistrictsAfterSelectedCity(itemValue)}
-                  selectedItems={AuthStore.courier_city}
-                  selectText="İl Seç"
-                  searchInputPlaceholderText="İl Ara..."
-                  onChangeInput={(text) => console.log(text)}
-                  tagRemoveIconColor="#CCC"
-                  tagBorderColor="#CCC"
-                  tagTextColor="#CCC"
-                  selectedItemTextColor="#CCC"
-                  selectedItemIconColor="#CCC"
-                  itemTextColor="#000"
-                  displayKey="name"
-                  searchInputStyle={{ color: '#CCC' }}
-                  submitButtonColor="#48d22b"
-                  submitButtonText="Kaydet"
-                  single={true}
-                />
+              <MultiSelect
+                flatListProps={{ nestedScrollEnabled: true }}
+                styleListContainer={{ height: 256 }}
+                hideTags
+                items={this.state.cities}
+                uniqueKey="id"
+                onSelectedItemsChange={(itemValue) => this.getDistrictsAfterSelectedCity(itemValue)}
+                selectedItems={AuthStore.courier_city}
+                selectText="İl Seç"
+                searchInputPlaceholderText="İl Ara..."
+                onChangeInput={(text) => console.log(text)}
+                tagRemoveIconColor="#CCC"
+                tagBorderColor="#CCC"
+                tagTextColor="#CCC"
+                selectedItemTextColor="#CCC"
+                selectedItemIconColor="#CCC"
+                itemTextColor="#000"
+                displayKey="name"
+                searchInputStyle={{ color: '#CCC' }}
+                submitButtonColor="#48d22b"
+                submitButtonText="Kaydet"
+                single={true}
+              />
             </Dialog.Content>
             <Dialog.Actions>
               <Button onPress={() => this.hideDialogCities()}>Onayla</Button>
@@ -331,36 +394,36 @@ class RegisterScreen extends Component {
           <Dialog visible={this.state.dialogDistricts} onDismiss={() => this.hideDialogDistricts()}>
             <Dialog.Title>İlçeler Seçin</Dialog.Title>
             <Dialog.Content>
-            <MultiSelect
-                  flatListProps={{ nestedScrollEnabled: true }}
-                  styleListContainer={{ height: 256 }}
-                  hideTags
-                  items={this.state.districts}
-                  uniqueKey="id"
-                  onSelectedItemsChange={(itemValue) =>
-                    AuthStore.handleDistrictId(itemValue)}
-                  selectedItems={AuthStore.courier_districts}
-                  selectText="İlçeler Seç"
-                  searchInputPlaceholderText="İlçe Ara..."
-                  onChangeInput={(text) => console.log(text)}
-                  tagRemoveIconColor="#CCC"
-                  tagBorderColor="#CCC"
-                  tagTextColor="#CCC"
-                  selectedItemTextColor="#CCC"
-                  selectedItemIconColor="#CCC"
-                  itemTextColor="#000"
-                  displayKey="name"
-                  searchInputStyle={{ color: '#CCC' }}
-                  submitButtonColor="#48d22b"
-                  submitButtonText="Kaydet"
-                />
+              <MultiSelect
+                flatListProps={{ nestedScrollEnabled: true }}
+                styleListContainer={{ height: 256 }}
+                hideTags
+                items={this.state.districts}
+                uniqueKey="id"
+                onSelectedItemsChange={(itemValue) =>
+                  AuthStore.handleDistrictId(itemValue)}
+                selectedItems={AuthStore.courier_districts}
+                selectText="İlçeler Seç"
+                searchInputPlaceholderText="İlçe Ara..."
+                onChangeInput={(text) => console.log(text)}
+                tagRemoveIconColor="#CCC"
+                tagBorderColor="#CCC"
+                tagTextColor="#CCC"
+                selectedItemTextColor="#CCC"
+                selectedItemIconColor="#CCC"
+                itemTextColor="#000"
+                displayKey="name"
+                searchInputStyle={{ color: '#CCC' }}
+                submitButtonColor="#48d22b"
+                submitButtonText="Kaydet"
+              />
             </Dialog.Content>
             <Dialog.Actions>
               <Button onPress={() => this.hideDialogDistricts()}>Onayla</Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>
-      </View>
+      </View >
     );
   }
 }

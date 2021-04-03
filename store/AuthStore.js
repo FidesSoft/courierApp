@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 04:05:57
+ * @LastEditTime: 2021-04-03 04:48:29
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -110,19 +110,17 @@ class AuthStore {
       });
   }
 
-  @action async register(navi) {
-
-    this.loading = true;
+  @action async register(values,navi) {
     if (this.sozlesme) {
       let formData = new FormData();
-      formData.append('tcno', this.tcno);
-      formData.append('email', this.email);
-      formData.append('name', this.name);
-      formData.append('phone', this.phone);
+      formData.append('tcno', values.tcno);
+      formData.append('email', values.email);
+      formData.append('name', values.name);
+      formData.append('phone', values.phone);
       formData.append('courier_city', JSON.stringify(this.courier_city));
       formData.append('courier_districts', JSON.stringify(this.courier_districts));
-      formData.append('password', this.password);
-      formData.append('password_confirmation', this.password_confirmation);
+      formData.append('password', values.password);
+      formData.append('password_confirmation', values.password_confirmation);
       if (this.imagePath != '') {
         formData.append("image", {
           name: this.imagePath.fileName,
@@ -145,7 +143,6 @@ class AuthStore {
     } else {
       this.registerSnackbar = true;
     }
-    this.loading = false;
   }
 
   @action async getUser() {
