@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-01 18:31:21
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 04:01:46
+ * @LastEditTime: 2021-04-03 04:04:34
  */
 import React, { Component } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
@@ -26,11 +26,6 @@ class ResetPasswordScreen extends Component {
     AuthStore.password = '';
   }
   
-  submitForm(values) {
-    AuthStore.handleEmail(values.email)
-    AuthStore.resetPassword();
-  }
-
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
@@ -75,7 +70,7 @@ class ResetPasswordScreen extends Component {
                 <View style={{ flex: 1, alignItems: 'center' }}>
                   <View style={{ flexDirection: "row" }}>
                     <View style={styles.button}>
-                      <Button icon="account-check" loading={isSubmitting}  disabled={!isValid} mode="contained" onPress={handleSubmit}>Şİfremİ Yenİle</Button>
+                      <Button icon="account-check" loading={isSubmitting} mode="contained" onPress={handleSubmit}>Şİfremİ Yenİle</Button>
                     </View>
                   </View>
                 </View>

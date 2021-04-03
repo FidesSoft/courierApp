@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 04:00:23
+ * @LastEditTime: 2021-04-03 04:04:12
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -233,7 +233,6 @@ class AuthStore {
   }
 
   @action async resetPassword(values) {
-    this.loading = true;
     let formData = new FormData();
     formData.append('email', values.email);
 
@@ -252,7 +251,6 @@ class AuthStore {
       .catch(error => {
         this.errors = error.response.data.errors;
       });
-    this.loading = false;
   }
 
 
