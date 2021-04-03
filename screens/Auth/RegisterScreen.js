@@ -10,7 +10,7 @@ import axios from 'axios';
 import * as ImagePicker from "react-native-image-picker"
 import MultiSelect from 'react-native-multiple-select';
 
-import { Button, Appbar, TextInput, Checkbox, HelperText, Snackbar, Avatar, Dialog, Portal } from 'react-native-paper';
+import { Button, Appbar, TextInput, Checkbox, HelperText, Avatar, Dialog, Portal } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
@@ -143,6 +143,20 @@ class RegisterScreen extends Component {
           />
         </Appbar.Header>
         <ScrollView>
+          <View style={{ flex: 1, alignItems: 'center', margin: 15 }}>
+
+            {AuthStore.imagePath.uri &&
+              <Avatar.Image style={{ margin: 10 }} size={100} source={{ uri: AuthStore.imagePath.uri }} />}
+
+            {!AuthStore.imagePath.uri &&
+              <Avatar.Icon style={{ margin: 10 }} size={100} icon="file-image" />}
+
+            {AuthStore.errors.image && <HelperText type="error" visible style={styles.helper}>
+              {AuthStore.errors.image}
+            </HelperText>}
+
+            <Button icon="camera" mode="contained" onPress={this.imageGalleryLaunch}>Fotograf Ekle</Button>
+          </View>
           <Formik
             initialValues={{
               email: '',
@@ -151,6 +165,7 @@ class RegisterScreen extends Component {
               tcno: '',
               name: '',
               phone: '',
+              sozlesme: false,
             }}
 
             onSubmit={values => AuthStore.register(values, this.props.navigation)}
@@ -179,24 +194,11 @@ class RegisterScreen extends Component {
                 .string()
                 .matches(/^[0-9]+$/, "Sadece sayı olabilir.")
                 .required('Bu alan mutlaka gerekiyor.'),
+              sozlesme: yup.bool().oneOf([true], 'Sözleşmeleri kabul etmelisiniz.')
             })}
           >
-            {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit, isSubmitting }) => (
+            {({ values, handleChange, errors, setFieldTouched, touched, setFieldValue, handleSubmit, isSubmitting }) => (
               <View>
-                <View style={{ flex: 1, alignItems: 'center', margin: 15 }}>
-
-                  {AuthStore.imagePath.uri &&
-                    <Avatar.Image style={{ margin: 10 }} size={100} source={{ uri: AuthStore.imagePath.uri }} />}
-
-                  {!AuthStore.imagePath.uri &&
-                    <Avatar.Icon style={{ margin: 10 }} size={100} icon="file-image" />}
-
-                  {AuthStore.errors.image && <HelperText type="error" visible style={styles.helper}>
-                    {AuthStore.errors.image}
-                  </HelperText>}
-
-                  <Button icon="camera" mode="contained" onPress={this.imageGalleryLaunch}>Fotograf Ekle</Button>
-                </View>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'flex-start'
@@ -310,10 +312,8 @@ class RegisterScreen extends Component {
                   <View style={{ flexDirection: "row" }}>
                     <Checkbox
                       color="#139740"
-                      status={AuthStore.sozlesme ? 'checked' : 'unchecked'}
-                      onPress={() => {
-                        AuthStore.handleSozlesme(!AuthStore.sozlesme);
-                      }}
+                      status={values.sozlesme ? 'checked' : 'unchecked'}
+                      onPress={() => setFieldValue('sozlesme', !values.sozlesme)}
                     />
                     <View style={{ flexDirection: "column", justifyContent: 'center' }}>
                       <Text> '
@@ -338,7 +338,9 @@ class RegisterScreen extends Component {
                   </View>
                 </View>
 
-
+                {touched.sozlesme && errors.sozlesme && <HelperText type="error" visible style={styles.helper}>
+                  {errors.sozlesme}
+                </HelperText>}
 
                 <View style={{ flex: 1, alignItems: 'center' }}>
                   <View style={{ flexDirection: "row" }}>
@@ -354,9 +356,6 @@ class RegisterScreen extends Component {
             )}
           </Formik>
         </ScrollView>
-        <Snackbar visible={AuthStore.registerSnackbar} onDismiss={() => AuthStore.onDismissRegisterSnackbar()}
-          duration={2000} action={{ label: 'Gizle', onPress: () => { AuthStore.onDismissRegisterSnackbar() } }}>
-          Sözleşmeleri kabul etmelisiniz.</Snackbar>
         <Portal>
           <Dialog visible={this.state.dialogCities} onDismiss={() => this.hideDialogCities()}>
             <Dialog.Title>İl Seçin</Dialog.Title>
@@ -386,7 +385,7 @@ class RegisterScreen extends Component {
               />
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={() => this.hideDialogCities()}>Onayla</Button>
+              <Button onPress={() => this.hideDialogCities()}>Kapat</Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>
@@ -419,7 +418,7 @@ class RegisterScreen extends Component {
               />
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={() => this.hideDialogDistricts()}>Onayla</Button>
+              <Button onPress={() => this.hideDialogDistricts()}>Kapat</Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>

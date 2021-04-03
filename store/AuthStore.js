@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 04:48:29
+ * @LastEditTime: 2021-04-03 05:23:00
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -111,7 +111,6 @@ class AuthStore {
   }
 
   @action async register(values,navi) {
-    if (this.sozlesme) {
       let formData = new FormData();
       formData.append('tcno', values.tcno);
       formData.append('email', values.email);
@@ -139,10 +138,7 @@ class AuthStore {
         })
         .catch(error => {
           this.errors = error.response.data.errors;
-        });
-    } else {
-      this.registerSnackbar = true;
-    }
+        });    
   }
 
   @action async getUser() {
