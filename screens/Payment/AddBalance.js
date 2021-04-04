@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-12 21:08:08
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 14:33:16
+ * @LastEditTime: 2021-04-05 01:07:54
  */
 
 import React, { Component } from "react";
@@ -33,7 +33,7 @@ class AddBalance extends Component {
     handleBalance = (text) => this.setState({ balance: text });
 
     addNewBalance = async (values) => {
-        this.setState({ loading: true });
+        // this.setState({ loading: true });
         let formData = new FormData();
         formData.append('balance', values.balance);
 
@@ -54,8 +54,7 @@ class AddBalance extends Component {
                 }
                 this.setState({ errors: error.response.data.errors });
             });
-        this.setState({ loading: false });
-
+        // this.setState({ loading: false });
     }
 
     render() {
@@ -81,8 +80,8 @@ class AddBalance extends Component {
                                 onChangeText={handleChange('balance')}
                                 onBlur={() => setFieldTouched('balance')}
                                 autoCapitalize="none" />
-                            {((touched.balance && errors.balance) || (AuthStore.errors.balance)) && <HelperText type="error" visible style={styles.helper}>
-                                {AuthStore.errors.balance ?? AuthStore.errors.balance}
+                            {((touched.balance && errors.balance) || (this.state.errors.balance)) && <HelperText type="error" visible style={styles.helper}>
+                                {this.state.errors.balance ?? this.state.errors.balance}
                                 {errors.balance ?? errors.balance}
                             </HelperText>}
 

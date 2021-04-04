@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-11 17:11:37
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 14:51:09
+ * @LastEditTime: 2021-04-05 01:09:42
  */
 import React, { Component } from "react";
 import axios from 'axios';
@@ -92,8 +92,8 @@ class IbanIndex extends Component {
                                 onChangeText={handleChange('iban_no')}
                                 onBlur={() => setFieldTouched('iban_no')}
                                 autoCapitalize="none" />
-                            {((touched.iban_no && errors.iban_no) || (AuthStore.errors.iban_no)) && <HelperText type="error" visible style={styles.helper}>
-                                {AuthStore.errors.iban_no ?? AuthStore.errors.iban_no}
+                            {((touched.iban_no && errors.iban_no) || (this.state.errors.iban_no)) && <HelperText type="error" visible style={styles.helper}>
+                                {this.state.errors.iban_no ?? this.state.errors.iban_no}
                                 {errors.iban_no ?? errors.iban_no}
                             </HelperText>}
 
@@ -106,8 +106,8 @@ class IbanIndex extends Component {
                                     <Picker.Item label="Aktif Değil" value={11} />
                                 </Picker>
                             </View>
-                            {((touched.status && errors.status) || (AuthStore.errors.status)) && <HelperText type="error" visible style={styles.helper}>
-                                {AuthStore.errors.status ?? AuthStore.errors.status}
+                            {((touched.status && errors.status) || (this.state.errors.status)) && <HelperText type="error" visible style={styles.helper}>
+                                {this.state.errors.status ?? this.state.errors.status}
                                 {errors.status ?? errors.status}
                             </HelperText>}
 

@@ -36,8 +36,6 @@ class ContactStore {
       .then((response) => {
         // console.log(response.data)
         this.contactSnackbar = true;
-        this.subject = '';
-        this.message = '';
         // navi.navigate('Home');
       })
       .catch(error => {

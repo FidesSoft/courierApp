@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-11 14:35:25
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 14:24:17
+ * @LastEditTime: 2021-04-05 01:08:36
  */
 import React, { Component } from "react";
 import axios from 'axios';
@@ -89,22 +89,22 @@ class IbanCreate extends Component {
                                 onChangeText={handleChange('iban_no')}
                                 onBlur={() => setFieldTouched('iban_no')}
                                 autoCapitalize="none" />
-                            {((touched.iban_no && errors.iban_no) || (AuthStore.errors.iban_no)) && <HelperText type="error" visible style={styles.helper}>
-                                {AuthStore.errors.iban_no ?? AuthStore.errors.iban_no}
+                            {((touched.iban_no && errors.iban_no) || (this.state.errors.iban_no)) && <HelperText type="error" visible style={styles.helper}>
+                                {this.state.errors.iban_no ?? this.state.errors.iban_no}
                                 {errors.iban_no ?? errors.iban_no}
                             </HelperText>}
 
                             <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
                                 <Picker
-                                    selectedValue={this.state.status}
+                                    selectedValue={values.status}
                                     onValueChange={handleChange('status')}>
                                     <Picker.Item label="Durum Seç" value="" />
                                     <Picker.Item label="Aktif" value="10" />
                                     <Picker.Item label="Aktif Değil" value="11" />
                                 </Picker>
                             </View>
-                            {((touched.status && errors.status) || (AuthStore.errors.status)) && <HelperText type="error" visible style={styles.helper}>
-                                {AuthStore.errors.status ?? AuthStore.errors.status}
+                            {((touched.status && errors.status) || (this.state.errors.status)) && <HelperText type="error" visible style={styles.helper}>
+                                {this.state.errors.status ?? this.state.errors.status}
                                 {errors.status ?? errors.status}
                             </HelperText>}
 
