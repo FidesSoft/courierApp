@@ -96,7 +96,7 @@ class IbanCreate extends Component {
 
                             <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
                                 <Picker
-                                    selectedValue={this.state.status}
+                                    selectedValue={values.status}
                                     onValueChange={handleChange('status')}>
                                     <Picker.Item label="Durum Seç" value="" />
                                     <Picker.Item label="Aktif" value="10" />
