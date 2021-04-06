@@ -3,11 +3,12 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 05:23:00
+ * @LastEditTime: 2021-04-06 00:19:39
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SplashScreen from 'react-native-splash-screen'
 
 class AuthStore {
   @observable cities = [];
@@ -244,33 +245,6 @@ class AuthStore {
       });
   }
 
-
-  @action async storeToken(token) {
-    try {
-      await AsyncStorage.setItem("@usertoken", token);
-    } catch (error) {
-      console.log("Something went wrong", error);
-    }
-  }
-
-  @action async getToken() {
-    try {
-      this.token = await AsyncStorage.getItem("@usertoken");
-      // console.log(this.token )
-    } catch (error) {
-      console.log("Something went wrong", error);
-    }
-    this.loading_screen = false;
-  }
-
-  @action async removeToken() {
-    try {
-      await AsyncStorage.removeItem("@usertoken");
-    } catch (error) {
-      console.log("Something went wrong", error);
-    }
-  }
-
   @action async isThereCourierTask() {
     console.log('check-courier-task istegi gönderildi')
     let uri = `${global.apiUrl}/check-courier-task`;
@@ -388,5 +362,31 @@ class AuthStore {
       });
   }
 
+  @action async storeToken(token) {
+    try {
+      await AsyncStorage.setItem("@usertoken", token);
+    } catch (error) {
+      console.log("Something went wrong", error);
+    }
+  }
+
+  @action async getToken() {
+    try {
+      this.token = await AsyncStorage.getItem("@usertoken");
+      // console.log(this.token )
+    } catch (error) {
+      console.log("Something went wrong", error);
+    }
+    this.loading_screen = false;
+    SplashScreen.hide();
+  }
+
+  @action async removeToken() {
+    try {
+      await AsyncStorage.removeItem("@usertoken");
+    } catch (error) {
+      console.log("Something went wrong", error);
+    }
+  }
 }
 export default new AuthStore()
