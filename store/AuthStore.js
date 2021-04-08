@@ -3,12 +3,13 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-06 00:19:39
+ * @LastEditTime: 2021-04-06 17:40:11
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen'
+import messaging from '@react-native-firebase/messaging'; 
 
 class AuthStore {
   @observable cities = [];
@@ -97,9 +98,11 @@ class AuthStore {
     let formData = new FormData();
     formData.append('email', values.email);
     formData.append('password', values.password);
+    formData.append('firebase_token', await messaging().getToken());
     let uri = `${global.apiUrl}/login`;
     await axios.post(uri, formData)
       .then(async (response) => {
+        // console.log(response.data)
         this.token = response.data.data.token;
         this.storeToken(this.token);
         global.googleApiKey = response.data.data.googleApiKey;
