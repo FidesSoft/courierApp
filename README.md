@@ -32,7 +32,6 @@ constructor(props) {
 
 ```
 
-
 ## start metro bundler
 
 ```
