@@ -1,11 +1,11 @@
 /*
 * @Author: @vedatbozkurt
 * @Date:   2020-05-08 18:37:36
-* @Last Modified by:   @vedatbozkurt
-* @Last Modified time: 2020-05-08 19:57:28
+ * @Last Modified by: @vedatbozkurt
+ * @Last Modified time: 2021-04-10 01:30:08
 */
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, Linking } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, Linking, StatusBar } from 'react-native';
 import axios from 'axios';
 import * as ImagePicker from "react-native-image-picker"
 import MultiSelect from 'react-native-multiple-select';
@@ -17,6 +17,7 @@ import AuthStore from '../../store/AuthStore';
 import * as yup from 'yup'
 import { Formik } from 'formik'
 
+
 @observer
 class RegisterScreen extends Component {
   constructor(props) {
@@ -27,6 +28,7 @@ class RegisterScreen extends Component {
       dialogCities: false,
       dialogDistricts: false,
     };
+
   }
 
   showDialogCities() { this.setState({ dialogCities: true }); }
@@ -134,7 +136,7 @@ class RegisterScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
+      <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF'}}>
         <Appbar.Header>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
@@ -331,7 +333,7 @@ class RegisterScreen extends Component {
                   {errors.sozlesme}
                 </HelperText>}
 
-                <View style={{ flex: 1, alignItems: 'center' }}>
+                <View style={{ flex: 1, alignItems: 'center', marginBottom: 30 }}>
                   <View style={{ flexDirection: "row" }}>
                     <View style={styles.button}>
                       <Button icon="account-plus" loading={isSubmitting} onPress={handleSubmit} mode="contained">KAYDET</Button>
@@ -411,7 +413,7 @@ class RegisterScreen extends Component {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-      </View >
+      </View>
     );
   }
 }

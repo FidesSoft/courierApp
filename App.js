@@ -3,12 +3,13 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:29:51
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-06 17:21:23
+ * @LastEditTime: 2021-04-10 14:24:36
  */
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import messaging from '@react-native-firebase/messaging'; 
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import MainStack from './routes/MainStack';
 
@@ -26,33 +27,20 @@ const theme = {
   },
 };
 
-function App() {
-  useEffect(async ()  => {
-    await messaging().registerDeviceForRemoteMessages();
-    await requestUserPermission();
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log(remoteMessage);
-    });
-    // console.log(await messaging().getToken())
-    }, [])
-    async function requestUserPermission() {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    
-      if (enabled) {
-        console.log('Authorization status:', authStatus);
-      }
-  }
 
-  global.url = 'https:///c79123426f15.ngrok.io';
+function App() {
+  
+  global.url = 'https://23118352cd0c.ngrok.io';
   global.apiUrl = `${global.url}/api/v1/courier`;
   return (
     <PaperProvider theme={theme}>
+
       <NavigationContainer>
+      <SafeAreaProvider>
         <MainStack />
+      </SafeAreaProvider>
       </NavigationContainer>
+
     </PaperProvider>
   );
 }

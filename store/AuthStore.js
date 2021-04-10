@@ -9,7 +9,6 @@ import { observable, action } from 'mobx';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen'
-import messaging from '@react-native-firebase/messaging'; 
 
 class AuthStore {
   @observable cities = [];
@@ -98,7 +97,6 @@ class AuthStore {
     let formData = new FormData();
     formData.append('email', values.email);
     formData.append('password', values.password);
-    formData.append('firebase_token', await messaging().getToken());
     let uri = `${global.apiUrl}/login`;
     await axios.post(uri, formData)
       .then(async (response) => {
