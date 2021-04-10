@@ -32,6 +32,12 @@ constructor(props) {
 
 ```
 
+## install pods
+
+```
+npx pod-install
+```
+
 ## start metro bundler
 
 ```
