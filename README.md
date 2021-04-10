@@ -9,15 +9,26 @@
 
 ## Installation
 
+### download repo
+```
+git clone https://github.com/FidesSoft/courierApp.git
+```
 
-## install packages
+### get updates from main branch
+```
+git checkout dev // git checkout dev-ios 
+git pull origin main
+```
+
+### install packages
+
 
 ```
 npm i
 ```
 
 
-## edit react-native-multiple-select package.
+### edit react-native-multiple-select package.
 
 edit node_modules/react-native-multiple-select/lib/react-native-multi-select.js like below.(set selector true)
 
@@ -32,20 +43,20 @@ constructor(props) {
 
 ```
 
-## install pods
+### install pods
 
 ```
 npx pod-install
 ```
 
-## start metro bundler
+### start metro bundler
 
 ```
 rns --reset-cache // npx react-native start --reset-cache
 ```
 
 
-## run app on emulator
+### run app on emulator
 
 ```
 rna // npx react-native run-android
