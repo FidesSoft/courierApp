@@ -36,7 +36,7 @@ constructor(props) {
 ## install pods
 
 ```
-npx pod-installnpx
+npx pod-install
 ```
 
 ## start metro bundler
