@@ -1,8 +1,8 @@
 /*
 * @Author: @vedatbozkurt
 * @Date:   2020-05-05 04:29:34
-* @Last Modified by:   @vedatbozkurt
-* @Last Modified time: 2020-05-11 02:12:41
+ * @Last Modified by: @vedatbozkurt
+ * @Last Modified time: 2021-04-10 00:17:01
 */
 import React, { Component } from 'react';
 import axios from 'axios';
@@ -323,6 +323,7 @@ class HomeScreen extends Component {
           </View>
           <View style={{ width: '50%', borderLeftWidth: 1, borderLeftColor: '#dedbd3', backgroundColor: '#fffaf0' }}>
             <Picker
+            // itemStyle={{height:50}}
               selectedValue={this.state.selectedStatus}
               onValueChange={(itemValue) =>
                 this.updateAfterSelectedStatus(itemValue)

@@ -33,7 +33,7 @@ export default class MainStack extends Component  {
   render() {
      return (
         <Stack.Navigator
-        // initialRouteName="Home"
+        initialRouteName="LoadingScreen"
         screenOptions={{
             headerShown: false,
         }}>

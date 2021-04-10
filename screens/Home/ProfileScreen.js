@@ -320,7 +320,7 @@ class ProfileScreen extends Component {
                                 hideTags
                                 items={AuthStore.cities}
                                 uniqueKey="id"
-                                onSelectedItemsChange={(itemValue) => this.getDistrictsAfterSelectedCity(itemValue)}
+                                onSelectedItemsChange={(itemValue) => AuthStore.getDistrictsAfterSelectedCity(itemValue)}
                                 selectedItems={AuthStore.courier_city}
                                 selectText="İl Seç"
                                 searchInputPlaceholderText="İl Ara..."

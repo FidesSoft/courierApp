@@ -111,6 +111,7 @@ class IbanCreate extends Component {
                             <View style={{ flex: 1, margin: 10 }}>
 
                                 <View style={{ flexDirection: "row" }}>
+                                {/* <View style={{ backgroundColor: '#ffffff' }}> */}
                                     <Checkbox
                                         color="#139740"
                                         status={this.state.default ? 'checked' : 'unchecked'}
