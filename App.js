@@ -30,7 +30,7 @@ const theme = {
 
 function App() {
   
-  global.url = 'https://23118352cd0c.ngrok.io';
+  global.url = 'https://23118352cd0d.ngrok.io';
   global.apiUrl = `${global.url}/api/v1/courier`;
   return (
     <PaperProvider theme={theme}>
