@@ -3,13 +3,14 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-11 14:35:25
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-05 01:08:36
+ * @LastEditTime: 2021-04-16 01:41:57
  */
 import React, { Component } from "react";
 import axios from 'axios';
 import { Text, View, ScrollView, StyleSheet } from "react-native";
 import { Button, TextInput, Checkbox, HelperText, Snackbar } from 'react-native-paper';
-import { Picker } from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
+
 import AuthStore from '../../store/AuthStore';
 import * as yup from 'yup'
 import { Formik } from 'formik'
@@ -95,13 +96,17 @@ class IbanCreate extends Component {
                             </HelperText>}
 
                             <View style={{ flex: 1, marginTop: 15, marginLeft: 15, marginRight: 15, backgroundColor: "white", borderColor: "#F59F0B", borderWidth: 1 }}>
-                                <Picker
-                                    selectedValue={values.status}
-                                    onValueChange={handleChange('status')}>
-                                    <Picker.Item label="Durum Seç" value="" />
-                                    <Picker.Item label="Aktif" value="10" />
-                                    <Picker.Item label="Aktif Değil" value="11" />
-                                </Picker>
+                                <RNPickerSelect
+                                    placeholder={{ label: 'Durum Seç', value: '' }}
+                                    doneText="Onayla"
+                                    value={values.status}
+                                    style={{ inputAndroid: { color: 'black' }, inputIOS: { height: 40, marginLeft: 15, margin: 5 } }}
+                                    onValueChange={handleChange('status')}
+                                    items={[
+                                        { label: 'Aktif', value: '10' },
+                                        { label: 'Aktif Değil', value: '11' },
+                                    ]}
+                                />
                             </View>
                             {((touched.status && errors.status) || (this.state.errors.status)) && <HelperText type="error" visible style={styles.helper}>
                                 {this.state.errors.status ?? this.state.errors.status}

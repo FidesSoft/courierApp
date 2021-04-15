@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-10 13:56:01
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 23:00:59
+ * @LastEditTime: 2021-04-16 01:24:44
  */
 import React, { Component } from "react";
 import axios from 'axios';
@@ -11,7 +11,7 @@ import AuthStore from '../../store/AuthStore';
 
 import { Text, View, FlatList, SafeAreaView, StyleSheet, RefreshControl } from 'react-native';
 import { Divider, DataTable, Button, Snackbar, FAB } from 'react-native-paper';
-import { Picker } from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 import LoadingFooter from '../../components/LoadingFooter';
 import EmptyComponent from '../../components/EmptyComponent';
@@ -156,15 +156,20 @@ class PaymentIndex extends Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{ width: '100%' }}>
-                    <Picker
-                        selectedValue={this.state.selectedStatus}
-                        onValueChange={(itemValue, itemIndex) => { this.updateAfterSelectedStatus(itemValue) }
-                        }>
-                        <Picker.Item label="Tümü" value="" />
-                        <Picker.Item label="Alınan Ödemeler" value="1" />
-                        <Picker.Item label="Bakiye Yüklemeleri" value="2" />
-                        <Picker.Item label="Gönderi Ödemeleri" value="3" />
-                    </Picker>
+                    <RNPickerSelect
+                        placeholder={{ label: 'Tüm Ödemeler', value: '' }}
+                        doneText="Onayla"
+                        value={this.state.selectedStatus}
+                        style={{ inputAndroid: { color: 'black' }, inputIOS: { height: 40, marginLeft: 15, margin: 5 } }}
+                        onValueChange={(itemValue) =>
+                            this.updateAfterSelectedStatus(itemValue)
+                        }
+                        items={[
+                            { label: 'Alınan Ödemeler', value: '1' },
+                            { label: 'Bakiye Yüklemeleri', value: '2' },
+                            { label: 'Gönderi Ödemeleri', value: '3' },
+                        ]}
+                    />
                 </View>
                 <Divider />
                 <FlatList

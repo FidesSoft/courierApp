@@ -3,9 +3,9 @@
  * @Email: info@wedat.org
  * @Date: 2021-04-10 14:35:58
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-10 14:43:13
+ * @LastEditTime: 2021-04-16 01:37:19
 -->
-# Courier Android App Dev Guide
+# Courier Mobile App Dev Guide
 
 ## Installation
 
@@ -43,7 +43,24 @@ constructor(props) {
 
 ```
 
-### install pods
+### edit react-native-picker-select package.
+
+edit node_modules/react-native-picker-select/src/index.js
+Line 161 
+
+```
+if (itemsChanged || selectedItemChanged) {
+            // this.props.onValueChange(selectedItem.value, idx); // delete this line
+
+            this.setState({
+                ...(itemsChanged ? { items } : {}),
+                ...(selectedItemChanged ? { selectedItem } : {}),
+            });
+        }
+
+```
+
+### install pods (ios dev)
 
 ```
 npx pod-install
@@ -60,3 +77,5 @@ rns --reset-cache // npx react-native start --reset-cache
 
 ```
 rna // npx react-native run-android
+or
+rna // npx react-native run-ios
