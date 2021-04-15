@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 20:00:20
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-22 20:00:44
+ * @LastEditTime: 2021-04-16 01:39:05
  */
 /*
  * @Author: @vedatbozkurt
@@ -18,7 +18,7 @@ import AuthStore from '../../store/AuthStore';
 
 import { SafeAreaView, View, Text, FlatList, RefreshControl } from 'react-native';
 import { Divider, DataTable, Button, Paragraph, Snackbar, Portal, Searchbar, IconButton, Dialog, FAB } from 'react-native-paper';
-import { Picker } from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 import LoadingFooter from '../../components/LoadingFooter';
 import EmptyComponent from '../../components/EmptyComponent';
@@ -235,20 +235,13 @@ class IbanIndex extends Component {
     }
 
     render() {
-
-        let allStatuses = this.state.statuses.map((status) => {
-            return (
-                <Picker.Item label={status.name} value={status.id} key={status.id} />
-            )
-        });
-
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'flex-start'
                 }}>                    
-                    <View style={{ width: '70%' }}>
+                    <View style={{ width: '60%' }}>
                         <Searchbar style={{ backgroundColor: '#fffaf0', 
                         elevation: 0}}
                             placeholder="İban Ara"
@@ -256,15 +249,15 @@ class IbanIndex extends Component {
                             onIconPress={() => this.searching()}
                         />
                     </View>
-                    <View style={{ width: '30%', borderLeftWidth : 1, borderLeftColor:  '#dedbd3', backgroundColor: '#fffaf0'}}>
-                        <Picker
-                            selectedValue={this.state.selectedStatus}
-                            onValueChange={(itemValue) =>
-                                this.updateAfterSelectedStatus(itemValue)
-                            }>
-                            <Picker.Item label="Tümü" value="0" />
-                            {allStatuses}
-                        </Picker>
+                    <View style={{ width: '40%', borderLeftWidth : 1, borderLeftColor:  '#dedbd3', backgroundColor: '#fffaf0'}}>
+                    <RNPickerSelect
+                            placeholder={{ label: 'Tümü', value: '' }}
+                            doneText="Onayla"
+                            value={this.state.selectedStatus}
+                            style={{ inputAndroid: { color: 'black' }, inputIOS: { height: 40, marginLeft: 15, margin: 5 } }}
+                            onValueChange={(itemValue) => this.updateAfterSelectedStatus(itemValue)}
+                            items={this.state.statuses}
+                        />
                     </View>
                 </View>
                 <Divider />
