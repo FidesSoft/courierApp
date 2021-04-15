@@ -12,7 +12,7 @@ import { Snackbar, Button, List, Searchbar, Divider, Paragraph, Dialog, Portal }
 import { observer } from 'mobx-react';
 import AuthStore from '../../store/AuthStore';
 
-import { Picker } from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 import LoadingFooter from '../../components/LoadingFooter';
 import EmptyComponent from '../../components/EmptyComponent';
@@ -224,11 +224,11 @@ class HomeScreen extends Component {
         console.log(error.response.data.errors.error_desc)
         this.setState({
           errors: error.response.data.errors.error_desc,
-          }, () => {
+        }, () => {
           this.setState({
             acceptTaskDialogError: this.state.errors,
-          showAcceptTaskDialogError: true,
-        });
+            showAcceptTaskDialogError: true,
+          });
         });
       });
     this.setState({
@@ -322,16 +322,20 @@ class HomeScreen extends Component {
             />
           </View>
           <View style={{ width: '50%', borderLeftWidth: 1, borderLeftColor: '#dedbd3', backgroundColor: '#fffaf0' }}>
-            <Picker
-            // itemStyle={{height:50}}
-              selectedValue={this.state.selectedStatus}
+            <RNPickerSelect
+              placeholder={{}}
+              doneText="Onayla"
+              value={this.state.selectedStatus}
+              style={{ inputAndroid: { color: 'black' }, inputIOS: { height: 40, marginLeft: 15, margin: 5 } }}
               onValueChange={(itemValue) =>
                 this.updateAfterSelectedStatus(itemValue)
-              }>
-              <Picker.Item label="Yeni Gönderiler" value={1} />
-              <Picker.Item label="Devam Eden Gönderilerim" value={2} />
-              <Picker.Item label="Tamamlanan Gönderilerim" value={3} />
-            </Picker>
+              }
+              items={[
+                { label: 'Yeni Gönderiler', value: 1 },
+                { label: 'Devam Eden Gönderilerim', value: 2 },
+                { label: 'Tamamlanan Gönderilerim', value: 3 },
+              ]}
+            />
           </View>
         </View>
         <Divider />
@@ -369,7 +373,7 @@ class HomeScreen extends Component {
           <Dialog visible={this.state.acceptTaskDialog} onDismiss={() => this.cancelAccepTask()}>
             <Dialog.Title>Gönderi Kabul Et</Dialog.Title>
             <Dialog.Content>
-              <Paragraph>Gönderi kabul ettiğinizi onaylıyor musunuz</Paragraph>
+              <Paragraph>Gönderi kabul ettiğinizi onaylıyor musunuz?</Paragraph>
             </Dialog.Content>
             <Dialog.Actions>
               <Button onPress={() => this.cancelAccepTask()}>İptal</Button>
