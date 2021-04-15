@@ -3,14 +3,12 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 14:15:52
+ * @LastEditTime: 2021-04-16 01:44:35
  */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { Button, Checkbox, TextInput, Snackbar, HelperText, Avatar, Dialog, Portal } from 'react-native-paper';
-import axios from 'axios';
 import { observer } from 'mobx-react';
-import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from "react-native-image-picker"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import MultiSelect from 'react-native-multiple-select';
