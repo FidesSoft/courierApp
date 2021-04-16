@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:29:51
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 17:44:33
+ * @LastEditTime: 2021-04-16 18:52:49
  */
 import React, { useState, useEffect } from 'react';
 
@@ -30,7 +30,7 @@ const theme = {
 
 function App() {
   
-  global.url = 'https://9b6cc66f2aa9.ngrok.io';
+  global.url = 'https://7578d6205ee9.ngrok.io';
   global.apiUrl = `${global.url}/api/v1/courier`;
   return (
     <PaperProvider theme={theme}>

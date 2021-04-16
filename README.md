@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-04-10 14:35:58
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 01:37:19
+ * @LastEditTime: 2021-04-16 18:57:49
 -->
 # Courier Mobile App Dev Guide
 
@@ -41,6 +41,12 @@ constructor(props) {
     }; 
 }
 
+```
+çeviriler;
+```
+167 // return `${selectText} (${selectedItems.length} selected)`; // seçildi
+432 // Add {item.name} (tap or press return) // Ekle dokun veya geri al
+529 // No item to display. // İçerik Bulunamadı.
 ```
 
 ### edit react-native-picker-select package.
