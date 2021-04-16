@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 18:33:05
+ * @LastEditTime: 2021-04-16 19:05:21
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -107,7 +107,10 @@ class AuthStore {
         this.loginSnackbar = true;
       })
       .catch(error => {
-        this.errors = error.response.data.errors;
+        if(error.response.data.errors){
+          this.errors = error.response.data.errors;
+        }
+        // 
         this.loginSnackbar = true;
       });
   }
@@ -139,7 +142,9 @@ class AuthStore {
           navi.navigate('Login');
         })
         .catch(error => {
-          this.errors = error.response.data.errors;
+          if(error.response.data.errors){
+            this.errors = error.response.data.errors;
+          }
         });    
   }
 
@@ -222,8 +227,9 @@ this.current_image = response.data.data.image;
         this.updateProfileSnackbar = true;
       })
       .catch(error => {
-        console.log('hata')
-        this.errors = error.response.data.errors;
+        if(error.response.data.errors){
+          this.errors = error.response.data.errors;
+        }
       });
     this.loading = false;
   }
@@ -245,7 +251,9 @@ this.current_image = response.data.data.image;
         this.resetPaswordSnackbar = true;
       })
       .catch(error => {
-        this.errors = error.response.data.errors;
+        if(error.response.data.errors){
+          this.errors = error.response.data.errors;
+        }
       });
   }
 
