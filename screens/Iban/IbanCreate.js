@@ -3,12 +3,12 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-11 14:35:25
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 01:41:57
+ * @LastEditTime: 2021-04-16 19:11:29
  */
 import React, { Component } from "react";
 import axios from 'axios';
 import { Text, View, ScrollView, StyleSheet } from "react-native";
-import { Button, TextInput, Checkbox, HelperText, Snackbar } from 'react-native-paper';
+import { Button, TextInput, Checkbox, HelperText } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 
 import AuthStore from '../../store/AuthStore';
@@ -56,7 +56,9 @@ class IbanCreate extends Component {
                     AuthStore.token = null;
                     AuthStore.storeToken('');
                 }
-                this.setState({ errors: error.response.data.errors });
+                if(error.response.data.errors){
+                    this.setState({ errors: error.response.data.errors });
+                  }
             });
         this.setState({ loading: false });
     }
