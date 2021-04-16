@@ -218,7 +218,7 @@ class RegisterScreen extends Component {
                   <View style={{ width: '50%' }}>
                     <Button style={styles.input} icon="format-list-checks" mode="contained" onPress={() => this.showDialogDistricts()}>İlçeler Seç</Button>
                     <View style={{ marginLeft: 15, marginTop: 5, }}>
-                    {AuthStore.courier_districts.length >0 && <Text>✓ İlçeler seçildi.</Text>}
+                    {AuthStore.courier_districts.length > 0 && <Text>✓ {AuthStore.courier_districts.length} İlçe seçildi.</Text>}
                     </View>
 
                     {AuthStore.errors.courier_districts && <HelperText type="error" visible style={styles.helper}>
