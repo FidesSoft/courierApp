@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-12 21:08:08
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-05 01:07:54
+ * @LastEditTime: 2021-04-16 19:13:41
  */
 
 import React, { Component } from "react";
@@ -52,7 +52,9 @@ class AddBalance extends Component {
                     AuthStore.token = null;
                     AuthStore.storeToken('');
                 }
-                this.setState({ errors: error.response.data.errors });
+                if(error.response.data.errors){
+                    this.setState({ errors: error.response.data.errors });
+                }
             });
         // this.setState({ loading: false });
     }
