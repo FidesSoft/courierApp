@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 19:09:25
+ * @LastEditTime: 2021-04-16 19:40:00
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';

@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:20:44
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-31 14:17:44
+ * @LastEditTime: 2021-04-16 19:43:49
  */
 import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,74 +21,74 @@ import PaymentStack from './PaymentStack';
 const Tab = createMaterialBottomTabNavigator();
 
 export default function UserTab() {
-  // const [hasLocationPermission, setHasLocationPermission] = useState(false);
-  // useEffect(() => { // her değişiklikte çalışır
-  //   if (hasLocationPermission) {
-  //     updateCourierLocation();
-  //   } else {
-  //     requestPermissions();
-  //     BackgroundTimer.stopBackgroundTimer();
-  //   }
-  // });
+  const [hasLocationPermission, setHasLocationPermission] = useState(false);
+  useEffect(() => { // her değişiklikte çalışır
+    if (hasLocationPermission) {
+      updateCourierLocation();
+    } else {
+      requestPermissions();
+      BackgroundTimer.stopBackgroundTimer();
+    }
+  });
 
-  // useEffect(() => { //tek sefer çalışır
-  //   AuthStore.isThereCourierTask();
-  // }, []);
+  useEffect(() => { //tek sefer çalışır
+    AuthStore.isThereCourierTask();
+  }, []);
 
-  // function updateCourierLocation() {
-  //   BackgroundTimer.runBackgroundTimer(() => {
-  //     //code that will be called every 3 seconds 
-  //     Geolocation.getCurrentPosition(
-  //       (position) => {
-  //         AuthStore.updateCourierLatLng(position);
-  //         if (AuthStore.isCourierAcceptTask) {
-  //           AuthStore.addLatLngToCourierTracking(position)
-  //         }
-  //       },
-  //       (error) => {
-  //         // See error code charts below.
-  //         console.log(error.code, error.message);
-  //         // hata varsa belli bir süre istek yapmaya gerek yok
-  //         setHasLocationPermission(false);
+  function updateCourierLocation() {
+    BackgroundTimer.runBackgroundTimer(() => {
+      //code that will be called every 3 seconds 
+      Geolocation.getCurrentPosition(
+        (position) => {
+          AuthStore.updateCourierLatLng(position);
+          if (AuthStore.isCourierAcceptTask) {
+            AuthStore.addLatLngToCourierTracking(position)
+          }
+        },
+        (error) => {
+          // See error code charts below.
+          console.log(error.code, error.message);
+          // hata varsa belli bir süre istek yapmaya gerek yok
+          setHasLocationPermission(false);
 
-  //       },
-  //       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-  //     );
-  //   },
-  //     // 10000);
-  //   300000); // 5 minutes
-  // }
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      );
+    },
+      // 10000);
+    300000); // 5 minutes
+  }
 
-  // async function requestPermissions() {
-  //   if (Platform.OS === 'ios') {
-  //     const auth = await Geolocation.requestAuthorization("whenInUse");
-  //     if (auth === "granted") {
-  //       // console.log('konum isteği kabul edildi');
-  //       // do something if granted...
-  //       setHasLocationPermission(true);
-  //     }
-  //   }
+  async function requestPermissions() {
+    if (Platform.OS === 'ios') {
+      const auth = await Geolocation.requestAuthorization("whenInUse");
+      if (auth === "granted") {
+        // console.log('konum isteği kabul edildi');
+        // do something if granted...
+        setHasLocationPermission(true);
+      }
+    }
 
-  //   if (Platform.OS === 'android') {
-  //     const granted = await PermissionsAndroid.request(
-  //       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-  //       {
-  //         title: "Konumunuza İhtiyacımız Var",
-  //         message:
-  //           "Size yakın gönderileri listelememiz için " +
-  //           "konum bilgilerinize ihtiyacımız var.",
-  //         buttonNeutral: "Daha sonra sor",
-  //         buttonNegative: "İptal",
-  //         buttonPositive: "İzin Ver"
-  //       }
-  //     );
-  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //       // console.log('konum isteği kabul edildi');
-  //       // do something if granted...
-  //       setHasLocationPermission(true);
-  //     }
-  //   }
-  // }
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: "Konumunuza İhtiyacımız Var",
+          message:
+            "Size yakın gönderileri listelememiz için " +
+            "konum bilgilerinize ihtiyacımız var.",
+          buttonNeutral: "Daha sonra sor",
+          buttonNegative: "İptal",
+          buttonPositive: "İzin Ver"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        // console.log('konum isteği kabul edildi');
+        // do something if granted...
+        setHasLocationPermission(true);
+      }
+    }
+  }
 
   return (
     <Tab.Navigator
