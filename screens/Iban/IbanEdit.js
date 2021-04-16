@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-11 17:11:37
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 01:43:32
+ * @LastEditTime: 2021-04-16 19:12:32
  */
 import React, { Component } from "react";
 import axios from 'axios';
@@ -56,8 +56,10 @@ class IbanIndex extends Component {
                 if (error.response.status == 401) {
                     AuthStore.token = null;
                     AuthStore.storeToken('');
+                }                
+                if(error.response.data.errors){
+                    this.setState({ errors: error.response.data.errors });
                 }
-                this.setState({ errors: error.response.data.errors });
             });
     }
 

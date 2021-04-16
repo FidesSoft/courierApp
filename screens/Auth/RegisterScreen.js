@@ -136,7 +136,7 @@ class RegisterScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF'}}>
+      <View style={{ flex: 1, alignItems: 'stretch', backgroundColor: '#F5FCFF' }}>
         <Appbar.Header>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
@@ -206,25 +206,21 @@ class RegisterScreen extends Component {
                   alignItems: 'flex-start'
                 }}>
                   <View style={{ width: '50%' }}>
-                    <TextInput style={styles.input}
-                      onFocus={() => this.showDialogCities()}
-                      // value={AuthStore.courier_city}
-                      label="İl Seçimi"
-                      mode="outlined"
-                      // onChangeText={text => AuthStore.handleBirthDate(text)}
-                      autoCapitalize="none" />
+                    <Button style={styles.input} icon="format-list-checks" mode="contained" onPress={() => this.showDialogCities()}>İl Seç</Button>
+                    <View style={{ marginLeft: 15, marginTop: 5, }}>
+                    {AuthStore.courier_city.length >0 && <Text>✓ İl seçildi.</Text>}
+                    </View>
+
                     {AuthStore.errors.courier_city && <HelperText type="error" visible style={styles.helper}>
                       {AuthStore.errors.courier_city}
                     </HelperText>}
                   </View>
                   <View style={{ width: '50%' }}>
-                    <TextInput style={styles.input}
-                      onFocus={() => this.showDialogDistricts()}
-                      // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
-                      label="İlçe Seçimi"
-                      mode="outlined"
-                      // onChangeText={text => AuthStore.handleBirthDate(text)}
-                      autoCapitalize="none" />
+                    <Button style={styles.input} icon="format-list-checks" mode="contained" onPress={() => this.showDialogDistricts()}>İlçeler Seç</Button>
+                    <View style={{ marginLeft: 15, marginTop: 5, }}>
+                    {AuthStore.courier_districts.length > 0 && <Text>✓ {AuthStore.courier_districts.length} İlçe seçildi.</Text>}
+                    </View>
+
                     {AuthStore.errors.courier_districts && <HelperText type="error" visible style={styles.helper}>
                       {AuthStore.errors.courier_districts}
                     </HelperText>}
@@ -238,7 +234,7 @@ class RegisterScreen extends Component {
                   onChangeText={handleChange('tcno')}
                   autoCapitalize="none" />
                 {((touched.tcno && errors.tcno) || (AuthStore.errors.tcno)) && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.tcno ?? AuthStore.errors.tcno} 
+                  {AuthStore.errors.tcno ?? AuthStore.errors.tcno}
                   {errors.tcno ?? errors.tcno}
                 </HelperText>}
 
@@ -249,7 +245,7 @@ class RegisterScreen extends Component {
                   // onChangeText={text => AuthStore.handleName(text)}
                   autoCapitalize="none" />
                 {((touched.name && errors.name) || (AuthStore.errors.name)) && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.name ?? AuthStore.errors.name} 
+                  {AuthStore.errors.name ?? AuthStore.errors.name}
                   {errors.name ?? errors.name}
                 </HelperText>}
 
@@ -261,7 +257,7 @@ class RegisterScreen extends Component {
                   // onChangeText={text => AuthStore.handleEmail(text)}
                   autoCapitalize="none" />
                 {((touched.email && errors.email) || (AuthStore.errors.email)) && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.email ?? AuthStore.errors.email} 
+                  {AuthStore.errors.email ?? AuthStore.errors.email}
                   {errors.email ?? errors.email}
                 </HelperText>}
 
@@ -272,7 +268,7 @@ class RegisterScreen extends Component {
                   // onChangeText={text => AuthStore.handlePhone(text)}
                   autoCapitalize="none" />
                 {((touched.phone && errors.phone) || (AuthStore.errors.phone)) && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.phone ?? AuthStore.errors.phone} 
+                  {AuthStore.errors.phone ?? AuthStore.errors.phone}
                   {errors.phone ?? errors.phone}
                 </HelperText>}
 
@@ -284,7 +280,7 @@ class RegisterScreen extends Component {
                   // onChangeText={text => AuthStore.handlePassword(text)}
                   secureTextEntry={true} />
                 {((touched.password && errors.password) || (AuthStore.errors.password)) && <HelperText type="error" visible style={styles.helper}>
-                  {AuthStore.errors.password ?? AuthStore.errors.password} 
+                  {AuthStore.errors.password ?? AuthStore.errors.password}
                   {errors.password ?? errors.password}
                 </HelperText>}
 
@@ -361,7 +357,7 @@ class RegisterScreen extends Component {
                 selectedItems={AuthStore.courier_city}
                 selectText="İl Seç"
                 searchInputPlaceholderText="İl Ara..."
-                onChangeInput={(text) => console.log(text)}
+                // onChangeInput={(text) => console.log(text)}
                 tagRemoveIconColor="#CCC"
                 tagBorderColor="#CCC"
                 tagTextColor="#CCC"

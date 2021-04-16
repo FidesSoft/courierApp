@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 01:44:35
+ * @LastEditTime: 2021-04-16 18:21:55
  */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
@@ -21,7 +21,7 @@ import AuthStore from '../../store/AuthStore';
 class ProfileScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = {            
+        this.state = {
             date: new Date('2021-01-01'),
             show: false,
             dialogCities: false,
@@ -145,26 +145,20 @@ class ProfileScreen extends Component {
                         alignItems: 'flex-start'
                     }}>
                         <View style={{ width: '50%' }}>
-                            <TextInput style={styles.input}
-                                onFocus={() => this.showDialogCities()}
-                                // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
-                                label="İl Listesi"
-                                mode="outlined"
-                                // onChangeText={text => AuthStore.handleBirthDate(text)}
-                                autoCapitalize="none" />
-                            
+                            <Button style={styles.input} icon="format-list-checks" mode="contained" onPress={() => this.showDialogCities()}>İl Seç</Button>
+                            <View style={{ marginLeft: 15, marginTop: 5, }}>
+                                {AuthStore.courier_city.length > 0 && <Text>✓ İl seçildi.</Text>}
+                            </View>
+
                             {AuthStore.errors.courier_city && <HelperText type="error" visible style={styles.helper}>
                                 {AuthStore.errors.courier_city}
                             </HelperText>}
                         </View>
                         <View style={{ width: '50%' }}>
-                            <TextInput style={styles.input}
-                                onFocus={() => this.showDialogDistricts()}
-                                // value={moment(AuthStore.birth_date).format('YYYY-MM-DD')}
-                                label="İlçe Seç"
-                                mode="outlined"
-                                // onChangeText={text => AuthStore.handleBirthDate(text)}
-                                autoCapitalize="none" />
+                            <Button style={styles.input} icon="format-list-checks" mode="contained" onPress={() => this.showDialogDistricts()}>İlçeler Seç</Button>
+                            <View style={{ marginLeft: 15, marginTop: 5, }}>
+                                {AuthStore.courier_districts.length > 0 && <Text>✓ {AuthStore.courier_districts.length} İlçe seçildi.</Text>}
+                            </View>
                             {AuthStore.errors.courier_districts && <HelperText type="error" visible style={styles.helper}>
                                 {AuthStore.errors.courier_districts}
                             </HelperText>}

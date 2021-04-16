@@ -221,15 +221,16 @@ class HomeScreen extends Component {
           AuthStore.token = null;
           AuthStore.storeToken('');
         }
-        console.log(error.response.data.errors.error_desc)
-        this.setState({
-          errors: error.response.data.errors.error_desc,
-        }, () => {
+        if (error.response.data.errors) {
           this.setState({
-            acceptTaskDialogError: this.state.errors,
-            showAcceptTaskDialogError: true,
+            errors: error.response.data.errors.error_desc,
+          }, () => {
+            this.setState({
+              acceptTaskDialogError: this.state.errors,
+              showAcceptTaskDialogError: true,
+            });
           });
-        });
+        }
       });
     this.setState({
       acceptTaskDialog: false,
