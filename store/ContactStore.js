@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-03 15:15:29
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-03 13:33:59
+ * @LastEditTime: 2021-04-16 19:05:43
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -43,7 +43,9 @@ class ContactStore {
           AuthStore.token = null;
           AuthStore.storeToken('');
         }
-        this.errors = error.response.data.errors;
+        if(error.response.data.errors){
+          this.errors = error.response.data.errors;
+        }
       });
   }
 
