@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-06 17:40:11
+ * @LastEditTime: 2021-04-16 18:33:05
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -216,6 +216,9 @@ class AuthStore {
       }
     })
       .then((response) => {
+
+// console.log(response.data.data.image)
+this.current_image = response.data.data.image;
         this.updateProfileSnackbar = true;
       })
       .catch(error => {
