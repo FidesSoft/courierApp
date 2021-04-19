@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 19:40:00
+ * @LastEditTime: 2021-04-19 04:01:52
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -257,7 +257,7 @@ this.current_image = response.data.data.image;
   }
 
   @action async isThereCourierTask() {
-    console.log('check-courier-task istegi gönderildi')
+    // console.log('check-courier-task istegi gönderildi')
     let uri = `${global.apiUrl}/check-courier-task`;
     await axios.get(uri, {
       headers: {

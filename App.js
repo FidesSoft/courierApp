@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:29:51
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 19:38:19
+ * @LastEditTime: 2021-04-19 23:01:36
  */
 import React, { useState, useEffect } from 'react';
 
@@ -30,17 +30,15 @@ const theme = {
 
 function App() {
   
-  global.url = 'https://2fcc9e2d5a93.ngrok.io';
+  global.url = 'http://v1.fideskurye.com';
   global.apiUrl = `${global.url}/api/v1/courier`;
   return (
     <PaperProvider theme={theme}>
-
       <NavigationContainer>
       <SafeAreaProvider>
         <MainStack />
       </SafeAreaProvider>
       </NavigationContainer>
-
     </PaperProvider>
   );
 }

@@ -272,7 +272,7 @@ class HomeScreen extends Component {
       <>
         <List.Item style={{ backgroundColor: '#fff7e6', margin: 2 }}
           // onPress={() => console.log(item)}
-          onPress={() => this.showDetails(item)}
+          onPress={() => console.log(item.status_id)}
           titleEllipsizeMode="clip"
           titleNumberOfLines={3}
           title={
@@ -294,9 +294,9 @@ class HomeScreen extends Component {
           right={props => <View style={{ alignItems: 'flex-end' }}>
             {item.payment_status == 0 ? <Text style={{ color: 'red' }}>Ödenmedi</Text> : <Text style={{ color: 'green' }}> Ödendi</Text>}
             <Text style={{ color: 'green' }}> {payment_type}</Text>
-            {(item.status_id === 17 || item.status_id === 25) && <Button icon="check" mode="contained" compact onPress={() => this.showApproveTaskDialog(item.id)}>
+            <Button icon="check" mode="contained" compact onPress={() => this.showApproveTaskDialog(item.id)}>
               Kabul Et
-            </Button>}
+            </Button>
           </View>}
         />
         <Divider />
