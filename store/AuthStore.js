@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-19 04:01:52
+ * @LastEditTime: 2021-04-20 14:21:26
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -87,9 +87,9 @@ class AuthStore {
         this.token = null;
       })
       .catch(error => {
-        //productionda bunu sil
-        this.removeToken();
-        this.token = null;
+        // productionda bunu sil
+        // this.removeToken();
+        // this.token = null;
       });
   }
 
@@ -100,7 +100,6 @@ class AuthStore {
     let uri = `${global.apiUrl}/login`;
     await axios.post(uri, formData)
       .then(async (response) => {
-        // console.log(response.data)
         this.token = response.data.data.token;
         this.storeToken(this.token);
         global.googleApiKey = response.data.data.googleApiKey;
