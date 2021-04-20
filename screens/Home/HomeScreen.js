@@ -199,8 +199,7 @@ class HomeScreen extends Component {
   }
 
   async approveTask() {
-    console.log('gidiyor');
-    
+   
     this.setState({ loading: true });
     let formData = new FormData();
     formData.append('id', this.state.approveTaskId);
@@ -213,15 +212,12 @@ class HomeScreen extends Component {
       }
     })
       .then((response) => {
-        console.log('basarili');
         this.props.route.params.refreshData = true;
         this.props.navigation.navigate('TaskDetails', { acceptTask: true, item: response.data.task })
         // navi.navigate('Home');
 
       })
       .catch(error => {
-        console.log(error.response);
-        console.log(this.state.approveTaskId);
         if (error.response.status == 401) {
           AuthStore.token = null;
           AuthStore.storeToken('');

@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-03-27 02:17:31
+ * @LastEditTime: 2021-04-20 14:32:49
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -112,7 +112,7 @@ class TaskDetails extends Component {
     let formData = new FormData();
     formData.append('id', id);
 
-    let uri = `${global.apiUrl}/task/update-task-status/`;
+    let uri = `${global.apiUrl}/task/update-task-status`;
     await axios.post(uri, formData, {
       headers: {
         'Accept': 'application/json',
@@ -145,7 +145,7 @@ class TaskDetails extends Component {
     let formData = new FormData();
     formData.append('id', id);
 
-    let uri = `${global.apiUrl}/task/cancel-task/`;
+    let uri = `${global.apiUrl}/task/cancel-task`;
     await axios.post(uri, formData, {
       headers: {
         'Accept': 'application/json',
