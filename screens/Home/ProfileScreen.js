@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 15:18:57
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-17 15:32:43
+ * @LastEditTime: 2021-04-20 14:53:52
  */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
@@ -284,7 +284,7 @@ class ProfileScreen extends Component {
                         <View style={{ flexDirection: "row" }}>
                             <Checkbox
                                 color="#139740"
-                                status={AuthStore.on_duty ? 'checked' : 'unchecked'}
+                                status={AuthStore.on_duty == 1 ? 'checked' : 'unchecked'}
                                 onPress={() => {
                                     AuthStore.handleOnDuty();
                                 }}
