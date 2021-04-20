@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-11 17:11:37
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 19:12:32
+ * @LastEditTime: 2021-04-20 15:03:08
  */
 import React, { Component } from "react";
 import axios from 'axios';
@@ -107,8 +107,8 @@ class IbanIndex extends Component {
                                     style={{ inputAndroid: { color: 'black' }, inputIOS: { height: 40, marginLeft: 15, margin: 5 } }}
                                     onValueChange={(itemValue) => setFieldValue('status', itemValue)}
                                     items={[
-                                        { label: 'Aktif', value: 10 },
-                                        { label: 'Aktif Değil', value: 11 }
+                                        { label: 'Aktif', value: '10' },
+                                        { label: 'Aktif Değil', value: '11' }
                                     ]}
                                 />
                             </View>
