@@ -4,7 +4,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-04 21:42:54
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-20 14:32:49
+ * @LastEditTime: 2021-04-20 14:37:28
  */
 import React, { Component } from "react";
 import { ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
@@ -120,7 +120,7 @@ class TaskDetails extends Component {
       }
     })
       .then((response) => {
-        console.log(response.data.task.status_id)
+        // console.log(response.data.task.status_id)
         if (response.data.task.status_id == 19) {
           AuthStore.handleIsCourierAcceptTask(true);
           AuthStore.handleIsCourierAcceptTaskId(response.data.task.id);
@@ -131,7 +131,7 @@ class TaskDetails extends Component {
         this.props.navigation.navigate('Home', { refreshData: true, update: true })
       })
       .catch(error => {
-        console.log('hata')
+        // console.log('hata')
         if (error.response.status == 401) {
           AuthStore.token = null;
           AuthStore.storeToken('');
@@ -158,7 +158,7 @@ class TaskDetails extends Component {
         this.props.navigation.navigate('Home', { refreshData: true, update: true })
       })
       .catch(error => {
-        console.log('hata')
+        // console.log('hata')
         if (error.response.status == 401) {
           AuthStore.token = null;
           AuthStore.storeToken('');
