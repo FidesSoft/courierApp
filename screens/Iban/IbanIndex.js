@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-22 20:00:20
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 01:39:05
+ * @LastEditTime: 2021-04-20 14:42:13
  */
 /*
  * @Author: @vedatbozkurt
@@ -207,7 +207,7 @@ class IbanIndex extends Component {
     renderItem = ({ item }) => {
         return (
             <DataTable.Row>
-                <DataTable.Cell>{item.default ? <Text style={{ color: "green" }}>*</Text> : ''}{item.iban_no}</DataTable.Cell>
+                <DataTable.Cell>{item.default  == 1 ? <Text style={{ color: "green" }}>*</Text> : ''}{item.iban_no}</DataTable.Cell>
                 <DataTable.Cell numeric>
                     {item.status_id == 10 ? <Text style={{ color: "green" }}>Aktif</Text> :
                         <Text style={{ color: "red" }}>Pasif</Text>}

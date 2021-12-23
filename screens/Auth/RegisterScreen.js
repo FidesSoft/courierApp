@@ -66,7 +66,7 @@ class RegisterScreen extends Component {
   }
 
   getCities = async () => {
-    let uri = `${global.apiUrl}/get-cities/`;
+    let uri = `${global.apiUrl}/get-cities`;
     await axios.get(uri, {
       headers: {
         'Accept': 'application/json',

@@ -3,7 +3,7 @@
  * @Email: info@wedat.org
  * @Date: 2021-03-21 13:46:19
  * @LastEditors: @vedatbozkurt
- * @LastEditTime: 2021-04-16 19:09:25
+ * @LastEditTime: 2021-04-20 14:59:30
  */
 import { observable, action } from 'mobx';
 import axios from 'axios';
@@ -63,7 +63,7 @@ class AuthStore {
   @action handleVehicle(text) { this.vehicle = text; }
   @action handleBirthDate(date) { this.birth_date = date }
   @action handleSozlesme() { this.sozlesme = !this.sozlesme; }
-  @action handleOnDuty() { this.on_duty = !this.on_duty; console.log(this.on_duty) }
+  @action handleOnDuty() { this.on_duty == 1 ? this.on_duty = 0 : this.on_duty = 1}
 
   @action onDismissLoginSnackbar() { this.loginSnackbar = false; }
   @action onDismissLogutSnackbar() { this.logutSnackbar = false; }
@@ -87,9 +87,9 @@ class AuthStore {
         this.token = null;
       })
       .catch(error => {
-        //productionda bunu sil
-        this.removeToken();
-        this.token = null;
+        // productionda bunu sil
+        // this.removeToken();
+        // this.token = null;
       });
   }
 
@@ -100,7 +100,6 @@ class AuthStore {
     let uri = `${global.apiUrl}/login`;
     await axios.post(uri, formData)
       .then(async (response) => {
-        // console.log(response.data)
         this.token = response.data.data.token;
         this.storeToken(this.token);
         global.googleApiKey = response.data.data.googleApiKey;
@@ -257,7 +256,7 @@ this.current_image = response.data.data.image;
   }
 
   @action async isThereCourierTask() {
-    console.log('check-courier-task istegi gönderildi')
+    // console.log('check-courier-task istegi gönderildi')
     let uri = `${global.apiUrl}/check-courier-task`;
     await axios.get(uri, {
       headers: {
@@ -297,7 +296,7 @@ this.current_image = response.data.data.image;
       }
     })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch(error => {
         if (error.response.status == 401) {
@@ -321,7 +320,7 @@ this.current_image = response.data.data.image;
       }
     })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch(error => {
         if (error.response.status == 401) {

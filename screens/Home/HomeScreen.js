@@ -199,11 +199,12 @@ class HomeScreen extends Component {
   }
 
   async approveTask() {
+   
     this.setState({ loading: true });
     let formData = new FormData();
     formData.append('id', this.state.approveTaskId);
 
-    let uri = `${global.apiUrl}/task/accept/`;
+    let uri = `${global.apiUrl}/task/accept`;
     await axios.post(uri, formData, {
       headers: {
         'Accept': 'application/json',
@@ -294,7 +295,7 @@ class HomeScreen extends Component {
           right={props => <View style={{ alignItems: 'flex-end' }}>
             {item.payment_status == 0 ? <Text style={{ color: 'red' }}>Ödenmedi</Text> : <Text style={{ color: 'green' }}> Ödendi</Text>}
             <Text style={{ color: 'green' }}> {payment_type}</Text>
-            {(item.status_id === 17 || item.status_id === 25) && <Button icon="check" mode="contained" compact onPress={() => this.showApproveTaskDialog(item.id)}>
+            {(item.status_id == 17 || item.status_id == 25) && <Button icon="check" mode="contained" compact onPress={() => this.showApproveTaskDialog(item.id)}>
               Kabul Et
             </Button>}
           </View>}
